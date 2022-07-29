@@ -1,4 +1,4 @@
-package com.daniel.chickenbreast.mychickenbreastshop;
+package com.daniel.mychickenbreastshop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
