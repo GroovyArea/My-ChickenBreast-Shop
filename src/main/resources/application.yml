@@ -6,8 +6,8 @@
 
 spring :
   profiles:
-    include: real-dev, real-service
+    active: local
 
 # logging
 logging:
-  config: classpath:logback/logback-local.xml
+  config: classpath:logback.xml
