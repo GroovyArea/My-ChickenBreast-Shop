@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -33,7 +34,7 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
-    private static final long VALIDATE_IN_MILLISECONDS = 1000 * 60L * 30L;
+    private static final long VALIDATE_DAYS = 1L;
 
     /**
      * 토큰 생성
@@ -42,8 +43,8 @@ public class JwtTokenProvider {
      * @return 토큰 값
      */
     public String createToken(String id, String grade) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + VALIDATE_IN_MILLISECONDS);
+        LocalDate now = LocalDate.now();
+        LocalDate validity = now.plusDays(VALIDATE_DAYS);
         log.info("now: {}", now);
         log.info("validity: {}", validity);
 
@@ -55,8 +56,8 @@ public class JwtTokenProvider {
                 .setSubject("Login Token")
                 .claim("userId", id)
                 .claim("userGrade", grade)
-                .setIssuedAt(now)
-                .setExpiration(validity)
+                .setIssuedAt(java.sql.Date.valueOf(now))
+                .setExpiration(java.sql.Date.valueOf(validity))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
