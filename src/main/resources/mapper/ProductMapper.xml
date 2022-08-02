@@ -34,18 +34,17 @@
     </select>
 
     <select id="selectCategoryList" resultType="ProductVO" resultMap="product">
-        SELECT *
-        FROM
         <trim>
             <if test="searchKeyword != null and searchValue !=''">
-                (SELECT PRODUCT_NO, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_STOCK,
+                SELECT PRODUCT_NO, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_STOCK,
                 PRODUCT_IMAGE, PRODUCT_CATEGORY
                 FROM PRODUCT
-                WHERE ${searchKeyword} LIKE '%${searchValue}%') subQuery
-                WHERE subQuery.PRODUCT_CATEGORY = #{productCategory}
+                WHERE ${searchKeyword} LIKE '%${searchValue}%' AND PRODUCT_CATEGORY = #{productCategory}
             </if>
             <if test="searchKeyword == null or searchValue ==''">
-                PRODUCT
+                SELECT PRODUCT_NO, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_STOCK,
+                PRODUCT_IMAGE, PRODUCT_CATEGORY
+                FROM PRODUCT
                 WHERE PRODUCT_CATEGORY = #{productCategory}
             </if>
         </trim>
@@ -53,24 +52,18 @@
     </select>
 
     <insert id="insertProduct">
-        <selectKey resultType="int" keyProperty="productNo" order="BEFORE">
-            select nextval('product_seq') from dual
-        </selectKey>
-        INSERT INTO product (PRODUCT_NO,
-        PRODUCT_NAME,
-        PRODUCT_CATEGORY,
-        PRODUCT_PRICE,
-        PRODUCT_STOCK,
-        PRODUCT_DETAIL,
-        PRODUCT_IMAGE) VALUES (
-        #{productNo},
-        #{productName},
-        #{productCategory},
-        #{productPrice},
-        #{productStock},
-        #{productDetail},
-        #{productImage}
-        )
+        INSERT INTO product (PRODUCT_NAME,
+                             PRODUCT_CATEGORY,
+                             PRODUCT_PRICE,
+                             PRODUCT_STOCK,
+                             PRODUCT_DETAIL,
+                             PRODUCT_IMAGE)
+        VALUES (#{productName},
+                #{productCategory},
+                #{productPrice},
+                #{productStock},
+                #{productDetail},
+                #{productImage})
     </insert>
 
     <update id="updateProduct">
