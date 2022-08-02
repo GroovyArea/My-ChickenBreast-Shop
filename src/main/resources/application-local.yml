@@ -78,3 +78,8 @@ jwt:
 file:
   upload:
     location: C:\파일경로\이미지폴더
+
+log:
+  config:
+      path: /Users/09520/logback
+      filename: localLog.log
