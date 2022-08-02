@@ -1,0 +1,80 @@
+# mybatis
+mybatis:
+  type-aliases-package: com.daniel.mapper
+  mapper-locations: classpath:com/daniel/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+spring:
+  # database
+  datasource:
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/스키마
+    username:
+    password:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+
+  # Redis
+  redis:
+    lettuce:
+      pool:
+        max-active: 5
+        max-idle: 5
+        min-idle: 5
+    host:
+    port: 6379
+    password:
+
+  # flyway
+  flyway:
+    enabled: true
+    locations: classpath:/db/migration
+    sql-migration-suffixes: ddl
+    baseline-version: 0
+    baseline-on-migrate: true
+
+  #Multipart file
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+# mail
+email:
+  from: 메일 주소
+  subject: 메일 제목
+  text: 메일 내용
+
+# order api uri
+order:
+  api:
+    approval: /api/order/completed
+    cancel: /api/order/cancel
+    fail: /api/order/fail
+
+# kakao pay
+kakao:
+  admin:
+    key: admin_key
+  uri:
+    host: https://kapi.kakao.com
+    pay:
+      ready: /v1/payment/ready
+      approve: /v1/payment/approve
+      cancel: /v1/payment/cancel
+      order: /v1/payment/order
+  parameter:
+    cid: TC0ONETIME
+    taxfree: 1000
+
+# jwt key
+jwt:
+  secret:
+    key: jwt_secret_key
+
+# file directory
+file:
+  upload:
+    location: C:\파일경로\이미지폴더
