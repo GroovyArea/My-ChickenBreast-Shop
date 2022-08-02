@@ -27,6 +27,9 @@ out/
 **/application-real-dev.yml
 **/application-real-service.yml
 **/application-real-email.yml
+**/application-local.yml
+**/application-dev.yml
+**/application-prod.yml
 
 ### NetBeans ###
 /nbproject/private/
