@@ -1,5 +1,10 @@
 package com.daniel.mychickenbreastshop.global.auth.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public enum FilterMessage {
 
     NULL_TOKEN("DB에 토큰이 존재하지 않습니다. 로그인이 필요합니다."),
@@ -11,13 +16,5 @@ public enum FilterMessage {
     UNSUPPORTED_TOKEN("지원하지 않는 토큰입니다.");
 
     private final String message;
-
-    FilterMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 
 }

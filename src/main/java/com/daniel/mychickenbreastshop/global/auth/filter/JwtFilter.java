@@ -41,6 +41,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String BEARER_TOKEN = "Bearer";
+    private static final String ENCODE_TYPE = "utf-8";
 
     private final AuthorizationExtractor authorizationExtractor;
     private final JwtTokenProvider jwtTokenProvider;
@@ -94,12 +95,14 @@ public class JwtFilter extends OncePerRequestFilter {
             setErrorResponse(response, FilterMessage.EXPIRED_TOKEN.getMessage(), e);
         } catch (UnsupportedJwtException e) {
             setErrorResponse(response, FilterMessage.UNSUPPORTED_TOKEN.getMessage(), e);
+        } catch (Exception e) {
+            setErrorResponse(response, e.getMessage(), e);
         }
     }
 
     private void setErrorResponse(HttpServletResponse response, String message, Exception e) throws IOException {
         log.error(e.getMessage());
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(ENCODE_TYPE);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().write(message);
     }
