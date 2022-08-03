@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.global.error.handler;
 
 import com.daniel.mychickenbreastshop.global.error.exception.AuthorizationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,10 +19,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @version 1.0
  */
 @RestControllerAdvice
+@Slf4j
 public class GlobalAdvice {
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<String> authorizationExceptionHandle(AuthorizationException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> illegalArgumentExceptionHandle(IllegalArgumentException e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+    }
+
 }

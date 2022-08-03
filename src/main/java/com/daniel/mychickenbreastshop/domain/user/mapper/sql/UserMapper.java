@@ -1,15 +1,13 @@
-package com.daniel.mychickenbreastshop.domain.user.mapper;
+package com.daniel.mychickenbreastshop.domain.user.mapper.sql;
 
 import com.daniel.mychickenbreastshop.domain.user.domain.UserVO;
 import com.daniel.mychickenbreastshop.global.util.Pager;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
 @Mapper
-@Repository
 public interface UserMapper {
 
     UserVO selectUser(String userId);

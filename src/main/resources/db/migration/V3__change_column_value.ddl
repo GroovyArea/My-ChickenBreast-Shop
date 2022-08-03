@@ -6,7 +6,7 @@ ALTER TABLE amount
     CHANGE COLUMN `discount` `discount` BIGINT(20) NULL DEFAULT NULL ;
 
 ALTER TABLE product
-    CHANGE COLUMN `product_status` `product_status` VARCHAR(10) NULL DEFAULT SALE ;
+    CHANGE COLUMN `product_status` `product_status` VARCHAR(10) NULL DEFAULT 'SALE' ;
 
 ALTER TABLE user
-    CHANGE COLUMN `user_grade` `user_grade` VARCHAR(20) NULL DEFAULT BASIC_USER ;
+    CHANGE COLUMN `user_grade` `user_grade` VARCHAR(20) NULL DEFAULT 'BASIC_USER' ;

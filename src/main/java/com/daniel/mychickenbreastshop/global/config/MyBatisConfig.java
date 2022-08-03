@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = {"com.daniel.mychickenbreastshop.domain.**.mapper",
+@MapperScan(basePackages = {"com.daniel.mychickenbreastshop.domain.**.mapper.sql",
         "com.daniel.mychickenbreastshop.outbox.mapper"})
 public class MyBatisConfig {
 

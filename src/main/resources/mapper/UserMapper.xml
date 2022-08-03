@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.daniel.mychickenbreastshop.domain.user.mapper.UserMapper">
+<mapper namespace="com.daniel.mychickenbreastshop.domain.user.mapper.sql.UserMapper">
 
     <resultMap type="UserVO" id="user">
         <result property="userId" column="user_id"/>
