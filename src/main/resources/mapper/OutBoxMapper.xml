@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daniel.mychickenbreastshop.outbox.mapper.OutBoxMapper">
+
+    <resultMap id="outBoxOrder" type="OutBox">
+        <result property="id" column="id"/>
+        <result property="aggregateId" column="aggregate_id"/>
+        <result property="aggregateType" column="aggregate_type"/>
+        <result property="eventType" column="event_type"/>
+        <result property="payload" column="payload"/>
+    </resultMap>
+
+    <select id="selectAllOrderOutBox" resultType="com.daniel.domain.vo.OutBox" resultMap="outBoxOrder">
+        SELECT *
+        FROM `OUTBOX-ORDER`
+    </select>
+
+    <insert id="insertEmailOutBox">
+        INSERT INTO `OUTBOX-EMAIL`(AGGREGATE_ID, AGGREGATE_TYPE, EVENT_TYPE, PAYLOAD)
+        VALUES (#{aggregateId},
+                #{aggregateType},
+                #{eventType},
+                #{payload})
+    </insert>
+
+    <insert id="insertOrderOutBox">
+        INSERT INTO `OUTBOX-ORDER`(AGGREGATE_ID, AGGREGATE_TYPE, EVENT_TYPE, PAYLOAD)
+        VALUES (#{aggregateId},
+                #{aggregateType},
+                #{eventType},
+                #{payload})
+    </insert>
+
+    <delete id="deleteById" parameterType="OutBox">
+        DELETE
+        FROM `OUTBOX-ORDER`
+        WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteAllById" parameterType="java.util.List">
+        DELETE FROM `OUTBOX-ORDER`
+        WHERE
+        ID IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

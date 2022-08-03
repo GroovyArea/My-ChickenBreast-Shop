@@ -33,14 +33,14 @@
             <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
             <fileNamePattern>${LOG_PATH}/filelog/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
-                <!-- 30일간 유효 -->
-                <maxHistory>30</maxHistory>
                 <!-- 파일당 최고 용량 kb, mb, gb -->
                 <maxFileSize>10MB</maxFileSize>
-                <!--아카이브 전체 용량-->
-                <totalSizeCap>20GB</totalSizeCap>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+            <!-- 30일간 유효 -->
+            <maxHistory>30</maxHistory>
+            <!--아카이브 전체 용량-->
+            <totalSizeCap>20GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
@@ -62,14 +62,14 @@
             <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
             <fileNamePattern>${LOG_PATH}/errorlog/${ERR_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
-                <!-- 30일간 유효 -->
-                <maxHistory>30</maxHistory>
                 <!-- 파일당 최고 용량 kb, mb, gb -->
                 <maxFileSize>10MB</maxFileSize>
-                <!--아카이브 전체 용량-->
-                <totalSizeCap>20GB</totalSizeCap>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+            <!-- 30일간 유효 -->
+            <maxHistory>30</maxHistory>
+            <!--아카이브 전체 용량-->
+            <totalSizeCap>20GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
