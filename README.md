@@ -2,7 +2,7 @@
 shop api with spring boot 
 
 ## ERD Model
-<img src ='https://user-images.githubusercontent.com/89288109/183251853-ba83d940-1f28-4039-8420-27be050990f5.png'>
+<img src ='https://user-images.githubusercontent.com/89288109/183344172-d4fb2db9-f224-432d-9c26-8db2f67ce8a0.png'>
 
 ### Table
 
@@ -32,7 +32,6 @@ shop api with spring boot
 - Pk
   - 컬럼명 : id 고유 번호 Auto_Increment 사용
 - FK
-  - 컬럼명 : product_id 상품 고유 번호
   - 컬럼명 : order_id 주문 고유 번호
   
   
@@ -43,14 +42,6 @@ shop api with spring boot
   - 컬럼명 : order_id 주문 고유 번호
   - 컬럼명 : payment_id 결제 고유 번호
   
-  
-#### Amount
-- PK 
-  - 컬럼명 : id Auto_Increment 사용
-- FK 
-  - 컬럼명 : order_id 주문 고유 번호
-- FK 
-  - 컬럼명 : payment_id 결제 고유 번호
   
 #### Outbox-email
 - PK 
