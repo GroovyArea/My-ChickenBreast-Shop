@@ -2,7 +2,7 @@
 shop api with spring boot 
 
 ## ERD Model
-<img src ='https://user-images.githubusercontent.com/89288109/183428015-8b442fa6-f13e-4e5c-8950-fed22ed0e67d.png'>
+<img src ='https://user-images.githubusercontent.com/89288109/183577933-57e41635-6535-4fdd-a3c1-e5a232d6afe5.png'>
 
 ### Table
 
