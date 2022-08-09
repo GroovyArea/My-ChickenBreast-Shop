@@ -17,16 +17,22 @@ public class BaseTimeEntity {
 
     private LocalDateTime updatedAt;
 
+    private LocalDateTime deletedAt;
+
     @PrePersist
-    public void prePersist() {
+    public void create() {
         LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
-    public void preUpdate() {
+    public void update() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 }
 

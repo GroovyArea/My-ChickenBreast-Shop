@@ -33,4 +33,16 @@ public class GlobalAdvice {
         return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exceptionHandle(Exception e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> runtimeExceptionHandle(RuntimeException e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+    }
+
 }

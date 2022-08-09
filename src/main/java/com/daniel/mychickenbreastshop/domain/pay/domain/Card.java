@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "cardinfo")
 @Getter
@@ -17,7 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 public class Card extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
@@ -35,6 +35,5 @@ public class Card extends BaseTimeEntity {
     private String installMonth;
 
     private String interestFreeInstall;
-
-    private LocalDateTime deletedAt;
 }
+

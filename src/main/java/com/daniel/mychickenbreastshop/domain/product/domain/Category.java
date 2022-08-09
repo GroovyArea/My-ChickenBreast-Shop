@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +19,8 @@ public class Category extends BaseTimeEntity {
     private Long id;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();8
 
     private String name;
-
-    private LocalDateTime deletedAt;
 
 }

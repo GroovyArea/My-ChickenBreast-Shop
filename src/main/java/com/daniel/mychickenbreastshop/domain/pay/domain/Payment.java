@@ -3,20 +3,20 @@ package com.daniel.mychickenbreastshop.domain.pay.domain;
 import com.daniel.mychickenbreastshop.domain.order.domain.Order;
 import com.daniel.mychickenbreastshop.domain.pay.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.pay.enums.PaymentType;
+import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+public class Payment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +30,6 @@ public class Payment {
     private Card card;
 
     private String key;
-
-    @Column(updatable = false)
-    private LocalDateTime readyAt;
-
-    private LocalDateTime approvedAt;
-
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime canceledAt;
 
     private int totalPrice;
 
