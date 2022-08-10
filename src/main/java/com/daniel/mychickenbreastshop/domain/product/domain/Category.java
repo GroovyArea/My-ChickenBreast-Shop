@@ -19,7 +19,7 @@ public class Category extends BaseTimeEntity {
     private Long id;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<>();8
+    private List<Product> products = new ArrayList<>();
 
     private String name;
 

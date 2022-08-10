@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
-import com.daniel.mychickenbreastshop.domain.order.domain.Order;
 import com.daniel.mychickenbreastshop.domain.user.enums.UserGrade;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -10,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -24,8 +21,8 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login_id")
-    private String userId;
+    @Column(name = "login_id", nullable = false)
+    private String loginId;
 
     private String password;
 
@@ -43,8 +40,5 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private UserGrade grade;
-
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
 
 }

@@ -20,20 +20,22 @@ public class Product extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    private int price;
+    private Integer price;
 
-    private int quantity;
+    private Integer quantity;
 
     private String content;
 
     private String image;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "product_status", nullable = false)
     private ChickenStatus status;
 }

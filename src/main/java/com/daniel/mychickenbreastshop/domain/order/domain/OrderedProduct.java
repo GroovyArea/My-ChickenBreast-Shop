@@ -19,22 +19,18 @@ public class OrderedProduct extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    private Integer count;
 
-    private int count;
-
-    @Column(name = "product_name")
+    @Column(name = "product_name", nullable = false)
     private String name;
 
-    @Column(name = "product_price")
+    @Column(name = "product_price", nullable = false)
     private String price;
 
-    @Column(name = "product_image")
+    @Column(name = "product_image", nullable = false)
     private String image;
 
-    @Column(name = "product_content")
+    @Column(name = "product_content", nullable = false)
     private String content;
 
 }

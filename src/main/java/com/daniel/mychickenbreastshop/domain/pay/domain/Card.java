@@ -1,6 +1,5 @@
 package com.daniel.mychickenbreastshop.domain.pay.domain;
 
-import com.daniel.mychickenbreastshop.domain.order.domain.Order;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,20 +19,15 @@ public class Card extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
     private String bin;
 
+    @Column(name = "card_type", nullable = false)
     private String cardType;
 
+    @Column(name = "install_month", nullable = false)
     private String installMonth;
 
+    @Column(name = "interest_free_install", nullable = false)
     private String interestFreeInstall;
 }
 
