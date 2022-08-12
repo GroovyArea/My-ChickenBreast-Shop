@@ -1,11 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
-import com.daniel.mychickenbreastshop.domain.user.dao.UserDAO;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserJoinDTO;
 import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
+import com.daniel.mychickenbreastshop.domain.user.respository.UserRepository;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,17 +28,18 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
     private final JoinObjectMapper joinObjectMapper;
     private final UserObjectMapper userObjectMapper;
 
     @Transactional(readOnly = true)
-    public UserDTO findById(String userId) {
-        return userObjectMapper.toDTO(userDAO.selectUser(userId));
+    public UserDTO getUser(String userId) {
+        return userObjectMapper.toDTO(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
     }
 
+    @Transactional
     public void addUser(UserJoinDTO userJoinDTO) {
-        if (userDAO.selectUser(userJoinDTO.getUserId()) != null) {
+        if (userRepository.findById(userJoinDTO.getUserId()).isPresent()) {
             throw new UserExistException();
         }
 
@@ -51,7 +52,7 @@ public class UserService {
             throw new IllegalArgumentException(e);
         }
 
-        userDAO.insertUser(joinObjectMapper.toVO(userJoinDTO));
+        userRepository.save(joinObjectMapper.toEntity(userJoinDTO));
     }
 
 

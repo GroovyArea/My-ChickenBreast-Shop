@@ -8,7 +8,7 @@ public interface GenericMapper<D, V> {
 
     D toDTO(V v);
 
-    V toVO(D d);
+    V toEntity(D d);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateFromVO(D dto, @MappingTarget V vo);
