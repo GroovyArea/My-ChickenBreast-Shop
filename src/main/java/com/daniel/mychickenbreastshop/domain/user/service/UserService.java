@@ -5,7 +5,7 @@ import com.daniel.mychickenbreastshop.domain.user.dto.UserJoinDTO;
 import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.respository.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,14 +34,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDTO getUser(String userId) {
-        return userObjectMapper.toDTO(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
+        return userObjectMapper.toDTO(userRepository.findByLoginId(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
     }
 
     @Transactional
-    public void addUser(UserJoinDTO userJoinDTO) {
-        if (userRepository.findById(userJoinDTO.getUserId()).isPresent()) {
-            throw new UserExistException();
-        }
+    public void registerUser(UserJoinDTO userJoinDTO) {
+        validateDuplicatedUser(userJoinDTO.getUserId());
 
         String salt = PasswordEncrypt.getSalt();
         userJoinDTO.setUserSalt(salt);
@@ -53,6 +51,12 @@ public class UserService {
         }
 
         userRepository.save(joinObjectMapper.toEntity(userJoinDTO));
+    }
+
+    private void validateDuplicatedUser(String userId) {
+        if (userRepository.findByLoginId(userId).isPresent()) {
+            throw new UserExistException();
+        }
     }
 
 

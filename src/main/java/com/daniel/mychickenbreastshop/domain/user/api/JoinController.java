@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
 import com.daniel.mychickenbreastshop.domain.user.dto.UserJoinDTO;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessage;
+import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +30,8 @@ public class JoinController {
 
     @PostMapping
     public ResponseEntity<String> join(@RequestBody UserJoinDTO userJoinDTO) {
-        userService.addUser(userJoinDTO);
-        return ResponseEntity.ok(ResponseMessage.JOIN_SUCCEED_MESSAGE.getMessage());
+        userService.registerUser(userJoinDTO);
+        return ResponseEntity.ok(ResponseMessages.JOIN_SUCCEED_MESSAGE.getMessage());
     }
 
 }

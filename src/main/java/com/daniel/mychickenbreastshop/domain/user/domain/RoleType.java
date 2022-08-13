@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.user.enums;
+package com.daniel.mychickenbreastshop.domain.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,19 +8,19 @@ import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
-public enum UserGrade {
+public enum RoleType {
 
     WITHDRAWAL_USER(0),
-    BASIC_USER(1),
+    USER(1),
     ADMIN(9);
 
     private final int grade;
 
-    public static Optional<UserGrade> of(int gradeNumber) {
-        return Optional.of(Arrays.stream(UserGrade.values())
+    public static Optional<RoleType> of(int gradeNumber) {
+        return Optional.of(Arrays.stream(RoleType.values())
                 .filter(userGrade -> userGrade.getGrade() == gradeNumber)
                 .findFirst()
-                .orElse(BASIC_USER));
+                .orElse(USER));
     }
 
 }
