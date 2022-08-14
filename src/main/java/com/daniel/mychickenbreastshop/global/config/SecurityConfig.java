@@ -1,9 +1,12 @@
 package com.daniel.mychickenbreastshop.global.config;
 
-import com.daniel.mychickenbreastshop.domain.auth.jwt.JwtTokenProvider;
-import com.daniel.mychickenbreastshop.domain.auth.security.filter.JwtAuthenticationFilter;
+import com.daniel.mychickenbreastshop.global.auth.jwt.JwtTokenProvider;
+import com.daniel.mychickenbreastshop.global.auth.security.filter.CustomAccessDeniedHandler;
+import com.daniel.mychickenbreastshop.global.auth.security.filter.CustomAuthenticationEntryPoint;
+import com.daniel.mychickenbreastshop.global.auth.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,11 +48,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/*/join", "/*/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
+
                 .antMatchers("/api").hasRole("USER")
                 .antMatchers("/admin").hasRole("ADMIN") // 테스트 시 path 관리할 것
 
                 .and()
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
+                .and()
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+
+                .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
     }

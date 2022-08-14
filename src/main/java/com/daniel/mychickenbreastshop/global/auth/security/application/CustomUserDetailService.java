@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.auth.security.application;
+package com.daniel.mychickenbreastshop.global.auth.security.application;
 
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;

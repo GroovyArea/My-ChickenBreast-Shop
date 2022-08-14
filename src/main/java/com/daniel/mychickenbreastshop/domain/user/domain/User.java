@@ -38,8 +38,6 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     private String name;
 
-    private String phone;
-
     private String email;
 
     private String address;

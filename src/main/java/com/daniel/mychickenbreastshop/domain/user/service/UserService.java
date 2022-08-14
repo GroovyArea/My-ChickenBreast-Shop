@@ -1,11 +1,17 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
+import com.daniel.mychickenbreastshop.global.auth.security.error.exception.LoginFailedException;
+import com.daniel.mychickenbreastshop.domain.user.domain.RoleType;
+import com.daniel.mychickenbreastshop.domain.user.domain.User;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
-import com.daniel.mychickenbreastshop.domain.user.dto.UserJoinDTO;
+import com.daniel.mychickenbreastshop.domain.user.dto.UserLoginDTO;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.UserJoinDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.response.UserLoginResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,19 +44,19 @@ public class UserService {
     }
 
     @Transactional
-    public void registerUser(UserJoinDTO userJoinDTO) {
-        validateDuplicatedUser(userJoinDTO.getUserId());
+    public Long signUp(UserJoinDto userJoinDto) {
+        validateDuplicatedUser(userJoinDto.getLoginId());
 
         String salt = PasswordEncrypt.getSalt();
-        userJoinDTO.setUserSalt(salt);
+        userJoinDto.setSalt(salt);
 
         try {
-            userJoinDTO.setUserPw(PasswordEncrypt.getSecurePassword(userJoinDTO.getUserPw(), salt));
+            userJoinDto.setPassword(PasswordEncrypt.getSecurePassword(userJoinDto.getPassword(), salt));
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(e);
         }
 
-        userRepository.save(joinObjectMapper.toEntity(userJoinDTO));
+        return userRepository.save(joinObjectMapper.toEntity(userJoinDto)).getId();
     }
 
     private void validateDuplicatedUser(String userId) {
@@ -59,5 +65,26 @@ public class UserService {
         }
     }
 
+    public UserLoginResponseDto login(UserLoginDTO userLoginDTO) {
+        User authUser = userRepository.findByLoginId(userLoginDTO.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+
+        if (authUser.getRoles().contains(RoleType.WITHDRAWAL_USER.name())) {
+            throw new RuntimeException(ResponseMessages.WITHDRAW_USER_MESSAGE.getMessage());
+        }
+
+        try {
+            String dbSalt = authUser.getSalt();
+            String loginPassword = PasswordEncrypt.getSecurePassword(userLoginDTO.getPassword(), dbSalt);
+            String dbPassword = authUser.getPassword();
+
+            if (!loginPassword.equals(dbPassword)) {
+                throw new LoginFailedException(ResponseMessages.LOGIN_FAIL_MESSAGE.getMessage());
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        return new UserLoginResponseDto(authUser);
+    }
 
 }

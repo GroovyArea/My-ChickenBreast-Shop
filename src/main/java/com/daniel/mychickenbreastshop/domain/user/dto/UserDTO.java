@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.dto;
 
+import com.daniel.mychickenbreastshop.domain.user.domain.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +21,5 @@ public class UserDTO {
     private String userMainAddress;
     private String userDetailAddress;
     private String userZipcode;
-    private Integer userGrade;
+    private RoleType roleType;
 }
