@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.global.auth.jwt.JwtTokenProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserLoginDTO;
 import com.daniel.mychickenbreastshop.domain.user.dto.response.UserLoginResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;

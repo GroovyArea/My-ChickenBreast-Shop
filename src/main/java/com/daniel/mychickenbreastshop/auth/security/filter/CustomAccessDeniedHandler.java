@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.global.auth.security.filter;
+package com.daniel.mychickenbreastshop.auth.security.filter;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

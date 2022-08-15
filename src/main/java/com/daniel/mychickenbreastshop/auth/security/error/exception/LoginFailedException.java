@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.global.auth.security.error.exception;
+package com.daniel.mychickenbreastshop.auth.security.error.exception;
 
 public class LoginFailedException extends RuntimeException{
 

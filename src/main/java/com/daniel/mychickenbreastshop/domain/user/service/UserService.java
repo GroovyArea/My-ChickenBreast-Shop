@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
-import com.daniel.mychickenbreastshop.global.auth.security.error.exception.LoginFailedException;
-import com.daniel.mychickenbreastshop.domain.user.domain.RoleType;
+import com.daniel.mychickenbreastshop.auth.security.error.exception.LoginFailedException;
+import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
@@ -68,7 +68,7 @@ public class UserService {
     public UserLoginResponseDto login(UserLoginDTO userLoginDTO) {
         User authUser = userRepository.findByLoginId(userLoginDTO.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
 
-        if (authUser.getRoles().contains(RoleType.WITHDRAWAL_USER.name())) {
+        if (authUser.getRoleType().equals(Role.ROLE_WITHDRAWAL)) {
             throw new RuntimeException(ResponseMessages.WITHDRAW_USER_MESSAGE.getMessage());
         }
 

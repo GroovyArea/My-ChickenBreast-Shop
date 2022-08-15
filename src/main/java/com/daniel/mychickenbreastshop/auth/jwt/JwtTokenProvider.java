@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.global.auth.jwt;
+package com.daniel.mychickenbreastshop.auth.jwt;
 
-import com.daniel.mychickenbreastshop.global.auth.security.error.exception.CustomAuthenticationEntrypointException;
+import com.daniel.mychickenbreastshop.auth.security.error.exception.CustomAuthenticationEntrypointException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -41,7 +41,8 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
-    private static final long VALIDATE_IN_MILLISECONDS = 1000 * 60L * 30L;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
     public static final String TOKEN_HEADER_KEY = "X-AUTH-TOKEN";
     private static final String ROLES = "roles";
 
@@ -65,7 +66,7 @@ public class JwtTokenProvider {
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
         Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
+        claims.put(ROLES, roles);
 
         return Jwts.builder()
                 .setClaims(claims)

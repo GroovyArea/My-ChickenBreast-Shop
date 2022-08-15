@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.global.auth.security.filter;
+package com.daniel.mychickenbreastshop.auth.security.filter;
 
-import com.daniel.mychickenbreastshop.global.auth.jwt.JwtTokenProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
