@@ -1,14 +1,14 @@
 package com.daniel.mychickenbreastshop.global.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+@UtilityClass
 public class PasswordEncrypt {
-
-    private PasswordEncrypt() {
-    }
 
     public static String getSalt() {
         Random random = new SecureRandom();

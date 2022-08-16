@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserJoinDto {
+public class JoinRequestDto {
 
     private String loginId;
     @Setter

@@ -1,17 +1,16 @@
 package com.daniel.mychickenbreastshop.auth.security.filter;
 
-import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
-import lombok.AllArgsConstructor;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 토큰의 유효성 검사를 진행하는 필터
@@ -24,19 +23,27 @@ import java.io.IOException;
  * @author 김남영
  * @version 1.0
  */
-@AllArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilterBean {
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = jwtTokenProvider.getResolvedToken((HttpServletRequest) request);
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        LoginRequestDto loginRequestDto = extractDto(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginRequestDto.getLoginId(), loginRequestDto.getPassword());
+
+        return authenticationManager.authenticate(authenticationToken);
+    }
+
+    private LoginRequestDto extractDto(HttpServletRequest request) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        chain.doFilter(request, response);
     }
 }

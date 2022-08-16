@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 토큰 제공 클래스 <br>
@@ -39,11 +38,10 @@ import java.util.List;
 @Slf4j
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret.key}")
+    @Value("${spring.jwt.key}")
     private String secretKey;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
-    public static final String TOKEN_HEADER_KEY = "X-AUTH-TOKEN";
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L; // 30분
+    public static final String TOKEN_HEADER_KEY = "Authorization";
     private static final String ROLES = "roles";
 
     private final UserDetailsService userDetailsService;
@@ -52,12 +50,12 @@ public class JwtTokenProvider {
      * 토큰 생성
      *
      * @param userPk 유저 PK
-     * @param roles  권한들
+     * @param role  권한
      * @return 생성된 토큰
      */
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, String role) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + VALIDATE_IN_MILLISECONDS);
+        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
 
         log.info("now: {}", now);
         log.info("validity: {}", validity);
@@ -65,11 +63,9 @@ public class JwtTokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put(ROLES, roles);
-
         return Jwts.builder()
-                .setClaims(claims)
+                .setSubject(userPk)
+                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.domain.user.dto.request.UserJoinDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.service.UserService;
 import com.daniel.mychickenbreastshop.global.model.Response;
@@ -29,10 +29,9 @@ public class JoinController {
     private final UserService userService;
 
     @PostMapping
-    public Response<Long> join(@RequestBody UserJoinDto userJoinDto) {
-        userService.signUp(userJoinDto);
+    public Response<Long> join(@RequestBody JoinRequestDto joinRequestDto) {
         return Response.<Long>builder()
-                .data(userService.signUp(userJoinDto))
+                .data(userService.join(joinRequestDto))
                 .message(ResponseMessages.JOIN_SUCCEED_MESSAGE.getMessage())
                 .build();
     }

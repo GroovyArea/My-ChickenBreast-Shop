@@ -1,15 +1,15 @@
-package com.daniel.mychickenbreastshop.domain.user.mapper.struct;
+package com.daniel.mychickenbreastshop.global.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public interface GenericMapper<D, V> {
+public interface GenericMapper<D, E> {
 
-    D toDTO(V v);
+    D toDTO(E e);
 
-    V toEntity(D d);
+    E toEntity(D d);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromVO(D dto, @MappingTarget V vo);
+    void updateFromVO(D dto, @MappingTarget E entity);
 }

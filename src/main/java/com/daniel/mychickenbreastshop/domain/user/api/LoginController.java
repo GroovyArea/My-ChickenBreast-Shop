@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
 import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
-import com.daniel.mychickenbreastshop.domain.user.dto.UserLoginDTO;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.UserLoginResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.response.LoginResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.service.UserService;
 import com.daniel.mychickenbreastshop.global.model.Response;
@@ -34,9 +34,9 @@ public class LoginController {
     private final RedisService redisService;
 
     @PostMapping
-    public Response<String> login(@RequestBody UserLoginDTO userLoginDTO) {
-        UserLoginResponseDto userLoginResponseDto = userService.login(userLoginDTO);
-        String accessToken = jwtTokenProvider.createToken(String.valueOf(userLoginResponseDto.getId()), userLoginResponseDto.getRoles());
+    public Response<String> login(@RequestBody LoginRequestDto userLoginDTO) {
+        LoginResponseDto userLoginResponseDto = userService.login(userLoginDTO);
+        String accessToken = jwtTokenProvider.createToken(String.valueOf(userLoginResponseDto.getId()), userLoginResponseDto.getRole().getRoleName());
         redisService.setData(String.valueOf(userLoginResponseDto.getId()), accessToken);
         return Response.<String>builder()
                 .data(accessToken)

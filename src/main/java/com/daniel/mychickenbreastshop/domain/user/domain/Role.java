@@ -16,14 +16,14 @@ public enum Role {
     private final int roleNumber;
     private final String roleName;
 
-    public static Role ofInt(int gradeNumber) {
+    public static Role ofNumber(int gradeNumber) {
         return Arrays.stream(Role.values())
                 .filter(role -> role.getRoleNumber() == gradeNumber)
                 .findFirst()
                 .orElse(ROLE_USER);
     }
 
-    public static Role ofString(String gradeName) {
+    public static Role ofName(String gradeName) {
         return Arrays.stream(Role.values())
                 .filter(role -> role.getRoleName().equals(gradeName))
                 .findFirst()
