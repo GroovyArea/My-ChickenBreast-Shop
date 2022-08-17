@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.dto.request;
 
+import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,8 @@ public class JoinRequestDto {
     private String email;
     private String address;
     private String zipcode;
+    @Setter
+    private Role roleType;
     private String emailAuthKey;
 
 }

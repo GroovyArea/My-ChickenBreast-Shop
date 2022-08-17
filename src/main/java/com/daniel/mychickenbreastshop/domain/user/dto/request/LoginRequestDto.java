@@ -2,11 +2,13 @@ package com.daniel.mychickenbreastshop.domain.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class LoginRequestDto {
 
-    private final String loginId;
-    private final String password;
+    private String loginId;
+    private String password;
 }

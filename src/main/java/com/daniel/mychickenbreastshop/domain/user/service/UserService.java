@@ -1,5 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
+import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
+import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
@@ -34,6 +36,8 @@ import java.security.NoSuchAlgorithmException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtProvider jwtTokenProvider;
+
     private final JoinObjectMapper joinObjectMapper;
     private final UserObjectMapper userObjectMapper;
     private final LoginResponseObjectMapper loginResponseObjectMapper;
@@ -56,6 +60,8 @@ public class UserService {
             throw new IllegalArgumentException(e);
         }
 
+        joinRequestDto.setRoleType(Role.ROLE_USER);
+
         return userRepository.save(joinObjectMapper.toEntity(joinRequestDto)).getId();
     }
 
@@ -65,9 +71,19 @@ public class UserService {
         }
     }
 
-    public LoginResponseDto login(LoginRequestDto userLoginDTO) {
-        User authUser = userRepository.findByLoginId(userLoginDTO.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
-        return loginResponseObjectMapper.toDTO(authUser);
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+        User authUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        return LoginResponseDto.builder()
+                .id(authUser.getId())
+                .role(authUser.getRoleType())
+                .accessToken(getToken(loginRequestDto))
+                .createdTime(authUser.getCreatedAt())
+                .build();
+    }
+
+    public String getToken(LoginRequestDto loginRequestDto) {
+        User loginUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        return jwtTokenProvider.createToken(String.valueOf(loginUser.getId()), loginUser.getRoleType().getRoleName());
     }
 
 }

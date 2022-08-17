@@ -17,5 +17,6 @@ public class LoginResponseDto {
     private Long id;
     private Role role;
     private LocalDateTime createdTime;
+    private String accessToken;
 
 }

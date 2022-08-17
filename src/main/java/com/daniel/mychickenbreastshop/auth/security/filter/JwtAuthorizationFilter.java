@@ -1,9 +1,10 @@
 package com.daniel.mychickenbreastshop.auth.security.filter;
 
-import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,45 +20,55 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    public static final String TOKEN_PREFIX = "Bearer ";
+    private final JwtProvider jwtProvider;
+    public static final String AUTH_TYPE = "Bearer ";
 
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, JwtProvider jwtProvider) {
         super(authenticationManager);
         this.userRepository = userRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(JwtTokenProvider.TOKEN_HEADER_KEY);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+        if(request.getRequestURI().startsWith("/join")) {
             chain.doFilter(request, response);
+            return;
         }
 
-        String token = header.replace(TOKEN_PREFIX, "");
+        String header = request.getHeader(JwtProvider.TOKEN_HEADER_KEY);
 
-        String userPk = jwtTokenProvider.getUserPk(token);
+        if (header == null || !header.startsWith(AUTH_TYPE)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-        User user = userRepository.findById(Long.valueOf(userPk)).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
-
-        PrincipalDetails principalDetails = PrincipalDetails.builder()
-                .id(user.getId())
-                .loginId(user.getLoginId())
-                .password(user.getPassword())
-                .name(user.getName())
-                .role(user.getRoleType().getRoleName())
-                .build();
-
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(
-                        principalDetails, null, principalDetails.getAuthorities()
-                );
+        Authentication authentication = getAuthentication(request);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         chain.doFilter(request, response);
+    }
+
+    private Authentication getAuthentication(HttpServletRequest request) {
+        String token = jwtProvider.getResolvedToken(request, AUTH_TYPE);
+        String userPk = jwtProvider.getUserPk(token);
+
+        User dbUser = userRepository.findById(Long.valueOf(userPk)).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+
+        PrincipalDetails principalDetails = PrincipalDetails.builder()
+                .id(dbUser.getId())
+                .name(dbUser.getName())
+                .loginId(dbUser.getLoginId())
+                .password(dbUser.getPassword())
+                .role(dbUser.getRoleType().getRoleName())
+                .build();
+
+        return new UsernamePasswordAuthenticationToken(
+                principalDetails, principalDetails.getPassword(), principalDetails.getAuthorities()
+        );
+
     }
 }

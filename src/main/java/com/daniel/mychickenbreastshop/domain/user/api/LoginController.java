@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.auth.jwt.JwtTokenProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.dto.response.LoginResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
@@ -30,16 +30,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtTokenProvider;
     private final RedisService redisService;
 
     @PostMapping
-    public Response<String> login(@RequestBody LoginRequestDto userLoginDTO) {
+    public Response<LoginResponseDto> login(@RequestBody LoginRequestDto userLoginDTO) {
         LoginResponseDto userLoginResponseDto = userService.login(userLoginDTO);
         String accessToken = jwtTokenProvider.createToken(String.valueOf(userLoginResponseDto.getId()), userLoginResponseDto.getRole().getRoleName());
         redisService.setData(String.valueOf(userLoginResponseDto.getId()), accessToken);
-        return Response.<String>builder()
-                .data(accessToken)
+        return Response.<LoginResponseDto>builder()
+                .data(userLoginResponseDto)
                 .message(ResponseMessages.LOGIN_SUCCEED_MESSAGE.getMessage())
                 .build();
     }
