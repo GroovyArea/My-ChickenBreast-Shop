@@ -4,6 +4,7 @@ import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailS
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,7 +30,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginId = (String) authentication.getPrincipal();
         String loginPassword = (String) authentication.getCredentials();
 
-        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
 

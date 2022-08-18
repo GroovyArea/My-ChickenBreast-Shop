@@ -75,7 +75,7 @@ public class UserService {
         User authUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
         return LoginResponseDto.builder()
                 .id(authUser.getId())
-                .role(authUser.getRoleType())
+                .role(authUser.getRole())
                 .accessToken(getToken(loginRequestDto))
                 .createdTime(authUser.getCreatedAt())
                 .build();
@@ -83,7 +83,7 @@ public class UserService {
 
     public String getToken(LoginRequestDto loginRequestDto) {
         User loginUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
-        return jwtTokenProvider.createToken(String.valueOf(loginUser.getId()), loginUser.getRoleType().getRoleName());
+        return jwtTokenProvider.createToken(String.valueOf(loginUser.getId()), loginUser.getLoginId(), loginUser.getRole().getRoleName());
     }
 
 }

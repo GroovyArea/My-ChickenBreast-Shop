@@ -2,7 +2,6 @@ package com.daniel.mychickenbreastshop.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,35 +38,41 @@ public class JwtProvider {
 
     @Value("${spring.jwt.key}")
     private String secretKey;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L; // 30분
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L; // 30분
     public static final String TOKEN_HEADER_KEY = "Authorization";
     private static final String ROLE = "role";
     private static final String ID = "id";
+    private static final String LOGIN_ID = "loginId";
 
     /**
      * 토큰 생성
      *
      * @param userPk 유저 PK
-     * @param role  권한
+     * @param role   권한
      * @return 생성된 토큰
      */
-    public String createToken(String userPk, String role) {
+    public String createToken(String userPk, String loginId, String role) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
 
         log.info("now: {}", now);
         log.info("validity: {}", validity);
 
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
+        //byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        Key key = getSignKey();
 
         return Jwts.builder()
                 .claim(ID, userPk)
+                .claim(LOGIN_ID, loginId)
                 .claim(ROLE, role)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    private Key getSignKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     /**
@@ -109,11 +114,20 @@ public class JwtProvider {
      * @return 회원 구별 정보
      */
     public String getUserPk(String token) {
-        return Jwts.parserBuilder()
+        return (String) Jwts.parserBuilder()
                 .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .get(ID);
+    }
+
+    public String getLoginId(String token) {
+        return (String) Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get(LOGIN_ID);
     }
 }

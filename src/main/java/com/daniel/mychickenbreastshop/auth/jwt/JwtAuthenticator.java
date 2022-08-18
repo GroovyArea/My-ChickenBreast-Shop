@@ -27,11 +27,11 @@ import org.springframework.stereotype.Component;
 public class JwtAuthenticator {
 
     private static final String ROLE = "role";
-    private static final String ID = "id";
+    private static final String LOGIN_ID = "loginId";
     @Value("${spring.jwt.key}")
     private String secretKey;
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
@@ -48,7 +48,7 @@ public class JwtAuthenticator {
             throw new CustomAuthenticationEntrypointException();
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(ID));
+        UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(LOGIN_ID));
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 }

@@ -4,12 +4,11 @@ import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
-import com.daniel.mychickenbreastshop.auth.security.filter.CustomAccessDeniedHandler;
-import com.daniel.mychickenbreastshop.auth.security.filter.CustomAuthenticationEntryPoint;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthorizationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationProvider;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.daniel.mychickenbreastshop.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsConfig corsConfig;
     private final UserRepository userRepository;
     private final PrincipalDetailService principalDetailService;
+    private final RedisService redisService;
 
     @Override
     public void configure(WebSecurity web) {
@@ -63,21 +63,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
 
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login, /logout").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/v2/**").hasRole("ADMIN")// 테스트 시 path 관리할 것
 
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, jwtProvider))
+                .formLogin()
+                .loginProcessingUrl("/login")
 
-                .exceptionHandling()
+
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler((request, response, authentication) -> {
+                    String token =
+                            jwtProvider.getResolvedToken(request, JwtProvider.TOKEN_HEADER_KEY);
+
+                    redisService.deleteData(token);
+                })
+                .logoutSuccessHandler((request, response, authentication) -> response.getWriter().write("Logout succeed"))
+
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, redisService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator, redisService))
+
+/*                .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .accessDeniedHandler(new CustomAccessDeniedHandler());
+                .accessDeniedHandler(new CustomAccessDeniedHandler())*/;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         return new CustomAuthenticationProvider(userRepository, principalDetailService);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.auth.security.filter;
+package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

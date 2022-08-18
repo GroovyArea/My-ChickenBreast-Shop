@@ -1,10 +1,11 @@
 package com.daniel.mychickenbreastshop.auth.security.filter;
 
+import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
+import com.daniel.mychickenbreastshop.auth.jwt.model.ErrorMessages;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
-import com.daniel.mychickenbreastshop.domain.user.domain.User;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
+import com.daniel.mychickenbreastshop.global.service.RedisService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,24 +20,22 @@ import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
+    private final JwtAuthenticator jwtAuthenticator;
+    private final RedisService redisService;
     public static final String AUTH_TYPE = "Bearer ";
 
-
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, JwtProvider jwtProvider) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtValidator jwtValidator, JwtAuthenticator jwtAuthenticator, RedisService redisService) {
         super(authenticationManager);
-        this.userRepository = userRepository;
         this.jwtProvider = jwtProvider;
+        this.jwtValidator = jwtValidator;
+        this.jwtAuthenticator = jwtAuthenticator;
+        this.redisService = redisService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        if(request.getRequestURI().startsWith("/join")) {
-            chain.doFilter(request, response);
-            return;
-        }
 
         String header = request.getHeader(JwtProvider.TOKEN_HEADER_KEY);
 
@@ -45,30 +44,25 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        Authentication authentication = getAuthentication(request);
+        String token = jwtProvider.getResolvedToken(request, AUTH_TYPE);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = getAuthentication(token);
+
+        if (token != null && jwtValidator.validateAccessToken(token)) {
+            if(!redisService.getData((String) authentication.getPrincipal()).equals(token)) {
+                throw new RuntimeException(ErrorMessages.TOKEN_MISMATCH.getMessage());
+            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
         chain.doFilter(request, response);
     }
 
-    private Authentication getAuthentication(HttpServletRequest request) {
-        String token = jwtProvider.getResolvedToken(request, AUTH_TYPE);
-        String userPk = jwtProvider.getUserPk(token);
-
-        User dbUser = userRepository.findById(Long.valueOf(userPk)).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
-
-        PrincipalDetails principalDetails = PrincipalDetails.builder()
-                .id(dbUser.getId())
-                .name(dbUser.getName())
-                .loginId(dbUser.getLoginId())
-                .password(dbUser.getPassword())
-                .role(dbUser.getRoleType().getRoleName())
-                .build();
+    private Authentication getAuthentication(String token) {
+        PrincipalDetails principalDetails = (PrincipalDetails) jwtAuthenticator.getAuthentication(token).getPrincipal();
 
         return new UsernamePasswordAuthenticationToken(
-                principalDetails, principalDetails.getPassword(), principalDetails.getAuthorities()
+                principalDetails.getLoginId(), principalDetails.getPassword(), principalDetails.getAuthorities()
         );
-
     }
 }

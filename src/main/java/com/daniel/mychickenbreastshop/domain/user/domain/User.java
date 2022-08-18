@@ -38,6 +38,5 @@ public class User extends BaseTimeEntity {
     private String zipcode;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role roleType;
+    private Role role;
 }
