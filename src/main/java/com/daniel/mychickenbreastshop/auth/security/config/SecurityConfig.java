@@ -3,10 +3,11 @@ package com.daniel.mychickenbreastshop.auth.security.config;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
-import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthorizationFilter;
+import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAccessDeniedHandler;
+import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationEntryPoint;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationProvider;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.global.service.RedisService;
@@ -46,11 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/db/**",
-                "/mapper/**",
-                "/static/**",
-                "/templates/**",
-                "/join"); // 테스트 시 path 수정할 것.
+        web.ignoring().antMatchers("/static/**"); // 테스트 시 path 수정할 것.
     }
 
     @Override
@@ -64,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
 
                 .authorizeRequests()
-                .antMatchers("/login, /logout").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/v2/**").hasRole("ADMIN")// 테스트 시 path 관리할 것
 
@@ -73,28 +70,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
 
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .addLogoutHandler((request, response, authentication) -> {
-                    String token =
-                            jwtProvider.getResolvedToken(request, JwtProperties.TOKEN_HEADER_KEY.getKey());
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
 
-                    redisService.deleteData(token);
-                })
-                .logoutSuccessHandler((request, response, authentication) -> response.getWriter().write("Logout succeed"))
-
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, redisService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator, redisService))
-
-/*                .exceptionHandling()
+                .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .accessDeniedHandler(new CustomAccessDeniedHandler())*/;
+                .accessDeniedHandler(new CustomAccessDeniedHandler());
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         return new CustomAuthenticationProvider(userRepository, principalDetailService);
     }
-
 }

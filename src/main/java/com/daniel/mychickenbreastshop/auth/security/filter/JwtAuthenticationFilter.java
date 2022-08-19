@@ -4,7 +4,6 @@ import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
-import com.daniel.mychickenbreastshop.global.service.RedisService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,14 +33,11 @@ import java.util.ArrayList;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
-    private final RedisService redisService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, RedisService redisService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
         super(authenticationManager);
         this.jwtProvider = jwtProvider;
-        this.redisService = redisService;
         setFilterProcessesUrl("/login");
-
     }
 
     @Override
@@ -68,8 +64,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtProvider.createToken(String.valueOf(principalDetails.getId()), principalDetails.getLoginId(), principalDetails.getRole());
 
-        redisService.setDataExpire(principalDetails.getLoginId(), token, JwtProvider.getEXPIRED_TIME());
-
         response.addHeader(JwtProperties.TOKEN_HEADER_KEY.getKey(), JwtProperties.AUTH_TYPE.getKey() + token);
     }
+
+
 }

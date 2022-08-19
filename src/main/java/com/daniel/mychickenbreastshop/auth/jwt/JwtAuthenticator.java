@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
+import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.error.exception.CustomAuthenticationEntrypointException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,8 +27,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtAuthenticator {
 
-    private static final String ROLE = "role";
-    private static final String LOGIN_ID = "loginId";
     @Value("${spring.jwt.key}")
     private String secretKey;
 
@@ -44,11 +43,11 @@ public class JwtAuthenticator {
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
 
-        if (claims.get(ROLE) == null) {
+        if (claims.get(JwtProperties.ROLE.getKey()) == null) {
             throw new CustomAuthenticationEntrypointException();
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(LOGIN_ID));
+        UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(JwtProperties.LOGIN_ID.getKey()));
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 }

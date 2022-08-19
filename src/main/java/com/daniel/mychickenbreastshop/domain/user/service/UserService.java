@@ -7,11 +7,9 @@ import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.LoginResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.LoginResponseObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,6 @@ public class UserService {
 
     private final JoinObjectMapper joinObjectMapper;
     private final UserObjectMapper userObjectMapper;
-    private final LoginResponseObjectMapper loginResponseObjectMapper;
 
     @Transactional(readOnly = true)
     public UserDTO getUser(String userId) {
@@ -69,16 +66,6 @@ public class UserService {
         if (userRepository.findByLoginId(userId).isPresent()) {
             throw new UserExistException();
         }
-    }
-
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        User authUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
-        return LoginResponseDto.builder()
-                .id(authUser.getId())
-                .role(authUser.getRole())
-                .accessToken(getToken(loginRequestDto))
-                .createdTime(authUser.getCreatedAt())
-                .build();
     }
 
     public String getToken(LoginRequestDto loginRequestDto) {
