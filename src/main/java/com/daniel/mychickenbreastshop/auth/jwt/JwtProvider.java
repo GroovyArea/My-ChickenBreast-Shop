@@ -1,8 +1,10 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
+import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -38,11 +40,8 @@ public class JwtProvider {
 
     @Value("${spring.jwt.key}")
     private String secretKey;
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L; // 30분
-    public static final String TOKEN_HEADER_KEY = "Authorization";
-    private static final String ROLE = "role";
-    private static final String ID = "id";
-    private static final String LOGIN_ID = "loginId";
+    @Getter
+    private static final long EXPIRED_TIME = 30 * 60 * 1000L; // 30분
 
     /**
      * 토큰 생성
@@ -53,18 +52,17 @@ public class JwtProvider {
      */
     public String createToken(String userPk, String loginId, String role) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
+        Date validity = new Date(now.getTime() + EXPIRED_TIME);
 
         log.info("now: {}", now);
         log.info("validity: {}", validity);
 
-        //byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         Key key = getSignKey();
 
         return Jwts.builder()
-                .claim(ID, userPk)
-                .claim(LOGIN_ID, loginId)
-                .claim(ROLE, role)
+                .claim(JwtProperties.ID.getKey(), userPk)
+                .claim(JwtProperties.LOGIN_ID.getKey(), loginId)
+                .claim(JwtProperties.ROLE.getKey(), role)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -97,7 +95,7 @@ public class JwtProvider {
      * @return 토큰
      */
     public String getResolvedToken(HttpServletRequest request, String type) {
-        Enumeration<String> headers = request.getHeaders(TOKEN_HEADER_KEY);
+        Enumeration<String> headers = request.getHeaders(JwtProperties.TOKEN_HEADER_KEY.getKey());
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if (value.toLowerCase().startsWith(type.toLowerCase())) {
@@ -119,15 +117,21 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get(ID);
+                .get(JwtProperties.ID.getKey());
     }
 
+    /**
+     * 토큰에서 로그인 아이디 추출
+     *
+     * @param token 토큰
+     * @return 로그인 아이디
+     */
     public String getLoginId(String token) {
         return (String) Jwts.parserBuilder()
                 .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get(LOGIN_ID);
+                .get(JwtProperties.LOGIN_ID.getKey());
     }
 }

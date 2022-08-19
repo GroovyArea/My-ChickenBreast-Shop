@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@SuppressWarnings("serial")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.auth.security.filter;
 
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
+import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
 import com.daniel.mychickenbreastshop.global.service.RedisService;
@@ -32,13 +33,12 @@ import java.util.ArrayList;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public static final String AUTH_TYPE = "Bearer ";
-    private final JwtProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final RedisService redisService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtTokenProvider, RedisService redisService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, RedisService redisService) {
         super(authenticationManager);
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtProvider = jwtProvider;
         this.redisService = redisService;
         setFilterProcessesUrl("/login");
 
@@ -66,10 +66,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        String token = jwtTokenProvider.createToken(String.valueOf(principalDetails.getId()), principalDetails.getLoginId(), principalDetails.getRole());
+        String token = jwtProvider.createToken(String.valueOf(principalDetails.getId()), principalDetails.getLoginId(), principalDetails.getRole());
 
-        redisService.setDataExpire(principalDetails.getLoginId(), token, JwtProvider.ACCESS_TOKEN_EXPIRE_TIME);
+        redisService.setDataExpire(principalDetails.getLoginId(), token, JwtProvider.getEXPIRED_TIME());
 
-        response.addHeader(JwtProvider.TOKEN_HEADER_KEY, AUTH_TYPE + token);
+        response.addHeader(JwtProperties.TOKEN_HEADER_KEY.getKey(), JwtProperties.AUTH_TYPE.getKey() + token);
     }
 }

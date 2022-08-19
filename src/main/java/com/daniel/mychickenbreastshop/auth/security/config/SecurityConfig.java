@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.auth.security.config;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
+import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthorizationFilter;
@@ -71,13 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginProcessingUrl("/login")
 
-
                 .and()
                 .logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler((request, response, authentication) -> {
                     String token =
-                            jwtProvider.getResolvedToken(request, JwtProvider.TOKEN_HEADER_KEY);
+                            jwtProvider.getResolvedToken(request, JwtProperties.TOKEN_HEADER_KEY.getKey());
 
                     redisService.deleteData(token);
                 })
