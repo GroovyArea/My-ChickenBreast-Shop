@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
+import com.daniel.mychickenbreastshop.auth.jwt.model.JwtErrorMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -32,8 +33,18 @@ public class JwtValidator {
         try {
             Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(token);
             return true;
-        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | ClassCastException | SignatureException e) {
-            throw new IllegalArgumentException(e);
+        } catch (MalformedJwtException e) {
+            throw new IllegalArgumentException(JwtErrorMessage.MALFORMED.getMessage());
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException(JwtErrorMessage.EXPIRED.getMessage());
+        } catch (UnsupportedJwtException e) {
+            throw new IllegalArgumentException(JwtErrorMessage.UNSUPPORTED.getMessage());
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(JwtErrorMessage.CLASS_CAST_FAIL.getMessage());
+        } catch (SignatureException e) {
+            throw new IllegalArgumentException(JwtErrorMessage.INVALID_SIGNATURE.getMessage());
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

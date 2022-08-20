@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
-import com.daniel.mychickenbreastshop.auth.security.error.exception.CustomAuthenticationEntrypointException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,6 @@ public class JwtAuthenticator {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
-
-        if (claims.get(JwtProperties.ROLE.getKey()) == null) {
-            throw new CustomAuthenticationEntrypointException();
-        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(JwtProperties.LOGIN_ID.getKey()));
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());

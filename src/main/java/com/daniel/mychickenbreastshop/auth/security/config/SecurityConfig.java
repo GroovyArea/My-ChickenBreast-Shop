@@ -4,13 +4,12 @@ import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
+import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthenticationFilter;
-import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthorizationFilter;
-import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAccessDeniedHandler;
-import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationEntryPoint;
+import com.daniel.mychickenbreastshop.auth.security.error.handler.CustomAccessDeniedHandler;
+import com.daniel.mychickenbreastshop.auth.security.error.handler.CustomAuthenticationEntryPoint;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationProvider;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsConfig corsConfig;
     private final UserRepository userRepository;
     private final PrincipalDetailService principalDetailService;
-    private final RedisService redisService;
 
     @Override
     public void configure(WebSecurity web) {
@@ -59,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .httpBasic().disable()
+                .formLogin().disable()
 
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
@@ -66,12 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v2/**").hasRole("ADMIN")// 테스트 시 path 관리할 것
 
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
-
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
+                .addFilter(new CustomAuthenticationFilter(authenticationManager(), jwtProvider))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
 
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())

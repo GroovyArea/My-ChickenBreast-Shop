@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
+import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -30,7 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginId = (String) authentication.getPrincipal();
         String loginPassword = (String) authentication.getCredentials();
 
-        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
 
@@ -38,7 +40,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             String encryptedLoginPassword = PasswordEncrypt.getSecurePassword(loginPassword, dbSalt);
 
             if (!encryptedLoginPassword.equals(dbPassword)) {
-                throw new BadCredentialsException(loginId);
+                throw new BadCredentialsException(SecurityMessage.PASSWORD_MISMATCH.getMessage());
             }
 
             PrincipalDetails principalDetails = (PrincipalDetails) principalDetailService.loadUserByUsername(loginId);
