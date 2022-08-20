@@ -9,6 +9,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -16,6 +19,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String exceptionMessage = (String) request.getAttribute("exception");
+
+        List<String> list = Arrays.stream(JwtErrorMessage.values())
+                .map(JwtErrorMessage::getMessage)
+                .collect(Collectors.toList());
+
+        if (!list.contains(exceptionMessage)) {
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().print(exceptionMessage);
+        }
 
         if (exceptionMessage.equals(JwtErrorMessage.MALFORMED.getMessage())) {
             setResponse(response, JwtErrorMessage.MALFORMED);

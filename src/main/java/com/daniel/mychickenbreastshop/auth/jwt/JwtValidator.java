@@ -7,6 +7,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtValidator {
 
     @Value("${spring.jwt.key}")
@@ -44,6 +46,11 @@ public class JwtValidator {
         } catch (SignatureException e) {
             throw new IllegalArgumentException(JwtErrorMessage.INVALID_SIGNATURE.getMessage());
         } catch (Exception e) {
+            log.error("================================================");
+            log.error("JwtValidator - validateAccessToken() 오류발생");
+            log.error("token : {}", token);
+            log.error("Exception Message : {}", e.getMessage());
+            log.error("================================================");
             throw new IllegalArgumentException(e.getMessage());
         }
     }

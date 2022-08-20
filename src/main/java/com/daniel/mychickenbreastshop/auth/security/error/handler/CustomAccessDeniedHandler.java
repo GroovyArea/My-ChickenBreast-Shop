@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.security.error.handler;
 
+import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -12,6 +13,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.getWriter().write("/exception/accessDenied");
+        setResponse(response);
+    }
+
+    private void setResponse(HttpServletResponse response) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().print(SecurityMessage.PERMISSION_DENIED.getMessage());
     }
 }
