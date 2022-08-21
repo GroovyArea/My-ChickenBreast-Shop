@@ -46,11 +46,11 @@ public class JwtValidator {
         } catch (SignatureException e) {
             throw new IllegalArgumentException(JwtErrorMessage.INVALID_SIGNATURE.getMessage());
         } catch (Exception e) {
-            log.error("================================================");
-            log.error("JwtValidator - validateAccessToken() 오류발생");
-            log.error("token : {}", token);
-            log.error("Exception Message : {}", e.getMessage());
-            log.error("================================================");
+            log.error("================================================ \n" +
+                    "JwtValidator - validateAccessToken() 오류발생 \n" +
+                    "token : " + token +
+                    "\n Exception Message : " + e.getMessage() + "\n " +
+                    "================================================");
             throw new IllegalArgumentException(e.getMessage());
         }
     }

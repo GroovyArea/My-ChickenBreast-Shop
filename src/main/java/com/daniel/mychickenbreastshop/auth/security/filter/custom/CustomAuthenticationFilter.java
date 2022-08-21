@@ -34,17 +34,19 @@ import java.util.ArrayList;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
+    private final ObjectMapper objectMapper;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, ObjectMapper objectMapper) {
         super(authenticationManager);
         this.jwtProvider = jwtProvider;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         try {
-            LoginRequestDto loginRequestDto = new ObjectMapper()
+            LoginRequestDto loginRequestDto = objectMapper
                     .readValue(request.getInputStream(), LoginRequestDto.class);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

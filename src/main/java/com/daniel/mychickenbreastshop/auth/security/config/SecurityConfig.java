@@ -10,6 +10,7 @@ import com.daniel.mychickenbreastshop.auth.security.error.handler.CustomAccessDe
 import com.daniel.mychickenbreastshop.auth.security.error.handler.CustomAuthenticationEntryPoint;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationProvider;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsConfig corsConfig;
     private final UserRepository userRepository;
     private final PrincipalDetailService principalDetailService;
+    private final ObjectMapper objectMapper;
+
 
     @Override
     public void configure(WebSecurity web) {
@@ -65,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v2/**").hasRole("ADMIN")// 테스트 시 path 관리할 것
 
                 .and()
-                .addFilter(new CustomAuthenticationFilter(authenticationManager(), jwtProvider))
+                .addFilter(new CustomAuthenticationFilter(authenticationManager(), jwtProvider, objectMapper))
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
 
                 .exceptionHandling()
