@@ -1,11 +1,16 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
+import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
+import com.daniel.mychickenbreastshop.domain.user.domain.Role;
+import com.daniel.mychickenbreastshop.domain.user.domain.User;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
-import com.daniel.mychickenbreastshop.domain.user.dto.UserJoinDTO;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
 import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.respository.UserRepository;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,31 +34,43 @@ import java.security.NoSuchAlgorithmException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtProvider jwtTokenProvider;
+
     private final JoinObjectMapper joinObjectMapper;
     private final UserObjectMapper userObjectMapper;
 
     @Transactional(readOnly = true)
     public UserDTO getUser(String userId) {
-        return userObjectMapper.toDTO(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
+        return userObjectMapper.toDTO(userRepository.findByLoginId(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
     }
 
     @Transactional
-    public void addUser(UserJoinDTO userJoinDTO) {
-        if (userRepository.findById(userJoinDTO.getUserId()).isPresent()) {
-            throw new UserExistException();
-        }
+    public Long join(JoinRequestDto joinRequestDto) {
+        validateDuplicatedUser(joinRequestDto.getLoginId());
 
         String salt = PasswordEncrypt.getSalt();
-        userJoinDTO.setUserSalt(salt);
+        joinRequestDto.setSalt(salt);
 
         try {
-            userJoinDTO.setUserPw(PasswordEncrypt.getSecurePassword(userJoinDTO.getUserPw(), salt));
+            joinRequestDto.setPassword(PasswordEncrypt.getSecurePassword(joinRequestDto.getPassword(), salt));
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(e);
         }
 
-        userRepository.save(joinObjectMapper.toEntity(userJoinDTO));
+        joinRequestDto.setRoleType(Role.ROLE_USER);
+
+        return userRepository.save(joinObjectMapper.toEntity(joinRequestDto)).getId();
     }
 
+    private void validateDuplicatedUser(String userId) {
+        if (userRepository.findByLoginId(userId).isPresent()) {
+            throw new UserExistException();
+        }
+    }
+
+    public String getToken(LoginRequestDto loginRequestDto) {
+        User loginUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        return jwtTokenProvider.createToken(String.valueOf(loginUser.getId()), loginUser.getLoginId(), loginUser.getRole().getRoleName());
+    }
 
 }

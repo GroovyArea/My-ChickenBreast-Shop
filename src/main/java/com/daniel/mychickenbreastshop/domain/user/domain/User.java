@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
-import com.daniel.mychickenbreastshop.domain.user.enums.UserGrade;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,13 +24,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "login_id", nullable = false)
     private String loginId;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String salt;
 
     private String name;
-
-    private String phone;
 
     private String email;
 
@@ -39,6 +38,5 @@ public class User extends BaseTimeEntity {
     private String zipcode;
 
     @Enumerated(EnumType.STRING)
-    private UserGrade grade;
-
+    private Role role;
 }
