@@ -3,9 +3,10 @@ package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
+import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,9 +33,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginId = (String) authentication.getPrincipal();
         String loginPassword = (String) authentication.getCredentials();
 
-        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
+
+        if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {
+            throw new RuntimeException(UserResponse.WITHDRAW_USER_MESSAGE.getMessage());
+        }
 
         try {
             String encryptedLoginPassword = PasswordEncrypt.getSecurePassword(loginPassword, dbSalt);

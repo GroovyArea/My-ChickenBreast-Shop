@@ -1,27 +1,22 @@
-package com.daniel.mychickenbreastshop.domain.user.dto.request;
+package com.daniel.mychickenbreastshop.domain.user.dto.response;
 
 import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class JoinRequestDto {
+@Getter
+public class ListResponseDto {
 
+    private String userId;
     private String loginId;
-    @Setter
-    private String password;
-    @Setter
-    private String salt;
     private String name;
     private String email;
     private String address;
     private String zipcode;
-    @Setter
     private Role role;
-    private String emailAuthKey;
-
 }

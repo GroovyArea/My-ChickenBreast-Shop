@@ -1,11 +1,11 @@
-package com.daniel.mychickenbreastshop.domain.user.enums;
+package com.daniel.mychickenbreastshop.domain.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ResponseMessages {
+public enum UserResponse {
 
     USER_EXISTS_MESSAGE("User already exists."),
     USER_NOT_EXISTS_MESSAGE("User not exists."),

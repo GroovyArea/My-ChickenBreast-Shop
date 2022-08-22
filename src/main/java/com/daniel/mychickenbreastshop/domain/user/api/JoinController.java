@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
 import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
 import com.daniel.mychickenbreastshop.domain.user.service.UserService;
 import com.daniel.mychickenbreastshop.global.model.Response;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class JoinController {
     public Response<Long> join(@RequestBody JoinRequestDto joinRequestDto) {
         return Response.<Long>builder()
                 .data(userService.join(joinRequestDto))
-                .message(ResponseMessages.JOIN_SUCCEED_MESSAGE.getMessage())
+                .message(UserResponse.JOIN_SUCCEED_MESSAGE.getMessage())
                 .build();
     }
 

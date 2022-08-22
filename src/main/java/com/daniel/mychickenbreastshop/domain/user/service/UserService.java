@@ -1,22 +1,27 @@
 package com.daniel.mychickenbreastshop.domain.user.service;
 
-import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.dto.UserDTO;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
 import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.request.LoginRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
-import com.daniel.mychickenbreastshop.domain.user.error.exception.UserExistException;
+import com.daniel.mychickenbreastshop.domain.user.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.response.DetailDto;
+import com.daniel.mychickenbreastshop.domain.user.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.mapper.struct.DetailObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.UserObjectMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ListObjectMapper;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User Sevice 클래스
@@ -34,19 +39,37 @@ import java.security.NoSuchAlgorithmException;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtProvider jwtTokenProvider;
-
     private final JoinObjectMapper joinObjectMapper;
-    private final UserObjectMapper userObjectMapper;
+    private final DetailObjectMapper detailObjectMapper;
+    private final ListObjectMapper listObjectMapper;
 
     @Transactional(readOnly = true)
-    public UserDTO getUser(String userId) {
-        return userObjectMapper.toDTO(userRepository.findByLoginId(userId).orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다.")));
+    public DetailDto getUser(Long userId) {
+        return detailObjectMapper.toDTO(userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage())));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListResponseDto> getAllUser(Pageable pageable) {
+        List<User> allList = userRepository.findAll(pageable).getContent();
+
+        return allList.stream()
+                .map(listObjectMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListResponseDto> searchUser(String loginId, Pageable pageable) {
+        List<User> searchList = userRepository.findByLoginIdContaining(loginId, pageable);
+
+        return searchList.stream()
+                .map(listObjectMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public Long join(JoinRequestDto joinRequestDto) {
-        validateDuplicatedUser(joinRequestDto.getLoginId());
+        checkDuplicatedUser(joinRequestDto.getLoginId());
 
         String salt = PasswordEncrypt.getSalt();
         joinRequestDto.setSalt(salt);
@@ -57,20 +80,39 @@ public class UserService {
             throw new IllegalArgumentException(e);
         }
 
-        joinRequestDto.setRoleType(Role.ROLE_USER);
+        joinRequestDto.setRole(Role.ROLE_USER);
 
         return userRepository.save(joinObjectMapper.toEntity(joinRequestDto)).getId();
     }
 
-    private void validateDuplicatedUser(String userId) {
-        if (userRepository.findByLoginId(userId).isPresent()) {
-            throw new UserExistException();
-        }
+    @Transactional
+    public void modifyUser(Long userId, ModifyRequestDto modifyDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+
+        user.update(modifyDTO, user.getSalt());
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword(), SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+        );
     }
 
-    public String getToken(LoginRequestDto loginRequestDto) {
-        User loginUser = userRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
-        return jwtTokenProvider.createToken(String.valueOf(loginUser.getId()), loginUser.getLoginId(), loginUser.getRole().getRoleName());
+    @Transactional
+    public void removeUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+
+        user.remove(Role.ROLE_WITHDRAWAL);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword(), SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+        );
+    }
+
+    private void checkDuplicatedUser(String loginId) {
+        if (userRepository.existsByLoginId(loginId)) {
+            throw new RuntimeException(UserResponse.USER_EXISTS_MESSAGE.getMessage());
+        }
     }
 
 }
