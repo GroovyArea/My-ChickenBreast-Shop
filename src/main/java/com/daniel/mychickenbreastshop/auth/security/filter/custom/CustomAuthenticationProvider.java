@@ -33,12 +33,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginId = (String) authentication.getPrincipal();
         String loginPassword = (String) authentication.getCredentials();
 
-        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(UserResponse.USER_NOT_EXISTS.getMessage()));
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
 
         if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {
-            throw new RuntimeException(UserResponse.WITHDRAW_USER_MESSAGE.getMessage());
+            throw new RuntimeException(UserResponse.WITHDRAW_USER.getMessage());
         }
 
         try {

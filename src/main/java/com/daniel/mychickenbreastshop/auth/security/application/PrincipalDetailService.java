@@ -32,7 +32,7 @@ public class PrincipalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
         return principalDetailMapper.toDTO(user);
     }
 }

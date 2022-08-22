@@ -46,7 +46,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public DetailDto getUser(Long userId) {
         return detailObjectMapper.toDTO(userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage())));
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +88,7 @@ public class UserService {
     @Transactional
     public void modifyUser(Long userId, ModifyRequestDto modifyDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
         user.update(modifyDTO, user.getSalt());
 
@@ -100,7 +100,7 @@ public class UserService {
     @Transactional
     public void removeUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS_MESSAGE.getMessage()));
+                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
         user.remove(Role.ROLE_WITHDRAWAL);
 
@@ -111,7 +111,7 @@ public class UserService {
 
     private void checkDuplicatedUser(String loginId) {
         if (userRepository.existsByLoginId(loginId)) {
-            throw new RuntimeException(UserResponse.USER_EXISTS_MESSAGE.getMessage());
+            throw new RuntimeException(UserResponse.USER_EXISTS.getMessage());
         }
     }
 
