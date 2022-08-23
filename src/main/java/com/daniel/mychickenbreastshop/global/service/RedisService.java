@@ -17,6 +17,7 @@ import java.time.Duration;
  *     </History>
  *
  * </pre>
+ *
  * @author 김남영
  * @version 1.1
  */
@@ -48,5 +49,17 @@ public class RedisService {
     /* 데이터 삭제 */
     public Boolean deleteData(String key) {
         return redisTemplate.delete(key);
+    }
+
+    public void validateData(String key, String value) {
+        String data = getData(key);
+
+        if (data == null) {
+            throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
+        } else {
+            if (!data.equals(value)) {
+                throw new IllegalArgumentException("데이터가 일치하지 않습니다.");
+            }
+        }
     }
 }

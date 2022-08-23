@@ -20,11 +20,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String exceptionMessage = (String) request.getAttribute("exception");
 
-        List<String> list = Arrays.stream(JwtErrorMessage.values())
+        String message = authException.getMessage();
+
+        List<String> errorMessageList = Arrays.stream(JwtErrorMessage.values())
                 .map(JwtErrorMessage::getMessage)
                 .collect(Collectors.toList());
 
-        if (!list.contains(exceptionMessage)) {
+        if (!errorMessageList.contains(exceptionMessage)) {
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print(exceptionMessage);
@@ -34,7 +36,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             setResponse(response, JwtErrorMessage.MALFORMED);
         } else if (exceptionMessage.equals(JwtErrorMessage.CLASS_CAST_FAIL.getMessage())) {
             setResponse(response, JwtErrorMessage.CLASS_CAST_FAIL);
-        } else if (exceptionMessage.equals(JwtErrorMessage.EXPIRED.getMessage())) {
+        } else if (message.equals(JwtErrorMessage.EXPIRED.getMessage())) {
             setResponse(response, JwtErrorMessage.EXPIRED);
         } else if (exceptionMessage.equals(JwtErrorMessage.INVALID_SIGNATURE.getMessage())) {
             setResponse(response, JwtErrorMessage.INVALID_SIGNATURE);

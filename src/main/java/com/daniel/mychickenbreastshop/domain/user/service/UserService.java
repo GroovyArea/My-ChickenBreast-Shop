@@ -11,6 +11,7 @@ import com.daniel.mychickenbreastshop.domain.user.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.DetailObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ListObjectMapper;
+import com.daniel.mychickenbreastshop.global.service.RedisService;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RedisService redisService;
     private final JoinObjectMapper joinObjectMapper;
     private final DetailObjectMapper detailObjectMapper;
     private final ListObjectMapper listObjectMapper;
@@ -70,6 +72,8 @@ public class UserService {
     @Transactional
     public Long join(JoinRequestDto joinRequestDto) {
         checkDuplicatedUser(joinRequestDto.getLoginId());
+
+        redisService.validateData(joinRequestDto.getEmail(), joinRequestDto.getEmailAuthKey());
 
         String salt = PasswordEncrypt.getSalt();
         joinRequestDto.setSalt(salt);

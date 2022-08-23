@@ -27,7 +27,6 @@ public class MailService {
     private String subject;
     @Value("${email.text}")
     private String text;
-
     private Random random;
 
     private final JavaMailSender javaMailSender;
@@ -52,6 +51,4 @@ public class MailService {
             throw new RuntimeException(e);
         }
     }
-
-
 }
