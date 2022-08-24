@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.infra.application;
 
-import com.daniel.mychickenbreastshop.domain.user.dto.request.EmailRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.EmailRequestDto;
+import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,6 @@ public class MailService {
     private static final String ENCODE_TYPE = "utf-8";
     private static final long EXPIRED_TIME = 5 * 60 * 1000L; // 5분
 
-
     @Value("${email.from}")
     private String from;
     @Value("${email.subject}")
@@ -32,7 +32,7 @@ public class MailService {
     private final JavaMailSender javaMailSender;
     private final RedisService redisService;
 
-    @Async
+    @Async("emailThreadPoolTaskExecutor")
     public void sendMail(EmailRequestDto emailRequestDto) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -48,7 +48,7 @@ public class MailService {
 
             redisService.setDataExpire(emailRequestDto.getEmail(), String.valueOf(randomKey), EXPIRED_TIME);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new InternalErrorException(e);
         }
     }
 }

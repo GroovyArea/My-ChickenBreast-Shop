@@ -1,5 +1,10 @@
 package com.daniel.mychickenbreastshop.global.config;
 
+import com.daniel.mychickenbreastshop.global.config.model.EmailAsyncProperty;
+import com.daniel.mychickenbreastshop.infra.async.error.handler.AsyncApiExceptionAdvice;
+import lombok.RequiredArgsConstructor;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -9,21 +14,26 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
+@RequiredArgsConstructor
 public class AsyncConfig extends AsyncConfigurerSupport {
 
-    private static final int CORE_POOL_SIZE = 5;
-    private static final int MAX_POOL_SIZE = 10;
-    private static final int QUEUE_CAPACITY = 200;
-    private static final String THREAD_NAME_PREFIX = "email-async-";
+    private static final String EMAIL_THREAD_NAME_PREFIX = "email-async-";
 
-    @Override
-    public Executor getAsyncExecutor() {
+    private final AsyncApiExceptionAdvice asyncApiExceptionAdvice;
+
+    @Bean(name = "emailThreadPoolTaskExecutor")
+    public Executor emailExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(CORE_POOL_SIZE);
-        executor.setMaxPoolSize(MAX_POOL_SIZE);
-        executor.setQueueCapacity(QUEUE_CAPACITY);
-        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
+        executor.setCorePoolSize(EmailAsyncProperty.CORE_POOL_SIZE.getSize());
+        executor.setMaxPoolSize(EmailAsyncProperty.MAX_POOL_SIZE.getSize());
+        executor.setQueueCapacity(EmailAsyncProperty.QUEUE_CAPACITY.getSize());
+        executor.setThreadNamePrefix(EMAIL_THREAD_NAME_PREFIX);
         executor.initialize();
         return executor;
+    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return asyncApiExceptionAdvice;
     }
 }

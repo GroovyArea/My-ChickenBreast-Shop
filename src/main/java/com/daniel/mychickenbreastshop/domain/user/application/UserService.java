@@ -1,22 +1,22 @@
-package com.daniel.mychickenbreastshop.domain.user.service;
+package com.daniel.mychickenbreastshop.domain.user.application;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.DetailDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.DetailObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ListObjectMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ModifyObjectMapper;
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.service.RedisService;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +44,10 @@ public class UserService {
     private final JoinObjectMapper joinObjectMapper;
     private final DetailObjectMapper detailObjectMapper;
     private final ListObjectMapper listObjectMapper;
+    private final ModifyObjectMapper modifyObjectMapper;
 
     @Transactional(readOnly = true)
-    public DetailDto getUser(Long userId) {
+    public DetailResponseDto getUser(Long userId) {
         return detailObjectMapper.toDTO(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
     }
@@ -62,7 +63,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<ListResponseDto> searchUser(String loginId, Pageable pageable) {
-        List<User> searchList = userRepository.findByLoginIdContaining(loginId, pageable);
+        List<User> searchList = userRepository.findByLoginIdStartsWith(loginId, pageable);
 
         return searchList.stream()
                 .map(listObjectMapper::toDTO)
@@ -92,30 +93,31 @@ public class UserService {
     @Transactional
     public void modifyUser(Long userId, ModifyRequestDto modifyDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
+                .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
-        user.update(modifyDTO, user.getSalt());
+        String updatedPassword;
+        try {
+            updatedPassword = PasswordEncrypt.getSecurePassword(modifyDTO.getPassword(), user.getSalt());
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword(), SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-        );
+        User modifier = modifyObjectMapper.toEntity(modifyDTO);
+
+        user.update(modifier, updatedPassword);
     }
 
     @Transactional
     public void removeUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
+                .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
-        user.remove(Role.ROLE_WITHDRAWAL);
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword(), SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-        );
+        user.remove();
     }
 
     private void checkDuplicatedUser(String loginId) {
         if (userRepository.existsByLoginId(loginId)) {
-            throw new RuntimeException(UserResponse.USER_EXISTS.getMessage());
+            throw new BadRequestException(UserResponse.USER_EXISTS.getMessage());
         }
     }
 

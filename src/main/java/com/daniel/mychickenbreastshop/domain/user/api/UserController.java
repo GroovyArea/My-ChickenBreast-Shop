@@ -1,9 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.domain.user.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.DetailDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.service.UserService;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,8 +39,8 @@ public class UserController {
      * @return 회원 정보
      */
     @GetMapping("/v1/users/{userId}")
-    public ResponseEntity<DetailDto> getUserDetail(@PathVariable Long userId) {
-        DetailDto userDTO = userService.getUser(userId);
+    public ResponseEntity<DetailResponseDto> getUserDetail(@PathVariable Long userId) {
+        DetailResponseDto userDTO = userService.getUser(userId);
         return ResponseEntity.ok(userDTO);
     }
 

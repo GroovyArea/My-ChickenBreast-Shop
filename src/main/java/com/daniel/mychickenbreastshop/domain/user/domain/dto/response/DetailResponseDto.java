@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.user.dto.response;
+package com.daniel.mychickenbreastshop.domain.user.domain.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.Role;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-public class DetailDto {
+public class DetailResponseDto {
 
     private Long userId;
     private String loginId;

@@ -1,9 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.dto.request.EmailRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.service.UserService;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.EmailRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.global.model.Response;
 import com.daniel.mychickenbreastshop.infra.application.MailService;
 import lombok.RequiredArgsConstructor;

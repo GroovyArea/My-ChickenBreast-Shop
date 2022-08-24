@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.auth.security.application;
 import com.daniel.mychickenbreastshop.auth.security.mapper.PrincipalDetailMapper;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

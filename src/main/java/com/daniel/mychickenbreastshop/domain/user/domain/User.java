@@ -1,16 +1,14 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
-import com.daniel.mychickenbreastshop.domain.user.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.security.NoSuchAlgorithmException;
 
 @Entity
 @Getter
@@ -42,16 +40,16 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void update(final ModifyRequestDto modifyDTO, final String salt) {
-        updateName(modifyDTO.getName());
-        updateEmail(modifyDTO.getEmail());
-        updateAddress(modifyDTO.getAddress());
-        updateZipcode(modifyDTO.getZipcode());
-        updatePassword(modifyDTO.getPassword(), salt);
+    public void update(final User modifier, final String updatePassword) {
+        updateName(modifier.getName());
+        updateEmail(modifier.getEmail());
+        updateAddress(modifier.getAddress());
+        updateZipcode(modifier.getZipcode());
+        updatePassword(updatePassword);
     }
 
-    public void remove(final Role role) {
-        updateRole(role);
+    public void remove() {
+        updateToWithDrawRole();
     }
 
     private void updateName(final String name) {
@@ -70,16 +68,12 @@ public class User extends BaseTimeEntity {
         this.zipcode = zipcode;
     }
 
-    private void updatePassword(final String password, final String salt) {
-        try {
-            this.password = PasswordEncrypt.getSecurePassword(password, salt);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
-        }
+    private void updatePassword(final String updatePassword) {
+        this.password = updatePassword;
     }
 
-    private void updateRole(final Role role) {
-        this.role = role;
+    private void updateToWithDrawRole() {
+        this.role = Role.ROLE_WITHDRAWAL;
     }
 
 }
