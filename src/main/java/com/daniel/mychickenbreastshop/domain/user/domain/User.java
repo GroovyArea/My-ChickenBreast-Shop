@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
+import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,16 +21,16 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login_id", nullable = false)
+    @Column(name = "login_id", nullable = false, unique = true)
     private String loginId;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String salt;
 
     private String name;
 
+    @Column(unique = true)
     private String email;
 
     private String address;
@@ -39,4 +39,41 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void updateUserInfo(final User modifier, final String updatePassword) {
+        updateName(modifier.getName());
+        updateEmail(modifier.getEmail());
+        updateAddress(modifier.getAddress());
+        updateZipcode(modifier.getZipcode());
+        updatePassword(updatePassword);
+    }
+
+    public void remove() {
+        updateToWithDrawRole();
+    }
+
+    private void updateName(final String name) {
+        this.name = name;
+    }
+
+    private void updateEmail(final String email) {
+        this.email = email;
+    }
+
+    private void updateAddress(final String address) {
+        this.address = address;
+    }
+
+    private void updateZipcode(final String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    private void updatePassword(final String updatePassword) {
+        this.password = updatePassword;
+    }
+
+    private void updateToWithDrawRole() {
+        this.role = Role.ROLE_WITHDRAWAL;
+    }
+
 }

@@ -1,8 +1,12 @@
 package com.daniel.mychickenbreastshop.global.error.handler;
 
-import com.daniel.mychickenbreastshop.global.error.exception.AuthorizationException;
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,27 +26,49 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalAdvice {
 
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<String> authorizationExceptionHandle(AuthorizationException e) {
-        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+
+        StringBuilder builder = new StringBuilder();
+
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            builder.append("[");
+            builder.append(fieldError.getField());
+            builder.append("](은)는 ");
+            builder.append(fieldError.getDefaultMessage());
+            builder.append(" 입력된 값 : [");
+            builder.append(fieldError.getRejectedValue());
+            builder.append("] \n");
+        }
+        return ResponseEntity.badRequest().body(builder.toString());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> illegalArgumentExceptionHandle(IllegalArgumentException e) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> badRequestExceptionHandle(BadRequestException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+        return ResponseEntity.badRequest().body(setExceptionBody(e.getMessage()));
+    }
+
+    @ExceptionHandler(InternalErrorException.class)
+    public ResponseEntity<String> internalErrorExceptionHandle(InternalErrorException e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> runtimeExceptionHandle(RuntimeException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+        return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exceptionHandle(Exception e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.badRequest().body("Exception message : " + e.getMessage());
+        return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
     }
 
+    private String setExceptionBody(String exceptionMessage) {
+        return "Exception message : " + exceptionMessage;
+    }
 }

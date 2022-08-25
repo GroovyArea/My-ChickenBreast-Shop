@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.auth.security.application;
 import com.daniel.mychickenbreastshop.auth.security.mapper.PrincipalDetailMapper;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.enums.ResponseMessages;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +32,7 @@ public class PrincipalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(ResponseMessages.USER_NOT_EXISTS_MESSAGE.getMessage()));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage()));
         return principalDetailMapper.toDTO(user);
     }
 }

@@ -16,7 +16,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
@@ -34,17 +33,18 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+/*
         if (request.getRequestURI().startsWith("/join")) {
             chain.doFilter(request, response);
             return;
-        }
+        }*/
 
         String header = request.getHeader(JwtProperties.TOKEN_HEADER_KEY.getKey());
 
         if (header == null || !header.startsWith(JwtProperties.AUTH_TYPE.getKey())) {
             request.setAttribute("exception", SecurityMessage.HEADER_LESS.getMessage());
-            throw new HeadlessException(SecurityMessage.HEADER_LESS.getMessage());
+            chain.doFilter(request, response);
+            return;
         }
 
         String token = jwtProvider.getResolvedToken(request, JwtProperties.AUTH_TYPE.getKey());
@@ -59,6 +59,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return "/join".equals(path);
     }
 
     private Authentication getAuthentication(String token) {
