@@ -1,14 +1,14 @@
-package com.daniel.mychickenbreastshop.global.service;
+package com.daniel.mychickenbreastshop.global.store;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 /**
- * Redis Service 클래스
+ * Redis Component 클래스
  *
  * <pre>
  *     <History>
@@ -21,9 +21,9 @@ import java.time.Duration;
  * @author 김남영
  * @version 1.1
  */
-@Service
+@Component
 @RequiredArgsConstructor
-public class RedisService {
+public class RedisStore {
 
     private final StringRedisTemplate redisTemplate;
 
@@ -51,15 +51,4 @@ public class RedisService {
         return redisTemplate.delete(key);
     }
 
-    public void validateData(String key, String value) {
-        String data = getData(key);
-
-        if (data == null) {
-            throw new IllegalArgumentException("데이터가 존재하지 않습니다.");
-        } else {
-            if (!data.equals(value)) {
-                throw new IllegalArgumentException("데이터가 일치하지 않습니다.");
-            }
-        }
-    }
 }

@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public enum UserResponse {
 
-    USER_EXISTS("User already exists."),
-    USER_NOT_EXISTS("User not exists."),
-    WITHDRAW_USER("Retired member."),
-    WRONG_PW("Passwords do not match."),
-    JOIN_SUCCEED("Join succeed."),
-    LOGIN_SUCCEED("Login succeed."),
-    MAIL_SEND("Email is sent");
+    USER_EXISTS("이미 동일 회원 정보가 존재합니다."),
+    USER_NOT_EXISTS("해당 회원 정보가 존재하지 않습니다."),
+    WITHDRAW_USER("탈퇴 회원입니다."),
+    JOIN_SUCCEED("회원 가입이 완료되었습니다."),
+    MAIL_SEND("이메일 인증번호가 전송 되었습니다."),
+    MAIL_KEY_EXPIRED("인증 번호가 만료되었습니다."),
+    MAIL_KEY_MISMATCH("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");
 
     private final String message;
 }

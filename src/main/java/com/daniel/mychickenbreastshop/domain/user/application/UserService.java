@@ -8,12 +8,12 @@ import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResp
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.DetailObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.JoinObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ListObjectMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.struct.ModifyObjectMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserDetailMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserModifyMapper;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.global.service.RedisService;
+import com.daniel.mychickenbreastshop.global.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -40,15 +40,15 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RedisService redisService;
-    private final JoinObjectMapper joinObjectMapper;
-    private final DetailObjectMapper detailObjectMapper;
-    private final ListObjectMapper listObjectMapper;
-    private final ModifyObjectMapper modifyObjectMapper;
+    private final RedisStore redisStore;
+    private final UserJoinMapper userJoinMapper;
+    private final UserDetailMapper userDetailMapper;
+    private final UserListMapper userListMapper;
+    private final UserModifyMapper userModifyMapper;
 
     @Transactional(readOnly = true)
     public DetailResponseDto getUser(Long userId) {
-        return detailObjectMapper.toDTO(userRepository.findById(userId)
+        return userDetailMapper.toDTO(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
     }
 
@@ -57,7 +57,7 @@ public class UserService {
         List<User> allList = userRepository.findAll(pageable).getContent();
 
         return allList.stream()
-                .map(listObjectMapper::toDTO)
+                .map(userListMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +66,7 @@ public class UserService {
         List<User> searchList = userRepository.findByLoginIdStartsWith(loginId, pageable);
 
         return searchList.stream()
-                .map(listObjectMapper::toDTO)
+                .map(userListMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +74,7 @@ public class UserService {
     public Long join(JoinRequestDto joinRequestDto) {
         checkDuplicatedUser(joinRequestDto.getLoginId());
 
-        redisService.validateData(joinRequestDto.getEmail(), joinRequestDto.getEmailAuthKey());
+        validateAuthKey(joinRequestDto.getEmail(), joinRequestDto.getEmailAuthKey());
 
         String salt = PasswordEncrypt.getSalt();
         joinRequestDto.setSalt(salt);
@@ -87,7 +87,7 @@ public class UserService {
 
         joinRequestDto.setRole(Role.ROLE_USER);
 
-        return userRepository.save(joinObjectMapper.toEntity(joinRequestDto)).getId();
+        return userRepository.save(userJoinMapper.toEntity(joinRequestDto)).getId();
     }
 
     @Transactional
@@ -102,9 +102,9 @@ public class UserService {
             throw new IllegalArgumentException(e);
         }
 
-        User modifier = modifyObjectMapper.toEntity(modifyDTO);
+        User modifier = userModifyMapper.toEntity(modifyDTO);
 
-        user.update(modifier, updatedPassword);
+        user.updateUserInfo(modifier, updatedPassword);
     }
 
     @Transactional
@@ -118,6 +118,18 @@ public class UserService {
     private void checkDuplicatedUser(String loginId) {
         if (userRepository.existsByLoginId(loginId)) {
             throw new BadRequestException(UserResponse.USER_EXISTS.getMessage());
+        }
+    }
+
+    private void validateAuthKey(String email, String emailKey) {
+        String savedKey = redisStore.getData(email);
+
+        if (savedKey == null) {
+            throw new BadRequestException(UserResponse.MAIL_KEY_EXPIRED.getMessage());
+        }
+
+        if (!savedKey.equals(emailKey)) {
+            throw new BadRequestException(UserResponse.MAIL_KEY_MISMATCH.getMessage());
         }
     }
 

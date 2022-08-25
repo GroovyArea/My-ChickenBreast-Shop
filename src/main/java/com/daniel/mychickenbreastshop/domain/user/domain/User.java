@@ -40,7 +40,7 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void update(final User modifier, final String updatePassword) {
+    public void updateUserInfo(final User modifier, final String updatePassword) {
         updateName(modifier.getName());
         updateEmail(modifier.getEmail());
         updateAddress(modifier.getAddress());

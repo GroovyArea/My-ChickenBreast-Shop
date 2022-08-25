@@ -11,34 +11,33 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String exceptionMessage = (String) request.getAttribute("exception");
+        String insertedExceptionMessage = (String) request.getAttribute("exception");
 
-        String message = authException.getMessage();
+        String defaultExceptionMessage = authException.getMessage();
 
-        List<String> errorMessageList = Arrays.stream(JwtErrorMessage.values())
-                .map(JwtErrorMessage::getMessage)
-                .collect(Collectors.toList());
+        List<String> jwtErrorMessageList = Arrays.stream(JwtErrorMessage.values())
+                .map(JwtErrorMessage::getMessage).toList();
 
-        if (!errorMessageList.contains(exceptionMessage)) {
+        if (!jwtErrorMessageList.contains(insertedExceptionMessage)) {
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().print(exceptionMessage);
+            response.getWriter().print(defaultExceptionMessage);
+            return;
         }
 
-        if (exceptionMessage.equals(JwtErrorMessage.MALFORMED.getMessage())) {
+        if (insertedExceptionMessage.equals(JwtErrorMessage.MALFORMED.getMessage())) {
             setResponse(response, JwtErrorMessage.MALFORMED);
-        } else if (exceptionMessage.equals(JwtErrorMessage.CLASS_CAST_FAIL.getMessage())) {
+        } else if (insertedExceptionMessage.equals(JwtErrorMessage.CLASS_CAST_FAIL.getMessage())) {
             setResponse(response, JwtErrorMessage.CLASS_CAST_FAIL);
-        } else if (message.equals(JwtErrorMessage.EXPIRED.getMessage())) {
+        } else if (insertedExceptionMessage.equals(JwtErrorMessage.EXPIRED.getMessage())) {
             setResponse(response, JwtErrorMessage.EXPIRED);
-        } else if (exceptionMessage.equals(JwtErrorMessage.INVALID_SIGNATURE.getMessage())) {
+        } else if (insertedExceptionMessage.equals(JwtErrorMessage.INVALID_SIGNATURE.getMessage())) {
             setResponse(response, JwtErrorMessage.INVALID_SIGNATURE);
         } else {
             setResponse(response, JwtErrorMessage.UNSUPPORTED);
