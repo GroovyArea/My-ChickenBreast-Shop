@@ -1,6 +1,7 @@
-package com.daniel.mychickenbreastshop.domain.product.domain;
+package com.daniel.mychickenbreastshop.domain.product.domain.item;
 
-import com.daniel.mychickenbreastshop.domain.product.enums.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +24,8 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private Integer price;

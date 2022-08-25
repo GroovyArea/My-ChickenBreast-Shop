@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.product.enums;
+package com.daniel.mychickenbreastshop.domain.product.domain.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @Getter
-public enum ChickenBreast {
+public enum ChickenCategory {
 
     STEAMED(1), // 스팀
     SMOKED(2), // 훈제
@@ -18,8 +18,8 @@ public enum ChickenBreast {
 
     private final int chickenNumber;
 
-    public static ChickenBreast of(int chickenNumber) {
-        return Arrays.stream(ChickenBreast.values())
+    public static ChickenCategory of(int chickenNumber) {
+        return Arrays.stream(ChickenCategory.values())
                 .filter(number -> number.getChickenNumber() == chickenNumber)
                 .findAny()
                 .orElse(STEAMED);
