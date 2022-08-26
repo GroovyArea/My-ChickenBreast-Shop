@@ -39,4 +39,37 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "product_status", nullable = false)
     private ChickenStatus status;
+
+    public void updateProductInfo(final Product updatableEntity) {
+        updateName(updatableEntity.getName());
+        updatePrice(updatableEntity.getPrice());
+        updateQuantity(updatableEntity.getQuantity());
+        updateContent(updatableEntity.getContent());
+        updateItemStatus(updatableEntity.getStatus());
+    }
+
+    private void updateName(final String name) {
+        this.name = name;
+    }
+
+    private void updatePrice(final Integer price) {
+        this.price = price;
+    }
+
+    private void updateQuantity(final Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    private void updateContent(final String content) {
+        this.content = content;
+    }
+
+    public void updateImageInfo(final String image) {
+        this.image = image;
+    }
+
+    public void updateItemStatus(final ChickenStatus status) {
+        this.status = status;
+    }
 }
+

@@ -2,10 +2,7 @@ package com.daniel.mychickenbreastshop.domain.product.domain.category;
 
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,7 +12,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Category extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +23,7 @@ public class Category extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ChickenCategory name;
 
+    public void updateCategoryName(final ChickenCategory name) {
+        this.name = name;
+    }
 }
