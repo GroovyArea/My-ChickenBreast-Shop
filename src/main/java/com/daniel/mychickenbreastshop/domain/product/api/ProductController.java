@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -71,7 +70,7 @@ public class ProductController {
      * @return 파일 리소스
      */
     @GetMapping("/v1/products/download/{fileName}")
-    public ResponseEntity<Resource> getDownloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    public ResponseEntity<Resource> getDownloadFile(@PathVariable String fileName, javax.servlet.http.HttpServletRequest request) {
         Resource resource = productService.getItemImageResource(fileName);
         String imageFilePath = productService.getItemFilePath(resource);
         String contentType = request.getServletContext().getMimeType(imageFilePath);

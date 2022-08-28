@@ -1,5 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
+import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.model.CategoryResponse;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ModifyRequestDto;
@@ -10,8 +13,8 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenSt
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyRequestMapper;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemRegisterRequestMapper;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemRegisterMapper;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +33,13 @@ public class ProductService {
 
     private final FileManager fileManager;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
     private final ItemDetailMapper itemDetailMapper;
     private final ItemListMapper itemListMapper;
-    private final ItemRegisterRequestMapper itemRegisterRequestMapper;
-    private final ItemModifyRequestMapper itemModifyRequestMapper;
+    private final ItemRegisterMapper itemRegisterMapper;
+    private final ItemModifyMapper itemModifyMapper;
 
-
+    // 상품 단건 조회
     @Transactional(readOnly = true)
     public DetailResponseDto getProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
@@ -49,6 +53,7 @@ public class ProductService {
         return dto;
     }
 
+    // 상품 리스트 조회
     @Transactional(readOnly = true)
     public List<ListResponseDto> getAllProduct(String categoryName, Pageable pageable) {
         return productRepository.findByJoinCategory(categoryName, pageable).stream()
@@ -68,22 +73,33 @@ public class ProductService {
         }
     }
 
+    // 상품 등록
     @Transactional
     public Long registerItem(RegisterRequestDto registerRequestDto, MultipartFile file) {
         String uploadFileName = fileManager.uploadFile(file);
 
         registerRequestDto.setImage(uploadFileName);
 
-        return productRepository.save(itemRegisterRequestMapper.toEntity(registerRequestDto)).getId();
+        Category dbCategory = categoryRepository.findByName(registerRequestDto.getCategory().name())
+                .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
+
+        Product savableProduct = itemRegisterMapper.toEntity(registerRequestDto);
+
+        savableProduct.updateCategoryInfo(dbCategory);
+
+        return productRepository.save(savableProduct).getId();
     }
 
+    // 상품 수정
     @Transactional
     public void modifyItem(ModifyRequestDto modifyRequestDto, MultipartFile file) {
         Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
-        Product updatableEntity = itemModifyRequestMapper.toEntity(modifyRequestDto);
+        Product updatableProduct = itemModifyMapper.toEntity(modifyRequestDto);
+        Category updatableCategory = categoryRepository.findByName(modifyRequestDto.getCategory().name())
+                .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
-        dbProduct.updateProductInfo(updatableEntity);
-        dbProduct.getCategory().updateCategoryName(modifyRequestDto.getCategory());
+        dbProduct.updateProductInfo(updatableProduct);
+        dbProduct.updateCategoryInfo(updatableCategory);
 
         if (file != null) {
             String savedImageName = dbProduct.getImage();

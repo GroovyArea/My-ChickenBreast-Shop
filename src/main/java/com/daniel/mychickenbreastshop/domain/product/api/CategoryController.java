@@ -21,4 +21,5 @@ public class CategoryController {
         categoryService.registerCategory(registerRequestDto);
         return ResponseEntity.ok().build();
     }
+
 }

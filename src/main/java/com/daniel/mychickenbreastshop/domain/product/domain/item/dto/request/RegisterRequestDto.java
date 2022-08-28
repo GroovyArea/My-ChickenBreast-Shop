@@ -27,9 +27,10 @@ public class RegisterRequestDto {
     @Setter
     private String image;
 
-    @Setter
+    @NotBlank(message = "필수 입력 값입니다.")
     private ChickenStatus status;
 
-    @Setter
+    @NotBlank(message = "필수 입력 값입니다.")
     private ChickenCategory category;
+
 }

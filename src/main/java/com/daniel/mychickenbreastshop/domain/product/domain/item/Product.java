@@ -71,5 +71,14 @@ public class Product extends BaseTimeEntity {
     public void updateItemStatus(final ChickenStatus status) {
         this.status = status;
     }
+
+    public void updateCategoryInfo(final Category updatableCategory) {
+        if (this.category != null) {
+            this.category.getProducts().remove(this);
+        }
+
+        this.category = updatableCategory;
+        category.getProducts().add(this);
+    }
 }
 

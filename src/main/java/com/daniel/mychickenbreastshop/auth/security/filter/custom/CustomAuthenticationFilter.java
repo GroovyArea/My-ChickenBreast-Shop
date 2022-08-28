@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
+import com.daniel.mychickenbreastshop.auth.security.model.dto.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -7,5 +7,4 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserJoinMapper extends GenericMapper<JoinRequestDto, User> {
-
 }

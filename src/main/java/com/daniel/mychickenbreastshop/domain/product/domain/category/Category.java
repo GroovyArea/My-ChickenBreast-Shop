@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,4 @@ public class Category extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ChickenCategory name;
 
-    public void updateCategoryName(final ChickenCategory name) {
-        this.name = name;
-    }
 }
