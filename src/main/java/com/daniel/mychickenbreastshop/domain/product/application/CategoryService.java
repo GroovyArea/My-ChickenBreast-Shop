@@ -15,7 +15,7 @@ public class CategoryService {
 
     @Transactional
     public void registerCategory(RegisterRequestDto registerRequestDto) {
-        categoryRepository.save(Category.builder().name(registerRequestDto.getName()).build());
+        categoryRepository.save(Category.builder().categoryName(registerRequestDto.getCategoryName()).build());
     }
 
 }

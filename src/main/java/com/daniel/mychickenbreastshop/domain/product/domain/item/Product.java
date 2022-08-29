@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.domain.product.domain.item;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -78,7 +80,7 @@ public class Product extends BaseTimeEntity {
         }
 
         this.category = updatableCategory;
-        category.getProducts().add(this);
+        this.category.getProducts().add(this);
     }
 }
 

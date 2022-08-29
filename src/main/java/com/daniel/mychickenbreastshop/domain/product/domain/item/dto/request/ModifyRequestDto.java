@@ -5,7 +5,6 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenSt
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
@@ -29,14 +28,11 @@ public class ModifyRequestDto {
     @NotBlank(message = "필수 입력 값입니다.")
     private String content;
 
-    @Setter
     private String image;
 
     @NotBlank(message = "필수 입력 값입니다.")
-    @Setter
     private ChickenStatus status;
 
     @NotBlank(message = "필수 입력 값입니다.")
-    @Setter
     private ChickenCategory category;
 }

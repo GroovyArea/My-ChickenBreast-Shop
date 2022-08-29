@@ -2,6 +2,7 @@ package com.daniel.mychickenbreastshop.domain.product.application;
 
 import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.model.CategoryResponse;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.ProductRepository;
@@ -55,7 +56,7 @@ public class ProductService {
 
     // 상품 리스트 조회
     @Transactional(readOnly = true)
-    public List<ListResponseDto> getAllProduct(String categoryName, Pageable pageable) {
+    public List<ListResponseDto> getAllProduct(ChickenCategory categoryName, Pageable pageable) {
         return productRepository.findByJoinCategory(categoryName, pageable).stream()
                 .map(itemListMapper::toDTO)
                 .toList();
@@ -80,7 +81,7 @@ public class ProductService {
 
         registerRequestDto.setImage(uploadFileName);
 
-        Category dbCategory = categoryRepository.findByName(registerRequestDto.getCategory().name())
+        Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory())
                 .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
         Product savableProduct = itemRegisterMapper.toEntity(registerRequestDto);
@@ -95,7 +96,7 @@ public class ProductService {
     public void modifyItem(ModifyRequestDto modifyRequestDto, MultipartFile file) {
         Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
         Product updatableProduct = itemModifyMapper.toEntity(modifyRequestDto);
-        Category updatableCategory = categoryRepository.findByName(modifyRequestDto.getCategory().name())
+        Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory())
                 .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
         dbProduct.updateProductInfo(updatableProduct);

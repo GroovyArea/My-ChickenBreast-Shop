@@ -56,10 +56,10 @@ public class ProductController {
      * @param pageable     페이지네이션
      * @return 상품 리스트
      */
-    @GetMapping("/v1/products/{categoryName}")
+    @GetMapping("/v1/products/search/{categoryName}")
     public ResponseEntity<List<ListResponseDto>> getProductList(@PathVariable ChickenCategory categoryName,
-                                                                @PageableDefault(size = 8, sort = "productId", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(productService.getAllProduct(categoryName.name(), pageable));
+                                                                @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProduct(categoryName, pageable));
     }
 
     /**
@@ -89,7 +89,7 @@ public class ProductController {
      */
     @PostMapping("/v1/products")
     public ResponseEntity<Long> registerProduct(@RequestPart RegisterRequestDto registerRequestDto,
-                                                @RequestPart("image") MultipartFile file) {
+                                                @RequestPart(value = "image") MultipartFile file) {
         if (file == null) {
             return ResponseEntity.badRequest().build();
         }

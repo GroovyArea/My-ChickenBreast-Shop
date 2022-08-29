@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RegisterRequestDto {
 
-    private ChickenCategory name;
+    private ChickenCategory categoryName;
 }
