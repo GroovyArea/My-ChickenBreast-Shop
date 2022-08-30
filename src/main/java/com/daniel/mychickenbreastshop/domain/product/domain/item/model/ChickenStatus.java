@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.product.enums;
+package com.daniel.mychickenbreastshop.domain.product.domain.item.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

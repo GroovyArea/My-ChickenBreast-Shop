@@ -1,23 +1,21 @@
-package com.daniel.mychickenbreastshop.domain.product.dto;
+package com.daniel.mychickenbreastshop.domain.product.domain.item;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
-public class ProductListDTO {
+public class ProductVO {
 
     private Integer productNo;
     private String productName;
+    private String productCategory;
     private Integer productPrice;
     private Integer productStock;
+    private String productDetail;
     private String productImage;
+    private Integer productStatus;
 
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
-    }
 }

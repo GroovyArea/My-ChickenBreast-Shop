@@ -22,10 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * User Sevice 클래스
+ * User Service 클래스
  *
  * <pre>
  *     <b>history</b>
@@ -58,16 +57,16 @@ public class UserService {
 
         return allList.stream()
                 .map(userListMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ListResponseDto> searchUser(String loginId, Pageable pageable) {
-        List<User> searchList = userRepository.findByLoginIdStartsWith(loginId, pageable);
+        List<User> searchList = userRepository.searchByLoginId(loginId, pageable);
 
         return searchList.stream()
                 .map(userListMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

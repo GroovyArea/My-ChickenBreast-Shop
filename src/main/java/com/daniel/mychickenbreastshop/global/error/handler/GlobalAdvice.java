@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.global.error.handler;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -48,12 +47,6 @@ public class GlobalAdvice {
     public ResponseEntity<String> badRequestExceptionHandle(BadRequestException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body(setExceptionBody(e.getMessage()));
-    }
-
-    @ExceptionHandler(InternalErrorException.class)
-    public ResponseEntity<String> internalErrorExceptionHandle(InternalErrorException e) {
-        log.error(e.getMessage(), e);
-        return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -75,7 +75,7 @@ public class UserController {
      */
     @GetMapping("/v1/users")
     public ResponseEntity<List<ListResponseDto>> getAll(
-            @PageableDefault(size = 10, sort = "userId", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUser(pageable));
     }
 
@@ -86,10 +86,10 @@ public class UserController {
      * @param pageable page 객체
      * @return 검색 회원 리스트
      */
-    @GetMapping("/v1/users/{loginId}")
+    @GetMapping("/v1/users/search/{loginId}")
     public ResponseEntity<List<ListResponseDto>> searchUserByLoginId(
             @PathVariable String loginId,
-            @PageableDefault(size = 10, sort = "userId", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(userService.searchUser(loginId, pageable));
     }
 }
