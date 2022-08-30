@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -68,7 +69,7 @@ public class FileManager {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException(FILE_NOT_FOUND);
+                throw new BadRequestException(FILE_NOT_FOUND);
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(FAILED_DOWNLOAD);
