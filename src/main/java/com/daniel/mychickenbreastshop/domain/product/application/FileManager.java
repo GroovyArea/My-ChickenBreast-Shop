@@ -23,7 +23,6 @@ import java.util.UUID;
 public class FileManager {
 
     private static final String FILE_NOT_FOUND = "파일을 찾을 수 없습니다.";
-    private static final String FAILED_DOWNLOAD = "파일을 다운로드 할 수 없습니다.";
 
     @Value("${file.upload.location}")
     private String uploadDirectory;
@@ -72,7 +71,7 @@ public class FileManager {
                 throw new BadRequestException(FILE_NOT_FOUND);
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException(FAILED_DOWNLOAD);
+            throw new RuntimeException(e);
         }
     }
 
