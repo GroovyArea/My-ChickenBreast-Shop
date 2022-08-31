@@ -33,12 +33,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-/*
-        if (request.getRequestURI().startsWith("/join")) {
-            chain.doFilter(request, response);
-            return;
-        }*/
-
         String header = request.getHeader(JwtProperties.TOKEN_HEADER_KEY.getKey());
 
         if (header == null || !header.startsWith(JwtProperties.AUTH_TYPE.getKey())) {
