@@ -15,6 +15,6 @@ import java.util.Map;
 public class UpdatableCartDto {
 
     private String cookieValue;
-    private Map<Integer, CartRequestDto> cartRequestDTOMap;
+    private Map<Long, CartRequestDto> cartRequestDTOMap; // Key : 상품 번호, Value : 변경 상품 dto
     private Cookie cookie;
 }

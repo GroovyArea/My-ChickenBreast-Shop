@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.cart.application.store;
+package com.daniel.mychickenbreastshop.domain.cart.application.manage;
 
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCartDto;
@@ -6,6 +6,7 @@ import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartResponse;
 import com.daniel.mychickenbreastshop.domain.cart.util.CookieUtil;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URLDecoder;
@@ -15,7 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class CartItemStore {
+public class CartItemManager {
+
+    @Value("{spring.cart.path}")
+    private String path;
 
     public UpdatableCartDto store(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         if (CookieUtil.isCookieEmpty(updatableCartDto.getCookie())) {
@@ -26,7 +30,7 @@ public class CartItemStore {
             String encodedObjectValue = URLEncoder.encode(JsonUtil.objectToString(newMap), StandardCharsets.UTF_8);
 
             return UpdatableCartDto.builder()
-                    .cookie(CookieUtil.createCookie(encodedObjectValue))
+                    .cookie(CookieUtil.createCookie(encodedObjectValue, path))
                     .build();
         }
 
@@ -65,7 +69,7 @@ public class CartItemStore {
         String encodedObjectValue = URLEncoder.encode(JsonUtil.objectToString(existingMap), StandardCharsets.UTF_8);
 
         return UpdatableCartDto.builder()
-                .cookie(CookieUtil.resetCookie(updatableCartDto.getCookie(), encodedObjectValue))
+                .cookie(CookieUtil.resetCookie(updatableCartDto.getCookie(), encodedObjectValue, path))
                 .build();
     }
 

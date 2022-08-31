@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCa
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.response.CartResponseDto;
 import com.daniel.mychickenbreastshop.domain.cart.util.CookieUtil;
-import com.daniel.mychickenbreastshop.domain.cart.application.store.CartItemStore;
+import com.daniel.mychickenbreastshop.domain.cart.application.manage.CartItemManager;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartService {
 
-    private final CartItemStore cartItemStore;
+    private final CartItemManager cartItemManager;
     private final CartValidator cartValidator;
 
     public List<CartResponseDto> getCart(String cookieValue) {
@@ -30,17 +30,17 @@ public class CartService {
 
     public UpdatableCartDto addCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         cartValidator.cartValidate(cartRequestDto);
-        return cartItemStore.store(updatableCartDto, cartRequestDto);
+        return cartItemManager.store(updatableCartDto, cartRequestDto);
 
     }
 
     public UpdatableCartDto modifyCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         cartValidator.cartValidate(cartRequestDto);
-        return cartItemStore.update(updatableCartDto, cartRequestDto);
+        return cartItemManager.update(updatableCartDto, cartRequestDto);
     }
 
     public UpdatableCartDto removeCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         cartValidator.cartValidate(cartRequestDto);
-        return cartItemStore.delete(updatableCartDto, cartRequestDto);
+        return cartItemManager.delete(updatableCartDto, cartRequestDto);
     }
 }

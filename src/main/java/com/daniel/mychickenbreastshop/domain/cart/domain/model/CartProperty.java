@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CartProperty {
 
-    COOKIE_KEY("Chicken");
+    COOKIE_KEY("chicken");
 
     private final String key;
 }

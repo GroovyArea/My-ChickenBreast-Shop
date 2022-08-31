@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -40,7 +39,7 @@ public class CartController {
      * @return 장바구니 리스트
      */
     @GetMapping
-    public ResponseEntity<List<CartResponseDto>> getCartList(@CookieValue(value = "Chicken") Cookie cookie) {
+    public ResponseEntity<List<CartResponseDto>> getCartList(@CookieValue(value = "chicken") Cookie cookie) {
         List<CartResponseDto> cartResponseDTOS = cartService.getCart(cookie.getValue());
         return ResponseEntity.ok(cartResponseDTOS);
     }
@@ -50,13 +49,12 @@ public class CartController {
      *
      * @param cookie            쿠키
      * @param addCartRequestDTO 추가할 상품
-     * @param request           request
      * @param response          response
      * @return ok 응답
      */
     @PostMapping
-    public ResponseEntity<Void> addCart(@CookieValue(value = "Chicken", required = false) Cookie cookie,
-                                        @Valid @RequestBody CartRequestDto addCartRequestDTO, HttpServletRequest request,
+    public ResponseEntity<Void> addCart(@CookieValue(value = "chicken", required = false) Cookie cookie,
+                                        @Valid @RequestBody CartRequestDto addCartRequestDTO,
                                         HttpServletResponse response) {
         UpdatableCartDto updatableCartDto = getUpdatableCartDto(cookie);
 
@@ -72,13 +70,12 @@ public class CartController {
      *
      * @param cookie         쿠키
      * @param cartRequestDTO 수정할 상품
-     * @param request        request
      * @param response       response
      * @return ok 응답
      */
     @PutMapping
-    public ResponseEntity<Void> modifyCart(@CookieValue(value = "Chicken", required = false) Cookie cookie,
-                                           @Valid @RequestBody CartRequestDto cartRequestDTO, HttpServletRequest request,
+    public ResponseEntity<Void> modifyCart(@CookieValue(value = "chicken", required = false) Cookie cookie,
+                                           @Valid @RequestBody CartRequestDto cartRequestDTO,
                                            HttpServletResponse response) {
         UpdatableCartDto updatableCartDto = getUpdatableCartDto(cookie);
 
@@ -94,13 +91,12 @@ public class CartController {
      *
      * @param cookie         쿠키
      * @param cartRequestDTO 삭제할 상품
-     * @param request        request
      * @param response       response
      * @return ok 응답
      */
     @DeleteMapping
-    public ResponseEntity<Void> removeCart(@CookieValue(value = "Chicken", required = false) Cookie cookie,
-                                           @Valid @RequestBody CartRequestDto cartRequestDTO, HttpServletRequest request,
+    public ResponseEntity<Void> removeCart(@CookieValue(value = "chicken", required = false) Cookie cookie,
+                                           @Valid @RequestBody CartRequestDto cartRequestDTO,
                                            HttpServletResponse response) {
         UpdatableCartDto updatableCartDto = getUpdatableCartDto(cookie);
 

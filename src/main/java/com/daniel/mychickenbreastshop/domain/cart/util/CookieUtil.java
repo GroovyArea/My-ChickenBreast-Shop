@@ -74,15 +74,15 @@ public class CookieUtil {
         return cookie == null;
     }
 
-    public static Cookie createCookie(String encodedObjectValue) {
+    public static Cookie createCookie(String encodedObjectValue, String path) {
         Cookie newCookie = new Cookie(CartProperty.COOKIE_KEY.getKey(), encodedObjectValue);
-        newCookie.setPath("/api");
+        newCookie.setPath(path);
         newCookie.setMaxAge(COOKIE_AGE);
         return newCookie;
     }
 
-    public static Cookie resetCookie(Cookie existingCookie, String encodedObjectValue) {
+    public static Cookie resetCookie(Cookie existingCookie, String encodedObjectValue, String path) {
         existingCookie.setMaxAge(KILL_COOKIE);
-        return createCookie(encodedObjectValue);
+        return createCookie(encodedObjectValue, path);
     }
 }
