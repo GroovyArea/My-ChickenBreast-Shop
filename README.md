@@ -19,6 +19,7 @@ Kakaopay REST API를 이용해 테스트 구매와 주문까지 가능하며,
 Java 17, Gradle
 Spring Boot 2.7.3
 Spring data JPA
+
 Mysql 8.0.17
 ```
 
