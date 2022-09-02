@@ -21,6 +21,7 @@ Spring Boot 2.7.3
 Spring data JPA
 Spring Security
 Mysql 8.0.17
+Redis
 ```
 
 ---
