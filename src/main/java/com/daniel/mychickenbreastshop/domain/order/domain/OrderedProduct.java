@@ -25,7 +25,7 @@ public class OrderedProduct extends BaseTimeEntity {
     private String name;
 
     @Column(name = "product_price", nullable = false)
-    private String price;
+    private Integer price;
 
     @Column(name = "product_image", nullable = false)
     private String image;
@@ -33,4 +33,7 @@ public class OrderedProduct extends BaseTimeEntity {
     @Column(name = "product_content", nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

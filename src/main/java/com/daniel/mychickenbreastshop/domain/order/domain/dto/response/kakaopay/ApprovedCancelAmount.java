@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.order.dto.response.kakaopay;
+package com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -7,16 +7,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class CancelAvailableAmount {
+public class ApprovedCancelAmount {
 
-    Integer total;
-    Integer taxFree;
-    Integer vat;
-    Integer point;
-    Integer discount;
+    private Integer total;
+    private Integer taxFree;
+    private Integer vat;
+    private Integer point;
+    private Integer discount;
 }

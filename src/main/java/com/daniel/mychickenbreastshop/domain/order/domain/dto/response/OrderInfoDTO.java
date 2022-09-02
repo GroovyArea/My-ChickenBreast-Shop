@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.order.dto.response;
+package com.daniel.mychickenbreastshop.domain.order.domain.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.order.dto.response.kakaopay.*;
+import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;

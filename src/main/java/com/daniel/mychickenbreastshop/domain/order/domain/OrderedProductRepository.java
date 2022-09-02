@@ -1,6 +1,5 @@
-package com.daniel.mychickenbreastshop.domain.order.repository;
+package com.daniel.mychickenbreastshop.domain.order.domain;
 
-import com.daniel.mychickenbreastshop.domain.order.domain.OrderedProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderedProductRepository extends JpaRepository<OrderedProduct, Long> {

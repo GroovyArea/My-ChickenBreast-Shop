@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.order.dto.response.kakaopay;
+package com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -7,15 +7,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class SelectedCardInfo {
+public class CancelAvailableAmount {
 
-    private String cardBin;
-    private String cardCorpName;
-    private String interestFreeInstall;
-    private Integer installMonth;
+    Integer total;
+    Integer taxFree;
+    Integer vat;
+    Integer point;
+    Integer discount;
 }

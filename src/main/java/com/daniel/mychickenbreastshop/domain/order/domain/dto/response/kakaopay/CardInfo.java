@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.order.dto.response.kakaopay;
+package com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

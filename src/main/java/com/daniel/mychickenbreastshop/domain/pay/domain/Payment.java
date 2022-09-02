@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.pay.domain;
 
+import com.daniel.mychickenbreastshop.domain.order.domain.Order;
 import com.daniel.mychickenbreastshop.domain.pay.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.pay.enums.PaymentType;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
@@ -17,7 +18,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Payment extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "pg_key", nullable = false)
@@ -33,5 +35,8 @@ public class Payment extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "pay_status", nullable = false)
     private PayStatus status;
+
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Order order;
 
 }
