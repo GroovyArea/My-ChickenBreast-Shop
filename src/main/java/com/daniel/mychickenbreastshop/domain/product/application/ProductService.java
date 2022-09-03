@@ -57,7 +57,7 @@ public class ProductService {
     // 상품 리스트 조회
     @Transactional(readOnly = true)
     public List<ListResponseDto> getAllProduct(ChickenCategory categoryName, Pageable pageable) {
-        return productRepository.findByJoinCategory(categoryName, pageable).stream()
+        return productRepository.findByCategoryNameUsingFetchJoin(categoryName, pageable).stream()
                 .map(itemListMapper::toDTO)
                 .toList();
     }

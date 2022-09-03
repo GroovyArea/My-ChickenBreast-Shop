@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.pay.dto.response;
+package com.daniel.mychickenbreastshop.domain.pay.domain.dto.response;
 
 import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.Amount;
 import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.CardInfo;

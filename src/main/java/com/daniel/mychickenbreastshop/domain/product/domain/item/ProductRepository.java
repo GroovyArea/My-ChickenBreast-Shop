@@ -12,7 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT p" +
             " FROM Product p" +
-            " JOIN p.category c" +
+            " JOIN fetch p.category c" +
             " WHERE c.categoryName = :categoryName")
-    List<Product> findByJoinCategory(@Param("categoryName") ChickenCategory categoryName, Pageable pageable);
+    List<Product> findByCategoryNameUsingFetchJoin(@Param("categoryName") ChickenCategory categoryName, Pageable pageable);
 }

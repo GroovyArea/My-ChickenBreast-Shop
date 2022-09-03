@@ -1,7 +1,5 @@
 package com.daniel.mychickenbreastshop.domain.order.domain;
 
-import com.daniel.mychickenbreastshop.domain.pay.domain.AmountVO;
-import com.daniel.mychickenbreastshop.domain.pay.domain.CardVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.pay.domain;
 
 import com.daniel.mychickenbreastshop.domain.order.domain.Order;
-import com.daniel.mychickenbreastshop.domain.pay.enums.PayStatus;
-import com.daniel.mychickenbreastshop.domain.pay.enums.PaymentType;
+import com.daniel.mychickenbreastshop.domain.pay.domain.model.PayStatus;
+import com.daniel.mychickenbreastshop.domain.pay.domain.model.PaymentType;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Table(name = "PAYMENT")
 @Entity
 @Getter
 @Builder

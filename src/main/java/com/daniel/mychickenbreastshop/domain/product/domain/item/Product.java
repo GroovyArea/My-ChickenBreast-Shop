@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Table(name = "PRODUCT")
 @Entity
 @Getter
 @Builder

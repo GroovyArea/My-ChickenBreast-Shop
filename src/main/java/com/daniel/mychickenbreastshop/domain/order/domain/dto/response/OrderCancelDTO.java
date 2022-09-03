@@ -3,7 +3,6 @@ package com.daniel.mychickenbreastshop.domain.order.domain.dto.response;
 import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.ApprovedCancelAmount;
 import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.CanceledAmount;
 import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.CancelAvailableAmount;
-import com.daniel.mychickenbreastshop.domain.pay.domain.AmountVO;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;

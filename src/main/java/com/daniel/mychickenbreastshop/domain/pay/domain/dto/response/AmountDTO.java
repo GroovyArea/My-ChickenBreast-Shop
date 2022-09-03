@@ -1,14 +1,15 @@
-
-package com.daniel.mychickenbreastshop.domain.pay.domain;
+package com.daniel.mychickenbreastshop.domain.pay.domain.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AmountVO {
+@Builder
+public class AmountDTO {
 
     private String tid;
     private Integer total;

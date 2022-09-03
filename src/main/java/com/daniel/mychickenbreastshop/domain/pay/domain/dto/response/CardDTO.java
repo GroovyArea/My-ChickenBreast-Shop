@@ -1,13 +1,15 @@
-package com.daniel.mychickenbreastshop.domain.pay.domain;
+package com.daniel.mychickenbreastshop.domain.pay.domain.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class CardVO {
+@Builder
+public class CardDTO {
 
     private String tid;
     private String issuerCorp;
@@ -16,4 +18,5 @@ public class CardVO {
     private String cardType;
     private String installMonth;
     private String interestFreeInstall;
+
 }

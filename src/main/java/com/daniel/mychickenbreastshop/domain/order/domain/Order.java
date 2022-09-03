@@ -13,7 +13,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "`order`")
+@Table(name = "ORDERS")
+@Entity
 @Getter
 @Builder
 @NoArgsConstructor

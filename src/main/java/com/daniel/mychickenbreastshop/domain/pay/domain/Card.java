@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "cardinfo")
+@Table(name = "CARD_INFO")
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
