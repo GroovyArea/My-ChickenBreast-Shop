@@ -11,6 +11,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             " FROM Order o" +
             " JOIN FETCH o.orderedProducts op" +
             " JOIN FETCH o.payment p" +
-            " JOIN FETCH p.")
+            " JOIN FETCH p.card c")
     List<Order> findByUserIdUsingFetchJoin(Long userId);
 }

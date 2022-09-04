@@ -30,5 +30,8 @@ public class Card extends BaseTimeEntity {
 
     @Column(name = "interest_free_install", nullable = false)
     private String interestFreeInstall;
+
+    @OneToOne(mappedBy = "card")
+    private Payment payment;
 }
 

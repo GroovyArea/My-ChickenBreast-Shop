@@ -40,4 +40,7 @@ public class Payment extends BaseTimeEntity {
     @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Order order;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "CARDINFO_id", nullable = false)
+    private Card card;
 }
