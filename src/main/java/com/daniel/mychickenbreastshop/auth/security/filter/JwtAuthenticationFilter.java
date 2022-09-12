@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             if (token != null && jwtValidator.validateAccessToken(token)) {
                 Authentication authentication = getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                request.setAttribute("userId", jwtProvider.getUserPk(token));
             }
         } catch (Exception e) {
             request.setAttribute("exception", e.getMessage());

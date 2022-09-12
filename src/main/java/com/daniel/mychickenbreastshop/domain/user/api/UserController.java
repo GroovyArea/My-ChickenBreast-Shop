@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,11 +36,11 @@ public class UserController {
     /**
      * 회원 디테일 조회
      *
-     * @param userId 회원 고유 번호
      * @return 회원 정보
      */
-    @GetMapping("/v1/users/{userId}")
-    public ResponseEntity<DetailResponseDto> getUserDetail(@PathVariable Long userId) {
+    @GetMapping("/v1/users")
+    public ResponseEntity<DetailResponseDto> getUserDetail(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
         DetailResponseDto userDTO = userService.getUser(userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -47,11 +48,12 @@ public class UserController {
     /**
      * 회원 수정
      *
-     * @param userId    회원 고유 번호
      * @param modifyDTO 회원 수정 정보
      */
-    @PatchMapping("/v1/users/{userId}")
-    public ResponseEntity<Void> modifyUser(@PathVariable Long userId, @Valid @RequestBody ModifyRequestDto modifyDTO) {
+    @PatchMapping("/v1/users")
+    public ResponseEntity<Void> modifyUser(HttpServletRequest request,
+                                           @Valid @RequestBody ModifyRequestDto modifyDTO) {
+        Long userId = (Long) request.getAttribute("userId");
         userService.modifyUser(userId, modifyDTO);
         return ResponseEntity.ok().build();
     }
