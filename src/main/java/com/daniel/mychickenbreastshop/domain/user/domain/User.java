@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
-import com.daniel.mychickenbreastshop.domain.order.domain.Order;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
