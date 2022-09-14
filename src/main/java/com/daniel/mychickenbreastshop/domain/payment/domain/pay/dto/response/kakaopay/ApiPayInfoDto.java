@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response;
+package com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.kakaopay;
 
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.kakaopay.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OrderInfoDTO {
+public class ApiPayInfoDto {
 
     String cid;
     String cidSecret;

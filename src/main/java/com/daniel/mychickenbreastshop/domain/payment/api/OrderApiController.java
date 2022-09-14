@@ -26,11 +26,6 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getOrderInfoData(userId, pageable));
     }
 
-    @GetMapping("/detail")
-    public ResponseEntity<> getApiOrderDetail(@RequestParam String tid, @RequestParam String cid) {
-
-    }
-
     /**
      * 주문 취소 요청
      */

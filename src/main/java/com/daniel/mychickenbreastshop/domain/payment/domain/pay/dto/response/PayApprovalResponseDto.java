@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.Amount;
-import com.daniel.mychickenbreastshop.domain.order.domain.dto.response.kakaopay.CardInfo;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.kakaopay.Amount;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.kakaopay.CardInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class PayApprovalDTO {
+public class PayApprovalResponseDto {
 
     private String aid;
     private String tid;

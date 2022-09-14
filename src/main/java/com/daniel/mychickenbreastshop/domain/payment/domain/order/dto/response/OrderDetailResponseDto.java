@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 주문 세부 정보
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

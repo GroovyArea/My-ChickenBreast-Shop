@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PayCancelDTO {
+public class ItemPayRequestDto {
 
-    String tid;
-
-    Integer cancelAmount;
-
-    Integer cancelTaxFreeAmount;
+    private int quantity;
+    private int itemNumber;
+    private String itemName;
+    private int totalAmount;
 }

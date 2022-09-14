@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response;
+package com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.kakaopay;
 
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.kakaopay.ApprovedCancelAmount;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.kakaopay.CancelAvailableAmount;
@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OrderCancelDTO {
+public class PayCanceledInfoDto {
 
     private String cid;
     private String tid;
@@ -26,7 +26,7 @@ public class OrderCancelDTO {
     private String partnerOrderId;
     private String partnerUserId;
     private String paymentMethodType;
-    private AmountVO amount;
+    private Amount amount;
     private ApprovedCancelAmount approvedCancelAmount;
     private CanceledAmount canceledAmount;
     private CancelAvailableAmount cancelAvailableAmount;
