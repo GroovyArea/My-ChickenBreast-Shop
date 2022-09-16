@@ -50,6 +50,7 @@ public class PayService {
         return applicant.payCart(cookieValue, requestURL, userId);
     }
 
+    @Transactional
     public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentApi paymentApi) {
         PaymentApplicant applicant = getPaymentApplicant(paymentApi);
 

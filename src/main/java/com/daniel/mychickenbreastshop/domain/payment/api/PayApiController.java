@@ -35,10 +35,11 @@ public class PayApiController {
     private final PayService payService;
 
     /**
-     * 외부 결제 API 에 해당 결제 건의 데이터 요청
+     * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민 좀 해보자)
      */
     @GetMapping("/{paymentApi}")
-    public ResponseEntity<ApiPayInfoDto> getPayDetail(@PathVariable PaymentApi paymentApi, @RequestParam String franchiseeId, @RequestParam String payId) {
+    public ResponseEntity<ApiPayInfoDto> getPayDetail(@PathVariable PaymentApi paymentApi,
+                                                      @RequestParam String franchiseeId, @RequestParam String payId) {
         return ResponseEntity.ok(payService.getApiPaymentDetail(franchiseeId, payId, paymentApi));
     }
 
@@ -46,7 +47,8 @@ public class PayApiController {
      * 외부 결제 API 에 결제 승인 요청
      */
     @GetMapping("/{paymentApi}/completed")
-    public ResponseEntity<PayApprovalResponseDto> approvalRequest(@PathVariable PaymentApi paymentApi, @RequestParam("pay_token") String payToken) {
+    public ResponseEntity<PayApprovalResponseDto> approvalRequest(@PathVariable PaymentApi paymentApi,
+                                                                  @RequestParam("pay_token") String payToken) {
         payService.approvePayment(payToken, paymentApi);
         return ResponseEntity.ok().build();
     }
@@ -54,8 +56,8 @@ public class PayApiController {
     /**
      * 외부 결제 시도 중 취소 시 얻은 Redirect Url 요청
      */
-    @GetMapping("/{paymentApi}/canceled")
-    public ResponseEntity<String> redirectPayCanceled(@PathVariable PaymentApi paymentApi) {
+    @GetMapping("/canceled")
+    public ResponseEntity<String> redirectPayCanceled() {
         return ResponseEntity.badRequest().body(CANCELED_PAY.getMessage());
     }
 
@@ -63,8 +65,8 @@ public class PayApiController {
     /**
      * 외부 결제 시도 중 실패 시 얻은 Redirect Url 로 요청
      */
-    @GetMapping("/{paymentApi}/failed")
-    public ResponseEntity<String> redirectPayFailed(@PathVariable PaymentApi paymentApi,) {
+    @GetMapping("/failed")
+    public ResponseEntity<String> redirectPayFailed() {
         return ResponseEntity.badRequest().body(FAILED_PAY.getMessage());
     }
 

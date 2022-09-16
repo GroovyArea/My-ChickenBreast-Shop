@@ -35,4 +35,5 @@ public class ApiPayInfoDto {
     Date canceledAt;
     SelectedCardInfo selectedCardInfo;
     PaymentActionDetails[] paymentActionDetails;
+
 }

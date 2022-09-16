@@ -1,9 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.payment.application.payment;
+package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay;
 
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderedProductRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.CardRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.PayRepository;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.PaymentApplicant;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
@@ -17,7 +14,7 @@ import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.Pay
  */
 @Component
 @RequiredArgsConstructor
-public class KakaopayApplicant implements PaymentApplicant {
+public class KakaoPayApplicant implements PaymentApplicant {
 
     @Override
     public PaymentApi getPaymentApiName() {

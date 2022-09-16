@@ -11,5 +11,5 @@ public enum PaymentResponse {
     FAILED_PAY("결제에 실패하였습니다."),
     UNCORRECTED_API("해당 결제 API를 이용할 수 없습니다.");
 
-    private String message;
+    private final String message;
 }

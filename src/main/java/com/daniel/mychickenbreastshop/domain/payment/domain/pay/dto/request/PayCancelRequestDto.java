@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 public class PayCancelRequestDto {
 
     String payId;
-
     Integer cancelAmount;
-
     Integer cancelTaxFreeAmount;
 }
