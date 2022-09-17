@@ -25,6 +25,7 @@ public class KakaoPayRequest {
     }
 
     @Getter
+    @Builder
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class PayReadyRequest {
 
@@ -32,6 +33,7 @@ public class KakaoPayRequest {
         private String partnerOrderId; // 가맹점 주문 번호
         private String partnerUserId; // 가맹점 회원 ID
         private String itemName; // 상품명
+        private String itemCode; // 상품 코드
         private Integer quantity; // 상품 수량
         private Integer totalAmount; // 상품 총액
         private Integer taxFreeAmount; // 상품 비과세 금액
@@ -41,6 +43,7 @@ public class KakaoPayRequest {
     }
 
     @Getter
+    @Builder
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class PayApproveRequest {
 
@@ -53,6 +56,7 @@ public class KakaoPayRequest {
     }
 
     @Getter
+    @Builder
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class PayCancelRequest {
 

@@ -117,10 +117,10 @@ public class ProductService {
         dbProduct.updateItemStatus(ChickenStatus.EXTINCTION);
     }
 
-    public void validatePayAmount(Long productNo, long productPrice, int productQuantity) {
-        Product dbProduct = productRepository.findById(productNo).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+    public void validatePayAmount(Long itemNo, long totalPrice, int itemQuantity) {
+        Product dbProduct = productRepository.findById(itemNo).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
 
-        if ((long) dbProduct.getPrice() * productQuantity != productPrice) {
+        if ((long) dbProduct.getPrice() * itemQuantity != totalPrice) {
             throw new BadRequestException(ProductResponse.INVALID_PAY_AMOUNT.getMessage());
         }
     }

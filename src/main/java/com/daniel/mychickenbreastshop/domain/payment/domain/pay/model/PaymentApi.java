@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PaymentApi {
 
-    KAKAO;
+    KAKAO; // 카카오페이 결제 API
 }

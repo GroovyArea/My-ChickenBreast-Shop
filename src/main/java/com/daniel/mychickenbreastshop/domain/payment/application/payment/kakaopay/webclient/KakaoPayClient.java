@@ -1,14 +1,13 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.error.KakaoPayException;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.config.KakaoPayClientProperty;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayRequest.OrderInfoRequest;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayRequest.PayApproveRequest;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayRequest.PayCancelRequest;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,15 +22,13 @@ import static com.daniel.mychickenbreastshop.domain.payment.application.payment.
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
 
 /**
- * kakao pay Web Client
+ * kakaoPay Web Client
  */
 @Component
 @RequiredArgsConstructor
 public class KakaoPayClient {
 
-    @Value("${kakaoPay.admin.key}")
-    private String adminKey;
-
+    private final KakaoPayClientProperty kakaoPayClientProperty;
     private final WebClient kakaoPayWebClient;
 
     public OrderInfoResponse getOrderInfo(String uri, OrderInfoRequest orderInfoRequest) {
@@ -48,7 +45,7 @@ public class KakaoPayClient {
                 .block();
     }
 
-    public PayReadyResponse ready(String uri, PayReadyRequest payReadyRequest) {
+    public <T> T ready(String uri, PayReadyRequest payReadyRequest, Class<T> clazz) {
         return kakaoPayWebClient.post()
                 .uri(uri)
                 .accept(MediaType.APPLICATION_JSON)
@@ -58,7 +55,7 @@ public class KakaoPayClient {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
                 .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
-                .bodyToMono(PayReadyResponse.class)
+                .bodyToMono(clazz)
                 .block();
     }
 
@@ -92,7 +89,7 @@ public class KakaoPayClient {
 
     private HttpHeaders setHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + adminKey);
+        headers.add("Authorization", "KakaoAK " + kakaoPayClientProperty.getAdmin().getKey());
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         return headers;

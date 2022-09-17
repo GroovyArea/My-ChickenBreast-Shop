@@ -15,23 +15,23 @@ import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.Pay
 @Component
 public class PayApplicantFactory {
 
-    private Map<PaymentApi, PaymentApplicant> strategies;
+    private Map<PaymentApi, PaymentRequest> strategies;
 
     @Autowired
-    public PayApplicantFactory(Set<PaymentApplicant> applicants) {
+    public PayApplicantFactory(Set<PaymentRequest> applicants) {
         createStrategy(applicants);
     }
 
-    public PaymentApplicant findStrategy(PaymentApi paymentApi) {
+    public PaymentRequest findStrategy(PaymentApi paymentApi) {
         if (!Arrays.asList(PaymentApi.values()).contains(paymentApi)) {
             throw new BadRequestException(UNCORRECTED_API.getMessage());
         }
         return strategies.get(paymentApi);
     }
 
-    private void createStrategy(Set<PaymentApplicant> applicants) {
+    private void createStrategy(Set<PaymentRequest> paymentRequests) {
         strategies = new HashMap<>();
-        applicants.forEach(
+        paymentRequests.forEach(
                 strategy -> strategies.put(strategy.getPaymentApiName(), strategy)
         );
     }

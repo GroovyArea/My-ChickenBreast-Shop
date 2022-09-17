@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/carts")
-public class CartController {
+public class CartApiController {
 
     private final CartService cartService;
 

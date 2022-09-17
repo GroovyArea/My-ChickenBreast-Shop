@@ -1,7 +1,5 @@
-package com.daniel.mychickenbreastshop.domain.cart.util;
+package com.daniel.mychickenbreastshop.global.util;
 
-import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartProperty;
-import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import lombok.experimental.UtilityClass;
 
 import javax.servlet.http.Cookie;
@@ -74,15 +72,15 @@ public class CookieUtil {
         return cookie == null;
     }
 
-    public static Cookie createCookie(String encodedObjectValue, String path) {
-        Cookie newCookie = new Cookie(CartProperty.COOKIE_KEY.getKey(), encodedObjectValue);
+    public static Cookie createCookie(String key, String encodedObjectValue, String path) {
+        Cookie newCookie = new Cookie(key, encodedObjectValue);
         newCookie.setPath(path);
         newCookie.setMaxAge(COOKIE_AGE);
         return newCookie;
     }
 
-    public static Cookie resetCookie(Cookie existingCookie, String encodedObjectValue, String path) {
+    public static Cookie resetCookie(String key, Cookie existingCookie, String encodedObjectValue, String path) {
         existingCookie.setMaxAge(KILL_COOKIE);
-        return createCookie(encodedObjectValue, path);
+        return createCookie(key, encodedObjectValue, path);
     }
 }

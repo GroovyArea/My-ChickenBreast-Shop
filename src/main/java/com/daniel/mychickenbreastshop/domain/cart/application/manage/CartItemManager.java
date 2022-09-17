@@ -2,8 +2,9 @@ package com.daniel.mychickenbreastshop.domain.cart.application.manage;
 
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCartDto;
+import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartProperty;
 import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartResponse;
-import com.daniel.mychickenbreastshop.domain.cart.util.CookieUtil;
+import com.daniel.mychickenbreastshop.global.util.CookieUtil;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,18 +26,18 @@ public class CartItemManager {
         if (CookieUtil.isCookieEmpty(updatableCartDto.getCookie())) {
             Map<Long, CartRequestDto> newMap = new HashMap<>();
 
-            newMap.put(cartRequestDto.getProductNo(), cartRequestDto);
+            newMap.put(cartRequestDto.getItemNo(), cartRequestDto);
 
             String encodedObjectValue = URLEncoder.encode(JsonUtil.objectToString(newMap), StandardCharsets.UTF_8);
 
             return UpdatableCartDto.builder()
-                    .cookie(CookieUtil.createCookie(encodedObjectValue, path))
+                    .cookie(CookieUtil.createCookie(CartProperty.COOKIE_KEY.getKey(), encodedObjectValue, path))
                     .build();
         }
 
         Map<Long, CartRequestDto> existingMap = getCartRequestDtoMap(updatableCartDto);
 
-        existingMap.put(cartRequestDto.getProductNo(), cartRequestDto);
+        existingMap.put(cartRequestDto.getItemNo(), cartRequestDto);
 
         return getUpdatableCartDto(updatableCartDto, existingMap);
     }
@@ -48,7 +49,7 @@ public class CartItemManager {
 
         Map<Long, CartRequestDto> existingMap = getCartRequestDtoMap(updatableCartDto);
 
-        existingMap.put(cartRequestDto.getProductNo(), cartRequestDto);
+        existingMap.put(cartRequestDto.getItemNo(), cartRequestDto);
 
         return getUpdatableCartDto(updatableCartDto, existingMap);
     }
@@ -60,7 +61,7 @@ public class CartItemManager {
 
         Map<Long, CartRequestDto> existingMap = getCartRequestDtoMap(updatableCartDto);
 
-        existingMap.remove(cartRequestDto.getProductNo());
+        existingMap.remove(cartRequestDto.getItemNo());
 
         return getUpdatableCartDto(updatableCartDto, existingMap);
     }
@@ -69,7 +70,7 @@ public class CartItemManager {
         String encodedObjectValue = URLEncoder.encode(JsonUtil.objectToString(existingMap), StandardCharsets.UTF_8);
 
         return UpdatableCartDto.builder()
-                .cookie(CookieUtil.resetCookie(updatableCartDto.getCookie(), encodedObjectValue, path))
+                .cookie(CookieUtil.resetCookie(CartProperty.COOKIE_KEY.getKey(), updatableCartDto.getCookie(), encodedObjectValue, path))
                 .build();
     }
 

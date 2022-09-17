@@ -17,8 +17,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     public List<OrderDetailResponseDto> getOrderInfoData(Long userId, Pageable pageable) {
-        return orderRepository.findByUserIdUsingFetchJoin(userId, pageable).stream()
-                .map();
+        return null;
     }
 
 

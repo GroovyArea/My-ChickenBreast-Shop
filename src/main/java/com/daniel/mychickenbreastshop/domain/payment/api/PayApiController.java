@@ -48,8 +48,10 @@ public class PayApiController {
      */
     @GetMapping("/{paymentApi}/completed")
     public ResponseEntity<PayApprovalResponseDto> approvalRequest(@PathVariable PaymentApi paymentApi,
-                                                                  @RequestParam("pay_token") String payToken) {
-        payService.approvePayment(payToken, paymentApi);
+                                                                  @RequestParam("pay_token") String payToken,
+                                                                  HttpServletRequest request) {
+        String loginId = getLoginId(request);
+        payService.approvePayment(payToken, paymentApi, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -87,11 +89,11 @@ public class PayApiController {
     public ResponseEntity<String> itemPay(@PathVariable PaymentApi paymentApi,
                                           @RequestBody ItemPayRequestDto itemPayRequestDto,
                                           HttpServletRequest request) {
-        Long userId = getUserId(request);
-        String requestURL = getRequestURL(request);
-        String payableURL = payService.getSingleItemPayURL(itemPayRequestDto, requestURL, userId, paymentApi);
+        String loginId = getLoginId(request);
+        String requestUrl = getRequestURL(request);
+        String payableUrl = payService.getSingleItemPayURL(itemPayRequestDto, requestUrl, loginId, paymentApi);
 
-        return ResponseEntity.ok(payableURL);
+        return ResponseEntity.ok(payableUrl);
     }
 
     /**
@@ -101,21 +103,20 @@ public class PayApiController {
     public ResponseEntity<String> cartItemsPay(@PathVariable PaymentApi paymentApi,
                                                HttpServletRequest request,
                                                @CookieValue(value = "chicken") Cookie cookie) {
-        Long userId = getUserId(request);
-        String requestURL = getRequestURL(request);
-        String payableURL = payService.getCartItemsPayURL(cookie.getValue(), requestURL, userId, paymentApi);
+        String loginId = getLoginId(request);
+        String requestUrl = getRequestURL(request);
+        String payableUrl = payService.getCartItemsPayURL(cookie.getValue(), requestUrl, loginId, paymentApi);
 
-        return ResponseEntity.ok(payableURL);
+        return ResponseEntity.ok(payableUrl);
     }
-
 
 
     private String getRequestURL(HttpServletRequest request) {
         return request.getRequestURL().toString().replace(request.getRequestURI(), "");
     }
 
-    private Long getUserId(HttpServletRequest request) {
-        return (Long) request.getAttribute("userId");
+    private String getLoginId(HttpServletRequest request) {
+        return (String) request.getAttribute("loginId");
     }
 
 }

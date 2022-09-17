@@ -13,15 +13,15 @@ import javax.validation.constraints.NotNull;
 public class CartRequestDto {
 
     @NotNull(message = "필수 입력 값입니다.")
-    private Long productNo;
+    private Long itemNo;
 
     @NotBlank(message = "필수 입력 값입니다.")
-    private String productName;
+    private String itemName;
 
     @NotNull(message = "필수 입력 값입니다.")
-    private int productQuantity;
+    private Integer itemQuantity;
 
     @NotNull(message = "필수 입력 값입니다.")
-    private long productPrice;
+    private Long totalPrice;
 
 }

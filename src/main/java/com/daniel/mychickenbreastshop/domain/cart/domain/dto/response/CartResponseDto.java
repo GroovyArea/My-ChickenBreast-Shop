@@ -9,9 +9,9 @@ import lombok.*;
 @Setter
 public class CartResponseDto {
 
-    private Long productNo;
-    private String productName;
-    private int productQuantity;
-    private long productPrice;
+    private Long itemNo;
+    private String itemName;
+    private int itemQuantity;
+    private long totalPrice;
 
 }

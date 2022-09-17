@@ -12,7 +12,7 @@ public class CartValidator {
     private final ProductService productService;
 
     public void cartValidate(CartRequestDto cartRequestDto) {
-        productService.validatePayAmount(cartRequestDto.getProductNo(), cartRequestDto.getProductPrice(),
-                cartRequestDto.getProductQuantity());
+        productService.validatePayAmount(cartRequestDto.getItemNo(), cartRequestDto.getTotalPrice(),
+                Math.toIntExact(cartRequestDto.getItemNo()));
     }
 }
