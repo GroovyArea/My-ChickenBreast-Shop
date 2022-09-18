@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.payment.application;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.PayApplicantFactory;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.PaymentRequest;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderedProductRepository;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PayService {
 
-    private final PayApplicantFactory payApplicantFactory;
+    private final PaymentStrategyFactory payApplicantFactory;
     private final ProductRepository productRepository;
     private final PayRepository payRepository;
     private final OrderRepository orderRepository;

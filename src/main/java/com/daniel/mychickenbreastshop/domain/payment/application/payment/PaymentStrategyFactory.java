@@ -13,16 +13,16 @@ import java.util.Set;
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse.UNCORRECTED_API;
 
 @Component
-public class PayApplicantFactory {
+public class PaymentStrategyFactory {
 
-    private Map<PaymentApi, PaymentRequest> strategies;
+    private Map<PaymentApi, PaymentService> strategies;
 
     @Autowired
-    public PayApplicantFactory(Set<PaymentRequest> applicants) {
+    public PaymentStrategyFactory(Set<PaymentRequest> applicants) {
         createStrategy(applicants);
     }
 
-    public PaymentRequest findStrategy(PaymentApi paymentApi) {
+    public PaymentService findStrategy(PaymentApi paymentApi) {
         if (!Arrays.asList(PaymentApi.values()).contains(paymentApi)) {
             throw new BadRequestException(UNCORRECTED_API.getMessage());
         }
