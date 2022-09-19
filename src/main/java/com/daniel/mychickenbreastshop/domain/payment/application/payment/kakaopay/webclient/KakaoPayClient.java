@@ -7,6 +7,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayRequest.PayCancelRequest;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
 
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayProperty.FAILED_POST;
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayRequest.PayReadyRequest;
@@ -34,9 +33,7 @@ public class KakaoPayClient {
     public OrderInfoResponse getOrderInfo(String uri, OrderInfoRequest orderInfoRequest) {
         return kakaoPayWebClient.post()
                 .uri(uri)
-                .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
-                .acceptCharset(StandardCharsets.UTF_8)
                 .bodyValue(orderInfoRequest)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
@@ -45,26 +42,22 @@ public class KakaoPayClient {
                 .block();
     }
 
-    public <T> T ready(String uri, PayReadyRequest payReadyRequest, Class<T> clazz) {
+    public PayReadyResponse ready(String uri, PayReadyRequest payReadyRequest) {
         return kakaoPayWebClient.post()
                 .uri(uri)
-                .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
-                .acceptCharset(StandardCharsets.UTF_8)
                 .bodyValue(payReadyRequest)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
                 .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
-                .bodyToMono(clazz)
+                .bodyToMono(PayReadyResponse.class)
                 .block();
     }
 
     public PayApproveResponse approve(String uri, PayApproveRequest payApproveRequest) {
         return kakaoPayWebClient.post()
                 .uri(uri)
-                .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
-                .acceptCharset(StandardCharsets.UTF_8)
                 .bodyValue(payApproveRequest)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
@@ -76,9 +69,7 @@ public class KakaoPayClient {
     public PayCancelResponse cancel(String uri, PayCancelRequest payCancelRequest) {
         return kakaoPayWebClient.post()
                 .uri(uri)
-                .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
-                .acceptCharset(StandardCharsets.UTF_8)
                 .bodyValue(payCancelRequest)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))

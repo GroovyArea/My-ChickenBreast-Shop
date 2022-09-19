@@ -5,6 +5,7 @@ import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
+import com.daniel.mychickenbreastshop.auth.security.filter.model.PassablePathProperty;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
@@ -60,7 +62,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return "/join".equals(path);
+        return Arrays.stream(PassablePathProperty.values()).map(PassablePathProperty::getPath).toList().contains(path);
     }
 
     private Authentication getAuthentication(String token) {

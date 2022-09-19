@@ -9,13 +9,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class KakaoPayClientConfig extends WebClientConfig {
 
-    @Value("${kakaoPay.url}")
+    @Value("${kakaopay.url}")
     private String baseUrl;
 
-    @Value("${kakaoPay.readTime}")
+    @Value("${kakaopay.readTime}")
     private int readTime;
 
-    @Value("${kakaoPay.connectTime}")
+    @Value("${kakaopay.connectTime}")
     private int connectTime;
 
     @Bean

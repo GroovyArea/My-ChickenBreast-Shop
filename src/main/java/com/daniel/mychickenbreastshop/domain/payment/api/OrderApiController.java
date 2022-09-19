@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.payment.api;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.OrderService;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderDetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderedProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class OrderApiController {
      * 회원 개인 주문 내역(DB) 조회
      */
     @GetMapping
-    public ResponseEntity<List<OrderDetailResponseDto>> geOrderInfo(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity<List<OrderedProductResponseDto>> geOrderInfo(HttpServletRequest request, Pageable pageable) {
         Long userId = getUserId(request);
         return ResponseEntity.ok(orderService.getOrderInfoData(userId, pageable));
     }

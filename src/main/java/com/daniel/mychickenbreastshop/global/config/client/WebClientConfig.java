@@ -3,8 +3,6 @@ package com.daniel.mychickenbreastshop.global.config.client;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -27,8 +25,6 @@ public abstract class WebClientConfig {
 
         return WebClient.builder()
                 .baseUrl(baseUrl)
-                .defaultHeaders(httpHeaders ->
-                        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }

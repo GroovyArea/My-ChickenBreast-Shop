@@ -75,7 +75,7 @@ public class UserApiController {
      * @param pageable page 객체
      * @return 회원 리스트
      */
-    @GetMapping("/v1/users")
+    @GetMapping("/v2/users")
     public ResponseEntity<List<ListResponseDto>> getAll(
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUser(pageable));

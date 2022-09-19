@@ -1,10 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.payment.api;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.PayService;
+import com.daniel.mychickenbreastshop.domain.payment.application.crew.PaymentApplicationCrew;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PayApprovalResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.kakaopay.ApiPayInfoDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,26 +30,26 @@ import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.Pay
 @RequestMapping("/api/v1/payment")
 public class PayApiController {
 
-    private final PayService payService;
+    private final PaymentApplicationCrew paymentApplicationCrew;
 
     /**
      * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민 좀 해보자)
      */
-    @GetMapping("/{paymentApi}")
+/*    @GetMapping("/{paymentApi}")
     public ResponseEntity<ApiPayInfoDto> getPayDetail(@PathVariable PaymentApi paymentApi,
                                                       @RequestParam String franchiseeId, @RequestParam String payId) {
         return ResponseEntity.ok(payService.getApiPaymentDetail(franchiseeId, payId, paymentApi));
-    }
+    }*/
 
     /**
      * 외부 결제 API 에 결제 승인 요청
      */
     @GetMapping("/{paymentApi}/completed")
-    public ResponseEntity<PayApprovalResponseDto> approvalRequest(@PathVariable PaymentApi paymentApi,
+    public ResponseEntity<Void> approvalRequest(@PathVariable PaymentApi paymentApi,
                                                                   @RequestParam("pay_token") String payToken,
                                                                   HttpServletRequest request) {
         String loginId = getLoginId(request);
-        payService.approvePayment(payToken, paymentApi, loginId);
+        paymentApplicationCrew.approvePayment(payToken, loginId, paymentApi);
         return ResponseEntity.ok().build();
     }
 
@@ -78,7 +76,7 @@ public class PayApiController {
     @PostMapping("/{paymentApi}/cancel")
     public ResponseEntity<Void> cancelPayment(@PathVariable PaymentApi paymentApi,
                                               @RequestBody PayCancelRequestDto payCancelRequestDto) {
-        payService.cancelPayment(payCancelRequestDto, paymentApi);
+        paymentApplicationCrew.cancelPayment(payCancelRequestDto, paymentApi);
         return ResponseEntity.ok().build();
     }
 
@@ -91,7 +89,7 @@ public class PayApiController {
                                           HttpServletRequest request) {
         String loginId = getLoginId(request);
         String requestUrl = getRequestURL(request);
-        String payableUrl = payService.getSingleItemPayURL(itemPayRequestDto, requestUrl, loginId, paymentApi);
+        String payableUrl = paymentApplicationCrew.getSingleItemPayResultUrl(itemPayRequestDto, requestUrl, loginId, paymentApi);
 
         return ResponseEntity.ok(payableUrl);
     }
@@ -105,7 +103,7 @@ public class PayApiController {
                                                @CookieValue(value = "chicken") Cookie cookie) {
         String loginId = getLoginId(request);
         String requestUrl = getRequestURL(request);
-        String payableUrl = payService.getCartItemsPayURL(cookie.getValue(), requestUrl, loginId, paymentApi);
+        String payableUrl = paymentApplicationCrew.getCartItemsPayUrl(cookie.getValue(), requestUrl, loginId, paymentApi);
 
         return ResponseEntity.ok(payableUrl);
     }

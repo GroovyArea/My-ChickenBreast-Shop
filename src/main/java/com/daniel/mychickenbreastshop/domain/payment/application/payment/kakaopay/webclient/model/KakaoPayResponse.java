@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model;
 
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.kakaopay.ApprovedCancelAmount;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -16,7 +16,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonInclude(NON_NULL)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class OrderInfoResponse {
+    public static class OrderInfoResponse implements PaymentResult{
 
         String cid; // 가맹점 코드
         String cidSecret;
@@ -42,6 +42,10 @@ public class KakaoPayResponse {
         SelectedCardInfo selectedCardInfo; // 결제 카드 정보
         PaymentActionDetails[] paymentActionDetails; // 결제/취소 상세
 
+        @Override
+        public String getRedirectUrl() {
+            return null;
+        }
     }
 
     @Getter
@@ -107,7 +111,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @JsonInclude(NON_NULL)
-    public static class PayReadyResponse {
+    public static class PayReadyResponse implements PaymentResult {
 
         private String tid; // 결제 고유 번호
         private String nextRedirectAppUrl; // 요청한 클라이언트(client)가 모바일 앱일 경우 카카오톡 결제 페이지 Redirect Url
@@ -117,12 +121,17 @@ public class KakaoPayResponse {
         private String iosAppScheme; // 결제 화명 이동하는 IOS 앱 스킴
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         private LocalDateTime createdAt; // 결제 준비 요청 시간
+
+        @Override
+        public String getRedirectUrl() {
+            return nextRedirectPcUrl;
+        }
     }
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @JsonInclude(NON_NULL)
-    public static class PayApproveResponse {
+    public static class PayApproveResponse implements PaymentResult {
 
         private String aid; // 요청 고유 번호
         private String tid; // 결제 고유 번호
@@ -143,6 +152,11 @@ public class KakaoPayResponse {
         private LocalDateTime approvedAt; // 결제 승인 시간
 
         private String payload; // 결제 승인 요청에 대해 저장한 값, 요청 시 전달된 내용
+
+        @Override
+        public String getRedirectUrl() {
+            return null;
+        }
     }
 
 
@@ -170,7 +184,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @JsonInclude(NON_NULL)
-    public static class PayCancelResponse {
+    public static class PayCancelResponse implements PaymentResult {
 
         private String aid; // 요청 고유 번호
         private String tid; // 결제 고유 번호
@@ -193,5 +207,22 @@ public class KakaoPayResponse {
         private LocalDateTime approvedAt; // 결제 승인 시간
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         private LocalDateTime canceledAt; // 결제 준비 요청 시각
+
+        @Override
+        public String getRedirectUrl() {
+            return null;
+        }
     }
+
+    @Getter
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ApprovedCancelAmount {
+        private Integer total; // 이번 요청으로 취소된 전체 결제 금액
+        private Integer taxFree; // 이번 요청으로 취소된 비과세 금액
+        private Integer vat; // 이번 요청으로 취소된 부가세 금액
+        private Integer point; // 이번 요청으로 취소된 포인트 금액
+        private Integer discount; // 이번 요청으로 취소된 할인 금액
+        private Integer greenDeposit; // 컵 보증금
+    }
+
 }

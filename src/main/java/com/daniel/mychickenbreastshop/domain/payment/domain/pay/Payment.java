@@ -37,7 +37,7 @@ public class Payment extends BaseTimeEntity {
     @Column(name = "pay_status", nullable = false)
     private PayStatus status;
 
-    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
