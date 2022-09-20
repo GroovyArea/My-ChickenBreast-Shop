@@ -46,9 +46,10 @@ public class KakaoPayClient {
         return kakaoPayWebClient.post()
                 .uri(uri)
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
-                .bodyValue(payReadyRequest)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(payReadyRequest), PayReadyRequest.class)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
+                /*.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))*/
                 .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(FAILED_POST.getMessage())))
                 .bodyToMono(PayReadyResponse.class)
                 .block();
@@ -81,8 +82,8 @@ public class KakaoPayClient {
     private HttpHeaders setHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "KakaoAK " + kakaoPayClientProperty.getAdmin().getKey());
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+        //headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        //headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         return headers;
     }
 

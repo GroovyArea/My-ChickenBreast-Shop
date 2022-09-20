@@ -35,7 +35,7 @@ public class Order extends BaseTimeEntity {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<OrderedProduct> orderedProducts = new ArrayList<>();
+    List<OrderProduct> orderedProducts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

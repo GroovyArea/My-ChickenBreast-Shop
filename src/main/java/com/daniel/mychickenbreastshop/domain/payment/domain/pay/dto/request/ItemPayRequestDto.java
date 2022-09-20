@@ -5,14 +5,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ItemPayRequestDto {
 
-    private int quantity;
-    private int itemNumber;
+    @NotNull(message = "상품 번호를 입력하세요.")
+    private Integer itemNumber;
+
+    @NotNull(message = "수량을 입력하세요.")
+    private Integer quantity;
+
+    @NotBlank(message = "상품 이름을 입력하세요.")
     private String itemName;
-    private int totalAmount;
+
+    @NotNull(message = "총 가격을 입력하세요.")
+    private Integer totalAmount;
 }

@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderedProductRepository;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProductRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.CardRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.PayRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
@@ -26,7 +26,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final PayRepository payRepository;
-    private final OrderedProductRepository orderedProductRepository;
+    private final OrderProductRepository orderedProductRepository;
     private final CardRepository cardRepository;
 
     @Override
