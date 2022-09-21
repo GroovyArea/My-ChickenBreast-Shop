@@ -28,14 +28,14 @@ public class Order extends BaseTimeEntity {
     @Column(name = "total_count")
     private Integer totalCount;
 
-    private Integer orderPrice;
+    private Long orderPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<OrderProduct> orderedProducts = new ArrayList<>();
+    List<OrderProduct> orderProducts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -45,13 +45,57 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
-    public void updateUserInfo(final User updatableUser) {
+    // <연관관계 편의 메서드> //
+
+    public void setUserInfo(final User userInfo) {
         if (this.user != null) {
-            this.user.getOrders().remove(this);
+            user.getOrders().remove(this);
         }
 
-        this.user = updatableUser;
-        this.user.getOrders().add(this);
+        this.user = userInfo;
+        user.getOrders().add(this);
     }
+
+    public void setPaymentInfo(final Payment paymentInfo) {
+        this.payment = paymentInfo;
+        payment.updateOrderInfo(this);
+    }
+
+    public void addOrderProduct(final OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
+        orderProduct.updateOrderInfo(this);
+    }
+
+    // <주문 생성 메서드> //
+
+    public static Order createOrder(User user, Payment payment, List<OrderProduct> orderProducts) {
+        return Order.builder()
+                .user(user)
+                .payment(payment)
+                .orderProducts(orderProducts)
+                .status(OrderStatus.ORDER_APPROVAL)
+                .totalCount(orderProducts.size())
+                .orderPrice(orderProducts.stream().map(OrderProduct::getPrice).mapToLong(Integer::longValue).sum())
+                .build();
+    }
+
+    public static Order createReadyOrder(final int quantity, final long totalAmount, final User user) {
+        return Order.builder()
+                .totalCount(quantity)
+                .orderPrice(totalAmount)
+                .status(OrderStatus.ORDER_READY)
+                .user(user)
+                .build();
+    }
+
+    // <비즈니스 로직 메서드> //
+    public void orderCancel() {
+        this.updateOrderStatus(OrderStatus.CANCEL_ORDER);
+    }
+
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
+    }
+
 
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "CARD_INFO")
+@Table(name = "card_info")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -33,5 +33,23 @@ public class Card extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "card")
     private Payment payment;
+
+    // <연관 관계 편의 메서드> //
+
+    // <비즈니스 로직 메서드> //
+
+    // <카드 생성 메서드> //
+    public static Card createCard(String bin, String cardType, String installMonth, String interestFreeInstall) {
+        return Card.builder()
+                .bin(bin)
+                .cardType(cardType)
+                .installMonth(installMonth)
+                .interestFreeInstall(interestFreeInstall)
+                .build();
+    }
+
+    public void updatePaymentInfo(Payment payment) {
+        this.payment = payment;
+    }
 }
 

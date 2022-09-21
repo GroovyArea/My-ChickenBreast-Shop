@@ -13,8 +13,6 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
-import com.daniel.mychickenbreastshop.domain.payment.extract.CartDisassembler;
-import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartItem;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.global.store.RedisStore;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,6 @@ public class KakaopayService implements KakaoPaymentService {
 
     private final KakaoPayClient kakaoPayClient;
     private final KakaoPayClientProperty kakaoPayClientProperty;
-    private final CartDisassembler cartDisassembler;
     private final RedisStore redisStore;
 
     @Override
@@ -55,8 +52,7 @@ public class KakaopayService implements KakaoPaymentService {
     }
 
     @Override
-    public PayReadyResponse payCart(String cookieValue, String requestUrl, String loginId) {
-        CartValue cartValue = getCartValue(cookieValue);
+    public PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId) {
         PayReadyRequest request = createCartPayRequest(cartValue, requestUrl, loginId);
         PayReadyResponse response = kakaoPayClient.ready(kakaoPayClientProperty.getUri().getReady(), request);
         savePayableData(response, request, loginId);
@@ -142,12 +138,4 @@ public class KakaopayService implements KakaoPaymentService {
                 .build();
     }
 
-    private CartValue getCartValue(String cookieValue) {
-        return CartValue.builder()
-                .itemNumbers(cartDisassembler.getItemNumbers(cookieValue, Long.class, CartItem.class, CartItem::getItemNo))
-                .itemNames(cartDisassembler.getItemNames(cookieValue, Long.class, CartItem.class, CartItem::getItemName))
-                .itemQuantities(cartDisassembler.getItemQuantities(cookieValue, Long.class, CartItem.class, CartItem::getItemQuantity))
-                .totalPrice(cartDisassembler.getTotalPrice(cookieValue, Long.class, CartItem.class, CartItem::getTotalPrice))
-                .build();
-    }
 }

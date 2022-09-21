@@ -47,6 +47,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
+
+
+    // <비즈니스 로직 메서드> //
+
     public void updateUserInfo(final User modifier, final String updatePassword) {
         updateName(modifier.getName());
         updateEmail(modifier.getEmail());

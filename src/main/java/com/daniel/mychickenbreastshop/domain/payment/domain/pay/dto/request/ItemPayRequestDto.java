@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class ItemPayRequestDto {
 
     @NotNull(message = "상품 번호를 입력하세요.")
-    private Integer itemNumber;
+    private Long itemNumber;
 
     @NotNull(message = "수량을 입력하세요.")
     private Integer quantity;

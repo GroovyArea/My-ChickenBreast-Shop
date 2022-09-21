@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderedProductResponseDto {
+public class OrderProductResponseDto {
 
     private Integer count;
     private String productName;

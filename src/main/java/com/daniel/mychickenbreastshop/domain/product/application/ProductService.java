@@ -115,6 +115,7 @@ public class ProductService {
     public void removeItem(Long productId) {
         Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
         dbProduct.updateItemStatus(ChickenStatus.EXTINCTION);
+        dbProduct.delete();
     }
 
     public void validatePayAmount(Long itemNo, long totalPrice, int itemQuantity) {

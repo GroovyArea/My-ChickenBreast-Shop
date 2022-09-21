@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "ORDER_PRODUCT")
+@Table(name = "ORDER_PRODUCT")
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,4 +37,21 @@ public class OrderProduct extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    // <연관관계 편의 메서드> //
+    public void updateOrderInfo(Order orderInfo) {
+        order = orderInfo;
+    }
+
+    // <주문 상품 생성 메서드> //
+    public static OrderProduct createOrderProduct(int count, String name, int price, String image, String content) {
+        return OrderProduct.builder()
+                .count(count)
+                .name(name)
+                .price(price)
+                .image(image)
+                .content(content)
+                .build();
+    }
+
 }

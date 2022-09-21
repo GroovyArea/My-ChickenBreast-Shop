@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
+    ORDER_READY("결제 준비"),
     ORDER_APPROVAL("결제 승인"),
     CANCEL_ORDER("결제 취소");
 

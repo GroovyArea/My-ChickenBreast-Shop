@@ -10,8 +10,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT o" +
             " FROM Order o" +
-            " JOIN FETCH o.orderedProducts op" +
+            " JOIN FETCH o.orderProducts op" +
             " JOIN FETCH o.payment p" +
             " JOIN FETCH p.card c")
     List<Order> findByUserIdUsingFetchJoin(Long userId, Pageable pageable);
+
 }

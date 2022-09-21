@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -15,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             " JOIN fetch p.category c" +
             " WHERE c.categoryName = :categoryName")
     List<Product> findByCategoryNameUsingFetchJoin(@Param("categoryName") ChickenCategory categoryName, Pageable pageable);
+
+    Optional<Product> findByName(String productName);
 }

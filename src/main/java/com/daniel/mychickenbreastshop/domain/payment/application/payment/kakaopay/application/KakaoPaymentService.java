@@ -7,6 +7,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
+import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartValue;
 
 /**
  * 카카오페이 서비스 인터페이스
@@ -17,7 +18,7 @@ public interface KakaoPaymentService extends PaymentService {
 
     PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId);
 
-    PayReadyResponse payCart(String cookieValue, String requestUrl, String loginId);
+    PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId);
 
     PayApproveResponse completePayment(String payToken, String loginId);
 

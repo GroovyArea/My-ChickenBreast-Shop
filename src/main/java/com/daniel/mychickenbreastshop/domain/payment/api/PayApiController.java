@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse.CANCELED_PAY;
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse.FAILED_PAY;
@@ -63,7 +64,7 @@ public class PayApiController {
 
 
     /**
-     * 외부 결제 시도 중 실패 시 얻은 Redirect Url 로 요청
+     * 외부 결제 시도 중 실패 시 얻은 Redirect Url 요청
      */
     @GetMapping("/failed")
     public ResponseEntity<String> redirectPayFailed() {
@@ -75,7 +76,7 @@ public class PayApiController {
      */
     @PostMapping("/{paymentApi}/cancel")
     public ResponseEntity<Void> cancelPayment(@PathVariable PaymentApi paymentApi,
-                                              @RequestBody PayCancelRequestDto payCancelRequestDto) {
+                                              @Valid @RequestBody PayCancelRequestDto payCancelRequestDto) {
         paymentApplicationCrew.cancelPayment(payCancelRequestDto, paymentApi);
         return ResponseEntity.ok().build();
     }
@@ -85,7 +86,7 @@ public class PayApiController {
      */
     @PostMapping("/{paymentApi}")
     public ResponseEntity<String> itemPay(@PathVariable PaymentApi paymentApi,
-                                          @RequestBody ItemPayRequestDto itemPayRequestDto,
+                                          @Valid @RequestBody ItemPayRequestDto itemPayRequestDto,
                                           HttpServletRequest request) {
         String loginId = getLoginId(request);
         String requestUrl = getRequestURL(request);

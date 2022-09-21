@@ -53,18 +53,18 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<ListResponseDto> getAllUser(Pageable pageable) {
-        List<User> allList = userRepository.findAll(pageable).getContent();
+        List<User> users = userRepository.findAll(pageable).getContent();
 
-        return allList.stream()
+        return users.stream()
                 .map(userListMapper::toDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<ListResponseDto> searchUser(String loginId, Pageable pageable) {
-        List<User> searchList = userRepository.searchByLoginId(loginId, pageable);
+        List<User> searchUsers = userRepository.searchByLoginId(loginId, pageable);
 
-        return searchList.stream()
+        return searchUsers.stream()
                 .map(userListMapper::toDTO)
                 .toList();
     }
@@ -111,6 +111,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
+        user.delete();
         user.remove();
     }
 

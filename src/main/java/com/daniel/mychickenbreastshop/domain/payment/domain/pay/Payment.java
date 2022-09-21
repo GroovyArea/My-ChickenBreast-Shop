@@ -23,11 +23,11 @@ public class Payment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pg_key", nullable = false)
-    private String key;
+    @Column(name = "pg_token", nullable = false)
+    private String pgToken;
 
     @Column(name = "total_price", nullable = false)
-    private Integer totalPrice;
+    private Long totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type", nullable = false)
@@ -41,6 +41,24 @@ public class Payment extends BaseTimeEntity {
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "CARDINFO_id", nullable = false)
+    @JoinColumn(name = "card_info_id", nullable = false)
     private Card card;
+
+    // <연관관계 편의 메서드> //
+
+    public void updateOrderInfo(final Order orderInfo) {
+        this.order = orderInfo;
+    }
+
+    public void setCardInfo(final Card cardInfo) {
+        this.card = cardInfo;
+        card.updatePaymentInfo(this);
+    }
+
+    // <비즈니스 로직 메서드> //
+
+    public void updatePaymentStatus(final PayStatus status) {
+        this.status = status;
+    }
+
 }
