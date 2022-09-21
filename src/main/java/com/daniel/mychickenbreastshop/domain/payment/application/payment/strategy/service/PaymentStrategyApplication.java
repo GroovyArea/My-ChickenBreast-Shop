@@ -5,6 +5,9 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.Item
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
 
+/**
+ * 결제 API 서비스 전략
+ */
 public interface PaymentStrategyApplication <T extends PaymentResult> {
 
     PaymentApi getPaymentApiName();

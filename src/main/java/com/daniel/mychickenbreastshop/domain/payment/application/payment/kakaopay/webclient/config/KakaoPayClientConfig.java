@@ -1,26 +1,23 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.config;
 
 import com.daniel.mychickenbreastshop.global.config.client.WebClientConfig;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * 카카오페이 WebClient 생성
+ */
 @Configuration
+@RequiredArgsConstructor
 public class KakaoPayClientConfig extends WebClientConfig {
 
-    @Value("${kakaopay.url}")
-    private String baseUrl;
-
-    @Value("${kakaopay.readTime}")
-    private int readTime;
-
-    @Value("${kakaopay.connectTime}")
-    private int connectTime;
+    private final KakaoPayClientProperty property;
 
     @Bean
     public WebClient kakaoPayWebClient() {
-        return createWebClientFrame(baseUrl, readTime, connectTime);
+        return createWebClientFrame(property.getUrl(), property.getReadTime(), property.getConnectTime());
     }
 
 }

@@ -92,7 +92,7 @@ public class KakaopayService implements KakaoPaymentService {
                 .totalAmount(dto.getTotalAmount())
                 .taxFreeAmount(kakaoPayClientProperty.getParameter().getTaxFree())
                 .cid(kakaoPayClientProperty.getParameter().getCid())
-                .approvedUrl(requestUrl + kakaoPayClientProperty.getApi().getApproval())
+                .approvalUrl(requestUrl + kakaoPayClientProperty.getApi().getApproval())
                 .cancelUrl(requestUrl + kakaoPayClientProperty.getApi().getCancel())
                 .failUrl(requestUrl + kakaoPayClientProperty.getApi().getFail())
                 .build();
@@ -112,7 +112,7 @@ public class KakaopayService implements KakaoPaymentService {
                 .totalAmount((int) cartValue.getTotalPrice())
                 .taxFreeAmount(kakaoPayClientProperty.getParameter().getTaxFree())
                 .cid(kakaoPayClientProperty.getParameter().getCid())
-                .approvedUrl(requestUrl + kakaoPayClientProperty.getApi().getApproval())
+                .approvalUrl(requestUrl + kakaoPayClientProperty.getApi().getApproval())
                 .cancelUrl(requestUrl + kakaoPayClientProperty.getApi().getCancel())
                 .failUrl(requestUrl + kakaoPayClientProperty.getApi().getFail())
                 .build();

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi.KAKAO;
 
+/**
+ * 전략 결제 API 서비스 구현체 (카카오페이)
+ */
 @Service
 @RequiredArgsConstructor
 public class KakaopayStrategyApplication implements PaymentStrategyApplication<PaymentResult>{

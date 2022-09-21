@@ -49,7 +49,7 @@ public class GlobalAdvice {
         return ResponseEntity.badRequest().body(setExceptionBody(e.getMessage()));
     }
 
-/*    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> runtimeExceptionHandle(RuntimeException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
@@ -59,7 +59,7 @@ public class GlobalAdvice {
     public ResponseEntity<String> exceptionHandle(Exception e) {
         log.error(e.getMessage(), e);
         return ResponseEntity.internalServerError().body(setExceptionBody(e.getMessage()));
-    }*/
+    }
 
     private String setExceptionBody(String exceptionMessage) {
         return "Exception message : " + exceptionMessage;

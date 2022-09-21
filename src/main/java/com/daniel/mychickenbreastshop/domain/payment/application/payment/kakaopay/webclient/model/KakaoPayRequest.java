@@ -1,12 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * KakaoPay API 요청 모델
@@ -15,21 +12,16 @@ public class KakaoPayRequest {
 
     @Getter
     @Builder
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class OrderInfoRequest {
 
-        // 가맹점 코드, 10자
-        @JsonProperty("cid")
-        private String cid;
+        private String cid;// 가맹점 코드, 10자
+        private String tid;// 결제 고유번호, 20자
 
-        // 결제 고유번호, 20자
-        @JsonProperty("tid")
-        private String tid;
     }
 
     @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class PayReadyRequest {
 
@@ -41,7 +33,7 @@ public class KakaoPayRequest {
         private Integer quantity; // 상품 수량
         private Integer totalAmount; // 상품 총액
         private Integer taxFreeAmount; // 상품 비과세 금액
-        private String approvedUrl; // 결제 성공 시 redirect url
+        private String approvalUrl; // 결제 성공 시 redirect url
         private String cancelUrl; // 결제 취소 시 redirect url
         private String failUrl; // 결제 실패 시 redirect url
     }
@@ -51,7 +43,7 @@ public class KakaoPayRequest {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class PayApproveRequest {
 
-        private String cid; // 가맹점 코드
+        private String cid;// 가맹점 코드
         private String tid; // 결제 고유 번호 (결제 준비 API 응답에 포함)
         private String partnerOrderId; // 가맹점 주문 번호, 결제 준비 API 요청과 일치해야 함
         private String partnerUserId; // 가맹점 회원 id, 결제 준비 API 요청과 일치해야 함

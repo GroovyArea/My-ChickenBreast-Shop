@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -35,11 +35,11 @@ public class KakaoPayResponse {
         String itemCode; // 상품 코드
         Integer quantity; // 상품 수량
 
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         LocalDateTime createdAt; // 결제 준비 요청 시각
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         LocalDateTime approvedAt; // 결제 승인 시각
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         LocalDateTime canceledAt; // 결제 취소 시각
 
         SelectedCardInfo selectedCardInfo; // 결제 카드 정보
@@ -125,7 +125,7 @@ public class KakaoPayResponse {
         private String nextRedirectPcUrl; // PC 웹일 경우 결제 요청 메시지(TMS)를 보내기 위한 정보 입력 화면 Redirect Url
         private String androidAppScheme; // 결제 화면 이동하는 Android 앱 스킴
         private String iosAppScheme; // 결제 화명 이동하는 IOS 앱 스킴
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime createdAt; // 결제 준비 요청 시간
 
         @Override
@@ -152,9 +152,9 @@ public class KakaoPayResponse {
         private String itemCode; // 상품 코드
         private Integer quantity; // 상품 수량
 
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime createdAt; // 결제 준비 요청 시각
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime approvedAt; // 결제 승인 시간
 
         private String payload; // 결제 승인 요청에 대해 저장한 값, 요청 시 전달된 내용
@@ -207,11 +207,11 @@ public class KakaoPayResponse {
         private String itemCode; // 상품 코드
         private Integer quantity; // 상품 수량
 
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime createdAt; // 결제 준비 요청 시각
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime approvedAt; // 결제 승인 시간
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
         private LocalDateTime canceledAt; // 결제 준비 요청 시각
 
         @Override

@@ -46,7 +46,7 @@ public class PayApiController {
      */
     @GetMapping("/{paymentApi}/completed")
     public ResponseEntity<Void> approvalRequest(@PathVariable PaymentApi paymentApi,
-                                                                  @RequestParam("pay_token") String payToken,
+                                                                  @RequestParam("pg_token") String payToken,
                                                                   HttpServletRequest request) {
         String loginId = getLoginId(request);
         paymentApplicationCrew.approvePayment(payToken, loginId, paymentApi);

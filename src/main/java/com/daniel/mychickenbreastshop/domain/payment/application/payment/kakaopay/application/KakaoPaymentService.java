@@ -8,6 +8,9 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 
+/**
+ * 카카오페이 서비스 인터페이스
+ */
 public interface KakaoPaymentService extends PaymentService {
 
     OrderInfoResponse getOrderInfo(String franchiseeId, String payId);

@@ -19,12 +19,6 @@ public class PaymentApplicationCrew {
 
     private final PaymentStrategyFactory paymentStrategyFactory;
 
-    /**
-     * api에서 요청하는 메서드들 만들기 payservice 참고
-     * 트랜잭션 어디서 처리할지 고민해보자
-     * 클래스 이름도
-     */
-
     public String getSingleItemPayResultUrl(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId, PaymentApi paymentApi) {
         PaymentStrategyApplication<PaymentResult> paymentApplication = getPaymentStrategyApplication(paymentApi);
         return paymentApplication.payItem(itemPayRequestDto, requestUrl, loginId).getRedirectUrl();
