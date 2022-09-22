@@ -26,17 +26,6 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getOrderInfoData(userId, pageable));
     }
 
-    /**
-     * 주문 취소 요청
-     */
-    @PatchMapping("/{orderId}")
-    public ResponseEntity<Void> cancelOrder(@PathVariable("orderId") Long orderId,
-                                            HttpServletRequest request) {
-        Long userId = getUserId(request);
-        orderService.cancelOrder(orderId, userId);
-        return ResponseEntity.ok().build();
-    }
-
     private Long getUserId(HttpServletRequest request) {
         return (Long) request.getAttribute("userId");
     }

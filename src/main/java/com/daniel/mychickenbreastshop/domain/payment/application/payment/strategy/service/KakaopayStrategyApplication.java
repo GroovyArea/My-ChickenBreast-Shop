@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.application.KakaoPaymentService;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
@@ -110,7 +111,8 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
         List<OrderProduct> orderProducts = new ArrayList<>();
 
-        for (int i = 0; i < savedProducts.size(); i++) {
+        int bound = savedProducts.size();
+        for (int i = 0; i < bound; i++) {
             orderProducts.add(
                     OrderProduct.createOrderProduct(
                             savedProducts.get(i).getQuantity(),
@@ -118,7 +120,6 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
                             savedProducts.get(i).getPrice(),
                             savedProducts.get(i).getImage(),
                             savedProducts.get(i).getContent()));
-
             order.addOrderProduct(orderProducts.get(i));
         }
 
@@ -164,7 +165,14 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     @Override
     @Transactional
     public PaymentResult cancelPayment(PayCancelRequestDto payCancelRequestDto) {
-        return kakaoPaymentService.cancelPayment(payCancelRequestDto);
+        KakaoPayResponse.PayCancelResponse response = kakaoPaymentService.cancelPayment(payCancelRequestDto);
+
+        Payment savedPayment = payRepository.findByPgToken(payCancelRequestDto.getPayId()).orElseThrow(() -> new BadRequestException(PaymentResponse.PAYMENT_NOT_EXISTS.getMessage()));
+
+        savedPayment.updatePaymentStatus(PayStatus.CANCELED);
+        savedPayment.getOrder().updateOrderStatus(OrderStatus.CANCEL_ORDER);
+
+        return response;
     }
 
     private Product getSavedProduct(String productName) {

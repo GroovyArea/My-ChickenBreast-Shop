@@ -21,6 +21,7 @@ public class Payment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     @Column(name = "pg_token", nullable = false)

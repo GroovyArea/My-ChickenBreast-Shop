@@ -18,6 +18,7 @@ public class Card extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     private String bin;

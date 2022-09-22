@@ -16,12 +16,14 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    /**
+     * 디비 조회 로직 (무엇을 조인할지 고민 후 배치사이즈로 성능 최적화)
+     * @param userId
+     * @param pageable
+     * @return
+     */
     public List<OrderProductResponseDto> getOrderInfoData(Long userId, Pageable pageable) {
         return null;
     }
 
-
-    @Transactional
-    public void cancelOrder(Long orderId, Long userId) {
-    }
 }

@@ -23,6 +23,7 @@ public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     @Column(name = "total_count")
