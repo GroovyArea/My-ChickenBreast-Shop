@@ -87,7 +87,7 @@ public class ProductApiController {
      * @param file               이미지 파일
      * @return 상품 고유 번호
      */
-    @PostMapping("/v1/products")
+    @PostMapping("/v2/products")
     public ResponseEntity<Long> registerProduct(@RequestPart RegisterRequestDto registerRequestDto,
                                                 @RequestPart(value = "image") MultipartFile file) {
         if (file == null) {
@@ -104,7 +104,7 @@ public class ProductApiController {
      * @param modifyRequestDto 수정 Dto
      * @param file             이미지 파일
      */
-    @PatchMapping("/v1/products")
+    @PatchMapping("/v2/products")
     public ResponseEntity<Void> modifyProduct(@RequestPart ModifyRequestDto modifyRequestDto,
                                               @RequestPart("image") MultipartFile file) {
         productService.modifyItem(modifyRequestDto, file);
@@ -116,7 +116,7 @@ public class ProductApiController {
      *
      * @param productId 상품 고유 번호
      */
-    @DeleteMapping("/v1/products/{productId}")
+    @DeleteMapping("/v2/products/{productId}")
     public ResponseEntity<Void> removeProduct(@PathVariable Long productId) {
         productService.removeItem(productId);
         return ResponseEntity.ok().build();

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "card_info")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -18,24 +17,27 @@ public class Card extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     private String bin;
 
-    @Column(name = "card_type", nullable = false)
+    @Column(name = "card_type")
     private String cardType;
 
-    @Column(name = "install_month", nullable = false)
+    @Column(name = "install_month")
     private String installMonth;
 
-    @Column(name = "interest_free_install", nullable = false)
+    @Column(name = "interest_free_install")
     private String interestFreeInstall;
 
     @OneToOne(mappedBy = "card")
     private Payment payment;
 
     // <연관 관계 편의 메서드> //
+
+    public void updatePaymentInfo(Payment payment) {
+        this.payment = payment;
+    }
 
     // <비즈니스 로직 메서드> //
 
@@ -49,8 +51,5 @@ public class Card extends BaseTimeEntity {
                 .build();
     }
 
-    public void updatePaymentInfo(Payment payment) {
-        this.payment = payment;
-    }
 }
 

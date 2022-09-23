@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "CATEGORY")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -21,7 +20,6 @@ public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

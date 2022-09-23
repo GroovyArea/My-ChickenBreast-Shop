@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "PAYMENT")
 @Entity
 @Getter
 @Builder
@@ -21,17 +20,16 @@ public class Payment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
-    @Column(name = "pg_token", nullable = false)
+    @Column(name = "pg_token")
     private String pgToken;
 
     @Column(name = "total_price", nullable = false)
     private Long totalPrice;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false)
+    @Column(name = "payment_type")
     private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
@@ -42,7 +40,7 @@ public class Payment extends BaseTimeEntity {
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_info_id", nullable = false)
+    @JoinColumn(name = "card_id")
     private Card card;
 
     // <연관관계 편의 메서드> //
@@ -56,7 +54,16 @@ public class Payment extends BaseTimeEntity {
         card.updatePaymentInfo(this);
     }
 
+
     // <비즈니스 로직 메서드> //
+
+    public void updatePgTokenInfo(final String pgToken) {
+        this.pgToken = pgToken;
+    }
+
+    public void updatePaymentTypeInfo(final PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
 
     public void updatePaymentStatus(final PayStatus status) {
         this.status = status;

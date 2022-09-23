@@ -87,6 +87,7 @@ public class ProductService {
         Product savableProduct = itemRegisterMapper.toEntity(registerRequestDto);
 
         savableProduct.updateCategoryInfo(dbCategory);
+        savableProduct.updateItemStatus(ChickenStatus.SALE);
 
         return productRepository.save(savableProduct).getId();
     }

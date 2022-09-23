@@ -40,8 +40,8 @@ public class CartApiController {
      */
     @GetMapping
     public ResponseEntity<List<CartResponseDto>> getCartList(@CookieValue(value = "chicken") Cookie cookie) {
-        List<CartResponseDto> cartResponseDTOS = cartService.getCart(cookie.getValue());
-        return ResponseEntity.ok(cartResponseDTOS);
+        List<CartResponseDto> cartResponseDtos = cartService.getCart(cookie.getValue());
+        return ResponseEntity.ok(cartResponseDtos);
     }
 
     /**

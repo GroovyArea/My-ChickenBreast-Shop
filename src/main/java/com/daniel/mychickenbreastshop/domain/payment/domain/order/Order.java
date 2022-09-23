@@ -23,7 +23,6 @@ public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     @Column(name = "total_count")
@@ -39,7 +38,7 @@ public class Order extends BaseTimeEntity {
     List<OrderProduct> orderProducts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -69,21 +68,11 @@ public class Order extends BaseTimeEntity {
 
     // <주문 생성 메서드> //
 
-    public static Order createOrder(User user, Payment payment, List<OrderProduct> orderProducts) {
-        return Order.builder()
-                .user(user)
-                .payment(payment)
-                .orderProducts(orderProducts)
-                .status(OrderStatus.ORDER_APPROVAL)
-                .totalCount(orderProducts.size())
-                .orderPrice(orderProducts.stream().map(OrderProduct::getPrice).mapToLong(Integer::longValue).sum())
-                .build();
-    }
-
     public static Order createReadyOrder(final int quantity, final long totalAmount, final User user) {
         return Order.builder()
                 .totalCount(quantity)
                 .orderPrice(totalAmount)
+                .orderProducts(new ArrayList<>())
                 .status(OrderStatus.ORDER_READY)
                 .user(user)
                 .build();
@@ -92,6 +81,7 @@ public class Order extends BaseTimeEntity {
     // <비즈니스 로직 메서드> //
     public void orderCancel() {
         this.updateOrderStatus(OrderStatus.CANCEL_ORDER);
+        this.delete();
     }
 
     public void updateOrderStatus(OrderStatus orderStatus) {

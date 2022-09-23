@@ -98,7 +98,7 @@ public class PayApiController {
     /**
      * 장바구니 상품 결제 요청
      */
-    @PostMapping("/{paymentApi}/cart")
+    @PostMapping("/cart/{paymentApi}")
     public ResponseEntity<String> cartItemsPay(@PathVariable PaymentApi paymentApi,
                                                HttpServletRequest request,
                                                @CookieValue(value = "chicken") Cookie cookie) {

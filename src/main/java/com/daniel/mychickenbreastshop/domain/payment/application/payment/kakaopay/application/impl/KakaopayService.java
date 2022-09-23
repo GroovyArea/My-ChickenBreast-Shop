@@ -97,7 +97,9 @@ public class KakaopayService implements KakaoPaymentService {
     private PayReadyRequest createCartPayRequest(CartValue cartValue, String requestUrl, String loginId) {
         String itemName = cartValue.getItemNames().get(0) + " 그 외 " + (cartValue.getItemNames().size() - 1) + "개";
         String orderId = loginId + " / " + itemName;
-        String itemCode = String.join(", ", cartValue.getItemNumbers().stream().map(String::valueOf).toArray(String[]::new));
+        String numberCode = String.join(",", cartValue.getItemNumbers().stream().map(String::valueOf).toArray(String[]::new));
+        String quantityCode = String.join(",", cartValue.getItemQuantities().stream().map(String::valueOf).toArray(String[]::new));
+        String itemCode = numberCode + "/" + quantityCode;
 
         return PayReadyRequest.builder()
                 .partnerOrderId(orderId)

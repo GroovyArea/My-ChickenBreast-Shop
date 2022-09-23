@@ -50,7 +50,7 @@ public class CookieUtil {
      * @return 쿠키 값 Map
      * @throws UnsupportedEncodingException 인코딩 예외
      */
-    private static <K, V> Map<K, V> cookieToMap(String cookieValue, Class<K> keyType, Class<V> valueType) throws UnsupportedEncodingException {
+    public static <K, V> Map<K, V> cookieToMap(String cookieValue, Class<K> keyType, Class<V> valueType) throws UnsupportedEncodingException {
         return JsonUtil.stringToMap(URLDecoder.decode(cookieValue, StandardCharsets.UTF_8), keyType, valueType);
     }
 

@@ -13,7 +13,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "USER")
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Builder
@@ -23,7 +24,6 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
     private Long id;
 
     @Column(name = "login_id", nullable = false, unique = true)
@@ -45,9 +45,9 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // 회원이 삭제 되어도 주문 데이터는 그냥 남아있어야 되기에, Cascade 사용 안함
+    @OneToMany(mappedBy = "user", fetch = LAZY)
     private List<Order> orders = new ArrayList<>();
-
 
 
     // <비즈니스 로직 메서드> //
@@ -62,6 +62,7 @@ public class User extends BaseTimeEntity {
 
     public void remove() {
         updateToWithDrawRole();
+        this.delete();
     }
 
     private void updateName(final String name) {

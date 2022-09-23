@@ -17,12 +17,12 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayC
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentType;
 import com.daniel.mychickenbreastshop.domain.payment.extract.CartDisassembler;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartItem;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.ProductRepository;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
@@ -31,11 +31,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi.KAKAO;
+import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse.ITEM_NOT_EXISTS;
 
 /**
  * 전략 결제 API 서비스 구현체 (카카오페이)
@@ -109,24 +110,17 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
         Order order = Order.createReadyOrder(savedProducts.size(), cartValue.getTotalPrice(), savedUser);
 
-        List<OrderProduct> orderProducts = new ArrayList<>();
+        savedProducts.stream().map(savedProduct -> OrderProduct.createOrderProduct(
+                savedProduct.getQuantity(),
+                savedProduct.getName(),
+                savedProduct.getPrice(),
+                savedProduct.getImage(),
+                savedProduct.getContent())).forEach(order::addOrderProduct);
 
-        int bound = savedProducts.size();
-        for (int i = 0; i < bound; i++) {
-            orderProducts.add(
-                    OrderProduct.createOrderProduct(
-                            savedProducts.get(i).getQuantity(),
-                            savedProducts.get(i).getName(),
-                            savedProducts.get(i).getPrice(),
-                            savedProducts.get(i).getImage(),
-                            savedProducts.get(i).getContent()));
-            order.addOrderProduct(orderProducts.get(i));
-        }
-
-        /* 재고 차감 로직 만들기 */
         Payment payment = Payment.builder()
                 .totalPrice(cartValue.getTotalPrice())
                 .status(PayStatus.READY)
+                .card(null)
                 .build();
 
         order.setPaymentInfo(payment);
@@ -143,8 +137,9 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     @Transactional
     public PaymentResult completePayment(String payToken, String loginId) {
         PayApproveResponse response = kakaoPaymentService.completePayment(payToken, loginId);
+        User savedUser = getSavedUser(loginId);
 
-        Payment savedPayment = payRepository.findByPgToken(payToken).orElseThrow(() -> new BadRequestException(PaymentResponse.PAYMENT_NOT_EXISTS.getMessage()));
+        Payment savedPayment = savedUser.getOrders().get(savedUser.getOrders().size() - 1).getPayment();
 
         if (response.getCardInfo() != null) {
             Card card = Card.createCard(
@@ -153,11 +148,31 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
                     response.getCardInfo().getInstallMonth(),
                     response.getCardInfo().getInterestFreeInstall());
 
+            savedPayment.updatePaymentTypeInfo(PaymentType.CARD);
             savedPayment.setCardInfo(card);
         }
 
+        savedPayment.updatePaymentTypeInfo(PaymentType.CASH);
+        savedPayment.updatePgTokenInfo(payToken);
         savedPayment.updatePaymentStatus(PayStatus.COMPLETED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.ORDER_APPROVAL);
+
+        /* 재고 차감 로직 */
+        String itemCode = response.getItemCode();
+
+        if (itemCode != null) { // 다중 상품 결제 시
+            String[] itemCodes = itemCode.split("/");
+            List<String> itemNumbers = Arrays.stream(itemCodes[0].split(",")).toList();
+            List<String> itemQuantities = Arrays.stream(itemCodes[1].split(",")).toList();
+
+            for (int i = 0; i < itemNumbers.size(); i++) {
+                Product savedProduct = productRepository.findById(Long.valueOf(itemNumbers.get(i))).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+                savedProduct.minusProductQuantity(Integer.parseInt(itemQuantities.get(i)));
+            }
+        } else { // 단일 상품 결제 시
+            Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+            savedProduct.minusProductQuantity(response.getQuantity());
+        }
 
         return response;
     }
@@ -177,7 +192,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
     private Product getSavedProduct(String productName) {
         return productRepository.findByName(productName).orElseThrow(
-                () -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+                () -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
     }
 
     private User getSavedUser(String loginId) {

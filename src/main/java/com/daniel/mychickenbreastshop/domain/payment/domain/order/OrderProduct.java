@@ -18,25 +18,24 @@ public class OrderProduct extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT_UNSIGNED")
     private Long id;
 
     private Integer count;
 
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name")
     private String name;
 
-    @Column(name = "product_price", nullable = false)
+    @Column(name = "product_price")
     private Integer price;
 
-    @Column(name = "product_image", nullable = false)
+    @Column(name = "product_image")
     private String image;
 
-    @Column(name = "product_content", nullable = false)
+    @Column(name = "product_content")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     // <연관관계 편의 메서드> //

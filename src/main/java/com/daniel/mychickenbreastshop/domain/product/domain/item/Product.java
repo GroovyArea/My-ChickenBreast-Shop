@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "PRODUCT")
 @Entity
 @Getter
 @Builder
@@ -20,14 +19,12 @@ public class Product extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private Integer price;
@@ -39,15 +36,20 @@ public class Product extends BaseTimeEntity {
     private String image;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "product_status", nullable = false)
+    @Column(name = "product_status")
     private ChickenStatus status;
 
+    // <비즈니스 로직 메서드> //
     public void updateProductInfo(final Product updatableEntity) {
         updateName(updatableEntity.getName());
         updatePrice(updatableEntity.getPrice());
         updateQuantity(updatableEntity.getQuantity());
         updateContent(updatableEntity.getContent());
         updateItemStatus(updatableEntity.getStatus());
+    }
+
+    public void minusProductQuantity(int payCount) {
+        this.quantity -= payCount;
     }
 
     private void updateName(final String name) {
