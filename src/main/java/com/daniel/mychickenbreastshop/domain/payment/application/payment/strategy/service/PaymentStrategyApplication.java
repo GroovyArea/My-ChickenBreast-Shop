@@ -20,5 +20,5 @@ public interface PaymentStrategyApplication <T extends PaymentResult> {
 
     T completePayment(String payToken, String loginId);
 
-    T cancelPayment(PayCancelRequestDto payCancelRequestDto);
+    T cancelPayment(PayCancelRequestDto payCancelRequestDto, String loginId);
 }

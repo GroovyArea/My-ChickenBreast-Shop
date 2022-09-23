@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.application.KakaoPaymentService;
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
@@ -16,7 +16,6 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.Item
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentType;
 import com.daniel.mychickenbreastshop.domain.payment.extract.CartDisassembler;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartItem;
@@ -150,9 +149,11 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
             savedPayment.updatePaymentTypeInfo(PaymentType.CARD);
             savedPayment.setCardInfo(card);
+
+        } else {
+            savedPayment.updatePaymentTypeInfo(PaymentType.CASH);
         }
 
-        savedPayment.updatePaymentTypeInfo(PaymentType.CASH);
         savedPayment.updatePgTokenInfo(payToken);
         savedPayment.updatePaymentStatus(PayStatus.COMPLETED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.ORDER_APPROVAL);
@@ -179,10 +180,11 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
     @Override
     @Transactional
-    public PaymentResult cancelPayment(PayCancelRequestDto payCancelRequestDto) {
-        KakaoPayResponse.PayCancelResponse response = kakaoPaymentService.cancelPayment(payCancelRequestDto);
+    public PaymentResult cancelPayment(PayCancelRequestDto payCancelRequestDto, String loginId) {
+        PayCancelResponse response = kakaoPaymentService.cancelPayment(payCancelRequestDto);
 
-        Payment savedPayment = payRepository.findByPgToken(payCancelRequestDto.getPayId()).orElseThrow(() -> new BadRequestException(PaymentResponse.PAYMENT_NOT_EXISTS.getMessage()));
+        User savedUser = getSavedUser(loginId);
+        Payment savedPayment = savedUser.getOrders().get(savedUser.getOrders().size() - 1).getPayment();
 
         savedPayment.updatePaymentStatus(PayStatus.CANCELED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.CANCEL_ORDER);

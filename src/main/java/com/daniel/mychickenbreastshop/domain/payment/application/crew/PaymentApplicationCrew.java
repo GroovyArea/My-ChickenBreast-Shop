@@ -40,9 +40,9 @@ public class PaymentApplicationCrew {
         paymentApplication.completePayment(payToken, loginId);
     }
 
-    public void cancelPayment(PayCancelRequestDto payCancelRequestDto, PaymentApi paymentApi) {
+    public void cancelPayment(PayCancelRequestDto payCancelRequestDto, PaymentApi paymentApi, String loginId) {
         PaymentStrategyApplication<PaymentResult> paymentApplication = getPaymentStrategyApplication(paymentApi);
-        paymentApplication.cancelPayment(payCancelRequestDto);
+        paymentApplication.cancelPayment(payCancelRequestDto, loginId);
     }
 
     private PaymentStrategyApplication<PaymentResult> getPaymentStrategyApplication(PaymentApi paymentApi) {

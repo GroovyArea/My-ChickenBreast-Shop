@@ -76,8 +76,10 @@ public class PayApiController {
      */
     @PostMapping("/{paymentApi}/cancel")
     public ResponseEntity<Void> cancelPayment(@PathVariable PaymentApi paymentApi,
-                                              @Valid @RequestBody PayCancelRequestDto payCancelRequestDto) {
-        paymentApplicationCrew.cancelPayment(payCancelRequestDto, paymentApi);
+                                              @Valid @RequestBody PayCancelRequestDto payCancelRequestDto,
+                                              HttpServletRequest request) {
+        String loginId = getLoginId(request);
+        paymentApplicationCrew.cancelPayment(payCancelRequestDto, paymentApi, loginId);
         return ResponseEntity.ok().build();
     }
 
