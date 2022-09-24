@@ -11,7 +11,6 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepositor
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderStatus;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.Card;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.PaymentRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PayStatus;
@@ -50,7 +49,6 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
-    private final PaymentRepository payRepository;
 
     @Override
     public PaymentApi getPaymentApiName() {
