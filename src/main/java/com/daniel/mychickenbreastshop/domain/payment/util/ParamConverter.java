@@ -11,13 +11,13 @@ import java.util.Map;
 @UtilityClass
 public class ParamConverter {
 
-    public static MultiValueMap<String, String> convert(ObjectMapper objectMapper, Object dto) { // (2)
+    public static MultiValueMap<String, String> convert(ObjectMapper objectMapper, Object dto) {
 
         try {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             Map<String, String> map = objectMapper.convertValue(dto, new TypeReference<Map<String, String>>() {
-            }); // (3)
-            params.setAll(map); // (4)
+            });
+            params.setAll(map);
 
             return params;
         } catch (Exception e) {

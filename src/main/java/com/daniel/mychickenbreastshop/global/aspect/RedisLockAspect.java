@@ -4,6 +4,5 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 public interface RedisLockAspect {
 
-    ProceedingJoinPoint executeWithLock(ProceedingJoinPoint joinPoint);
-
+    Object executeWithLock(ProceedingJoinPoint joinPoint);
 }
