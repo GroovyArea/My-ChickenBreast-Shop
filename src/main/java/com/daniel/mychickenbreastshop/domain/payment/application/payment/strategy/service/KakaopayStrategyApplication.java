@@ -5,6 +5,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.domain.payment.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProduct;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
@@ -27,6 +28,7 @@ import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -64,10 +66,13 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
      * 추후 redisson lock 사용
      */
     @Override
-    @Transactional
+    @RedisLocked
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
+        // stock count 확인 메서드 private으로 생성
+        
         PayReadyResponse response = kakaoPaymentService.payItem(itemPayRequestDto, requestUrl, loginId);
-
+        
         User savedUser = getSavedUser(loginId);
         Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName());
 
@@ -136,6 +141,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         PayApproveResponse response = kakaoPaymentService.completePayment(payToken, loginId);
         User savedUser = getSavedUser(loginId);
 
+        // 업데이트 필요
         Payment savedPayment = savedUser.getOrders().get(savedUser.getOrders().size() - 1).getPayment();
 
         if (response.getCardInfo() != null) {

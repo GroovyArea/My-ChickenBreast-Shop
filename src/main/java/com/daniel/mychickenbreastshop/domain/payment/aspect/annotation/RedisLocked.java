@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.global.util;
+package com.daniel.mychickenbreastshop.domain.payment.aspect.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Locked {
+public @interface RedisLocked {
 }
