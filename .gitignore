@@ -24,12 +24,8 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-**/application-real-dev.yml
-**/application-real-service.yml
-**/application-real-email.yml
-**/application-local.yml
-**/application-dev.yml
-**/application-prod.yml
+**/application-local-dev.yml
+
 
 ### NetBeans ###
 /nbproject/private/

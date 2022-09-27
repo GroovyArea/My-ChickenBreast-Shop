@@ -17,4 +17,5 @@ public class CartValue {
     private List<String> itemNames;
     private List<Integer> itemQuantities;
     private long totalPrice;
+
 }

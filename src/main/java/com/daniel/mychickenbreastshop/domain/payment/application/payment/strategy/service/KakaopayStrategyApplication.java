@@ -5,7 +5,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
-import com.daniel.mychickenbreastshop.domain.payment.aspect.annotation.RedisLocked;
+import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProduct;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
+import static com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderResponse.ORDER_QUANTITY_NOT_ENOUGH;
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi.KAKAO;
 import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse.ITEM_NOT_EXISTS;
 
@@ -66,15 +67,18 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
      * 추후 redisson lock 사용
      */
     @Override
-    @RedisLocked
+    @RedisLocked(leaseTime = 3000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
-        // stock count 확인 메서드 private으로 생성
-        
-        PayReadyResponse response = kakaoPaymentService.payItem(itemPayRequestDto, requestUrl, loginId);
-        
-        User savedUser = getSavedUser(loginId);
         Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName());
+
+        if (savedProduct.getQuantity() < itemPayRequestDto.getQuantity()) {
+            throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
+        }
+
+        PayReadyResponse response = kakaoPaymentService.payItem(itemPayRequestDto, requestUrl, loginId);
+
+        User savedUser = getSavedUser(loginId);
 
         Order order = Order.createReadyOrder(itemPayRequestDto.getQuantity(), itemPayRequestDto.getTotalAmount(),
                 savedUser);
@@ -100,15 +104,22 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         return response;
     }
 
-
     @Override
-    @Transactional
+    @RedisLocked(leaseTime = 3000)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult payCart(String cookieValue, String requestUrl, String loginId) {
         CartValue cartValue = getCartValue(cookieValue);
-        PayReadyResponse response = kakaoPaymentService.payCart(cartValue, requestUrl, loginId);
 
         User savedUser = getSavedUser(loginId);
         List<Product> savedProducts = cartValue.getItemNames().stream().map(this::getSavedProduct).toList();
+
+        for (int i = 0; i < savedProducts.size(); i++) {
+            if(savedProducts.get(i).getQuantity() < cartValue.getItemQuantities().get(i)) {
+                throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
+            }
+        }
+
+        PayReadyResponse response = kakaoPaymentService.payCart(cartValue, requestUrl, loginId);
 
         Order order = Order.createReadyOrder(savedProducts.size(), cartValue.getTotalPrice(), savedUser);
 
@@ -132,16 +143,13 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         return response;
     }
 
-    /**
-     * 재고 차감을 주문 성공하고 나서? 추후 redissonLock 사용해서 update lock 걸기
-     */
     @Override
-    @Transactional
+    @RedisLocked(leaseTime = 3000)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult completePayment(String payToken, String loginId) {
         PayApproveResponse response = kakaoPaymentService.completePayment(payToken, loginId);
         User savedUser = getSavedUser(loginId);
 
-        // 업데이트 필요
         Payment savedPayment = savedUser.getOrders().get(savedUser.getOrders().size() - 1).getPayment();
 
         if (response.getCardInfo() != null) {
@@ -162,28 +170,20 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         savedPayment.updatePaymentStatus(PayStatus.COMPLETED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.ORDER_APPROVAL);
 
-        /* 재고 차감 로직 */
-        String itemCode = response.getItemCode();
-
-        if (itemCode != null) { // 다중 상품 결제 시
-            String[] itemCodes = itemCode.split("/");
-            List<String> itemNumbers = Arrays.stream(itemCodes[0].split(",")).toList();
-            List<String> itemQuantities = Arrays.stream(itemCodes[1].split(",")).toList();
-
-            for (int i = 0; i < itemNumbers.size(); i++) {
-                Product savedProduct = productRepository.findById(Long.valueOf(itemNumbers.get(i))).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
-                savedProduct.minusProductQuantity(Integer.parseInt(itemQuantities.get(i)));
-            }
-        } else { // 단일 상품 결제 시
-            Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
-            savedProduct.minusProductQuantity(response.getQuantity());
-        }
+        /* 재고 차감 */
+        quantityDecrease(response);
 
         return response;
     }
 
+
+    private String[] getItemCodes(String itemCode) {
+        return itemCode.split("/");
+    }
+
     @Override
-    @Transactional
+    @RedisLocked(leaseTime = 3000)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult cancelPayment(PayCancelRequestDto payCancelRequestDto, String loginId) {
         PayCancelResponse response = kakaoPaymentService.cancelPayment(payCancelRequestDto);
 
@@ -193,7 +193,55 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         savedPayment.updatePaymentStatus(PayStatus.CANCELED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.CANCEL_ORDER);
 
+        /* 재고 회복 */
+        quantityIncrease(response);
+
         return response;
+    }
+
+
+    private void quantityIncrease(PayCancelResponse response) {
+        String itemCode = response.getItemCode();
+
+        if (itemCode != null) { // 다중 상품 결제 시
+            String[] itemCodes = getItemCodes(itemCode);
+            List<String> itemNumbers = getItemNumbers(itemCodes);
+            List<String> itemQuantities = getItemQuantities(itemCodes);
+
+            for (int i = 0; i < itemNumbers.size(); i++) {
+                Product savedProduct = productRepository.findById(Long.valueOf(itemNumbers.get(i))).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+                savedProduct.increaseItemQuantity(Integer.parseInt(itemQuantities.get(i)));
+            }
+        } else { // 단일 상품 결제 시
+            Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+            savedProduct.increaseItemQuantity(response.getQuantity());
+        }
+    }
+
+    private void quantityDecrease(PayApproveResponse response) {
+        String itemCode = response.getItemCode();
+
+        if (itemCode != null) { // 다중 상품 결제 시
+            String[] itemCodes = getItemCodes(itemCode);
+            List<String> itemNumbers = getItemNumbers(itemCodes);
+            List<String> itemQuantities = getItemQuantities(itemCodes);
+
+            for (int i = 0; i < itemNumbers.size(); i++) {
+                Product savedProduct = productRepository.findById(Long.valueOf(itemNumbers.get(i))).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+                savedProduct.decreaseItemQuantity(Integer.parseInt(itemQuantities.get(i)));
+            }
+        } else { // 단일 상품 결제 시
+            Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+            savedProduct.decreaseItemQuantity(response.getQuantity());
+        }
+    }
+
+    private List<String> getItemQuantities(String[] itemCodes) {
+        return Arrays.stream(itemCodes[1].split(",")).toList();
+    }
+
+    private List<String> getItemNumbers(String[] itemCodes) {
+        return Arrays.stream(itemCodes[0].split(",")).toList();
     }
 
     private Product getSavedProduct(String productName) {

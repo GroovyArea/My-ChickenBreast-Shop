@@ -1,14 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.payment.extract.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CartItem {
 
     private Long itemNo;

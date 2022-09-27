@@ -40,6 +40,15 @@ public class Product extends BaseTimeEntity {
     private ChickenStatus status;
 
     // <비즈니스 로직 메서드> //
+
+    public void decreaseItemQuantity(int quantity) {
+        this.quantity -= quantity;
+    }
+
+    public void increaseItemQuantity(int quantity) {
+        this.quantity += quantity;
+    }
+
     public void updateProductInfo(final Product updatableEntity) {
         updateName(updatableEntity.getName());
         updatePrice(updatableEntity.getPrice());
@@ -48,9 +57,6 @@ public class Product extends BaseTimeEntity {
         updateItemStatus(updatableEntity.getStatus());
     }
 
-    public void minusProductQuantity(int payCount) {
-        this.quantity -= payCount;
-    }
 
     private void updateName(final String name) {
         this.name = name;

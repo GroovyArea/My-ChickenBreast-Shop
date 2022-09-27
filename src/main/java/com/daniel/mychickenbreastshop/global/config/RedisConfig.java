@@ -1,5 +1,8 @@
 package com.daniel.mychickenbreastshop.global.config;
 
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +24,9 @@ public class RedisConfig {
 
     @Value("${spring.redis.password}")
     private String password;
+
+    @Value("${spring.redis.connectionTimeout}")
+    private Long connectionTimeout;
 
     /**
      * redis와 connection을 생성해 주는 객체
@@ -59,5 +65,17 @@ public class RedisConfig {
         stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
         stringRedisTemplate.setValueSerializer(new StringRedisSerializer());
         return stringRedisTemplate;
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        String address = "redis://" + host + ":" + port;
+
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress(address)
+                .setConnectTimeout(connectionTimeout.intValue());
+
+        return Redisson.create(config);
     }
 }
