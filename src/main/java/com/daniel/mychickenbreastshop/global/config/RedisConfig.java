@@ -74,6 +74,7 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(address)
+                .setPassword(password)
                 .setConnectTimeout(connectionTimeout.intValue());
 
         return Redisson.create(config);

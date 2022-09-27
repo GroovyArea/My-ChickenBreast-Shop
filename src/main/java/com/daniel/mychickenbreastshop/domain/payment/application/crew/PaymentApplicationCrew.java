@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.domain.payment.application.crew;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.domain.payment.application.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Service;
 public class PaymentApplicationCrew {
 
     private final PaymentStrategyFactory paymentStrategyFactory;
+    private final ItemValidator itemValidator;
 
     public String getSingleItemPayResultUrl(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId, PaymentApi paymentApi) {
+        itemValidator.itemValidate(itemPayRequestDto );
         PaymentStrategyApplication<PaymentResult> paymentApplication = getPaymentStrategyApplication(paymentApi);
         return paymentApplication.payItem(itemPayRequestDto, requestUrl, loginId).getRedirectUrl();
     }

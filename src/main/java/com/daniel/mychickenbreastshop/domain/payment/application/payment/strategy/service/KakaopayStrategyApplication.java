@@ -176,11 +176,6 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         return response;
     }
 
-
-    private String[] getItemCodes(String itemCode) {
-        return itemCode.split("/");
-    }
-
     @Override
     @RedisLocked(leaseTime = 3000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -199,11 +194,10 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         return response;
     }
 
-
     private void quantityIncrease(PayCancelResponse response) {
         String itemCode = response.getItemCode();
 
-        if (itemCode != null) { // 다중 상품 결제 시
+        if (itemCode.isEmpty()) { // 다중 상품 결제 시
             String[] itemCodes = getItemCodes(itemCode);
             List<String> itemNumbers = getItemNumbers(itemCodes);
             List<String> itemQuantities = getItemQuantities(itemCodes);
@@ -221,7 +215,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     private void quantityDecrease(PayApproveResponse response) {
         String itemCode = response.getItemCode();
 
-        if (itemCode != null) { // 다중 상품 결제 시
+        if (!itemCode.isEmpty()) { // 다중 상품 결제 시
             String[] itemCodes = getItemCodes(itemCode);
             List<String> itemNumbers = getItemNumbers(itemCodes);
             List<String> itemQuantities = getItemQuantities(itemCodes);
@@ -234,6 +228,10 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
             Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
             savedProduct.decreaseItemQuantity(response.getQuantity());
         }
+    }
+
+    private String[] getItemCodes(String itemCode) {
+        return itemCode.split("/");
     }
 
     private List<String> getItemQuantities(String[] itemCodes) {
