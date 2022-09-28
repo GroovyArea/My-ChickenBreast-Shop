@@ -166,7 +166,6 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
             savedPayment.updatePaymentTypeInfo(PaymentType.CASH);
         }
 
-        savedPayment.updatePgTokenInfo(payToken);
         savedPayment.updatePaymentStatus(PayStatus.COMPLETED);
         savedPayment.getOrder().updateOrderStatus(OrderStatus.ORDER_APPROVAL);
 

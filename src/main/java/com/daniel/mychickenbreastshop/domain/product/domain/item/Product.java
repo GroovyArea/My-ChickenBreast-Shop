@@ -57,7 +57,6 @@ public class Product extends BaseTimeEntity {
         updateItemStatus(updatableEntity.getStatus());
     }
 
-
     private void updateName(final String name) {
         this.name = name;
     }

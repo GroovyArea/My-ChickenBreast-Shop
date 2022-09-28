@@ -22,9 +22,6 @@ public class Payment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pg_token")
-    private String pgToken;
-
     @Column(name = "total_price", nullable = false)
     private Long totalPrice;
 
@@ -56,10 +53,6 @@ public class Payment extends BaseTimeEntity {
 
 
     // <비즈니스 로직 메서드> //
-
-    public void updatePgTokenInfo(final String pgToken) {
-        this.pgToken = pgToken;
-    }
 
     public void updatePaymentTypeInfo(final PaymentType paymentType) {
         this.paymentType = paymentType;

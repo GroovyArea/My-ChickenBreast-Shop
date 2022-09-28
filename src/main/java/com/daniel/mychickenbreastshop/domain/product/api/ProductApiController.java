@@ -1,16 +1,15 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ItemSearchDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.RegisterRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +24,11 @@ import java.util.List;
  * <pre>
  *     <b>history</b>
  *     1.0 2022.08.23 최초 작성
+ *     1.1 2022.09.28 조회 api 추가
  * </pre>
  *
  * @author Daniel Kim
- * @version 1.0
+ * @version 1.1
  */
 @RestController
 @RequiredArgsConstructor
@@ -56,10 +56,20 @@ public class ProductApiController {
      * @param pageable     페이지네이션
      * @return 상품 리스트
      */
-    @GetMapping("/v1/products/search/{categoryName}")
-    public ResponseEntity<List<ListResponseDto>> getProductList(@PathVariable ChickenCategory categoryName,
-                                                                @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(productService.getAllProduct(categoryName, pageable));
+    @GetMapping("/v1/products/category")
+    public ResponseEntity<List<ListResponseDto>> getProducts(@RequestParam(defaultValue = "BALL") ChickenCategory category,
+                                                             @RequestParam(defaultValue = "1") int page) {
+        return ResponseEntity.ok(productService.getAllProduct(category, page));
+    }
+
+    @GetMapping("/v2/products/search")
+    public ResponseEntity<List<ListResponseDto>> getSearchProducts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "SALE") ChickenStatus status,
+            @RequestParam(defaultValue = "STEAMED") ChickenCategory category,
+            @RequestBody ItemSearchDto searchDto) {
+
+        return ResponseEntity.ok(productService.searchProducts(page, status, category, searchDto));
     }
 
     /**

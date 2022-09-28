@@ -1,10 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.user.domain.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +19,12 @@ public class ListResponseDto {
     private String email;
     private String address;
     private String zipcode;
-    private Role role;
+    private String role;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
+
+    public void changeNameWithUserRole(String roleName) {
+        role = roleName;
+    }
 }
