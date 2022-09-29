@@ -32,8 +32,8 @@ public class PaymentApplicationCrew {
         return paymentApplication.payCart(cookieValue, requestUrl, loginId).getRedirectUrl();
     }
 
-    // 애매한 놈
-/*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentApi paymentApi) {
+/*    // 애매한 놈
+*//*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentApi paymentApi) {
         PaymentStrategyApplication<PaymentResult> paymentapplication = getPaymentStrategyApplication(paymentApi);
         return null;
     }*/

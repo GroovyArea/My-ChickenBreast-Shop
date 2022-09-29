@@ -6,6 +6,8 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepositor
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderProductResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderResponse;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderInfoListMapper;
 import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderInfoMapper;
 import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderProductListMapper;
@@ -39,7 +41,7 @@ public class OrderService {
                 .toList();
     }
 
-    public OrderInfoResponseDto getOrderInfo(Long orderId) {
+    public OrderInfoResponseDto getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new BadRequestException(ORDER_NOT_EXISTS.getMessage()));
         List<OrderProduct> orderProducts = order.getOrderProducts();
         OrderInfoResponseDto orderInfoResponseDto = orderInfoMapper.toDTO(order);
@@ -55,4 +57,8 @@ public class OrderService {
         return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
     }
 
+    public PaymentInfoResponseDto getPaymentDetail(Long orderId) {
+        Order order = orderRepository.findByIdWithFetchJoin(orderId).orElseThrow(ORDER_NOT_EXISTS.getMessage());
+
+    }
 }

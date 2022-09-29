@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.domain.payment.api;
 import com.daniel.mychickenbreastshop.domain.payment.application.OrderService;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,12 @@ public class OrderApiController {
      */
     @GetMapping("/v1/orders/detail/{orderId}")
     public ResponseEntity<OrderInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.getOrderInfo(orderId));
+        return ResponseEntity.ok(orderService.getOrderDetail(orderId));
+    }
+
+    @GetMapping("/v1/orders/payment/{orderId}")
+    public ResponseEntity<PaymentInfoResponseDto> getPaymentInfo(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.getPaymentDetail(orderId));
     }
 
     private Long getUserId(HttpServletRequest request) {

@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDetailResponseDto {
+public class PaymentInfoResponseDto {
 
-    private Long id;
-    private String pgKey;
+    private Long paymentId;
     private Integer totalPrice;
     private PaymentType paymentType;
     private PayStatus payStatus;
