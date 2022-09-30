@@ -1,11 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.application.KakaoPaymentService;
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
-import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProduct;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
@@ -25,8 +23,10 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.ProductReposito
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
+import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
-import static com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderResponse.ORDER_QUANTITY_NOT_ENOUGH;
 import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi.KAKAO;
 import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse.ITEM_NOT_EXISTS;
 
@@ -45,6 +44,7 @@ import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.Pr
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class KakaopayStrategyApplication implements PaymentStrategyApplication<PaymentResult> {
 
     private final KakaoPaymentService kakaoPaymentService;
@@ -59,22 +59,12 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
-    public OrderInfoResponse getOrderInfo() {
-        return null;
-    }
-
-    /**
-     * 추후 redisson lock 사용
-     */
-    @Override
     @RedisLocked(leaseTime = 3000)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
         Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName());
 
-        if (savedProduct.getQuantity() < itemPayRequestDto.getQuantity()) {
-            throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
-        }
+        savedProduct.checkStockQuantity(itemPayRequestDto.getQuantity());
 
         PayReadyResponse response = kakaoPaymentService.payItem(itemPayRequestDto, requestUrl, loginId);
 
@@ -114,9 +104,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         List<Product> savedProducts = cartValue.getItemNames().stream().map(this::getSavedProduct).toList();
 
         for (int i = 0; i < savedProducts.size(); i++) {
-            if(savedProducts.get(i).getQuantity() < cartValue.getItemQuantities().get(i)) {
-                throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
-            }
+            savedProducts.get(i).checkStockQuantity(cartValue.getItemQuantities().get(i));
         }
 
         PayReadyResponse response = kakaoPaymentService.payCart(cartValue, requestUrl, loginId);
@@ -211,6 +199,17 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         }
     }
 
+    @RedisLocked
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void test(String id) {
+        log.info("일해라!");
+        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("에헤이"));
+        //log.info("상품 전 개수:" + product.getQuantity());
+        product.decreaseItemQuantity(1);
+        productRepository.flush();
+        //log.info("상품 후 개수:" + product.getQuantity());
+    }
+
     private void quantityDecrease(PayApproveResponse response) {
         String itemCode = response.getItemCode();
 
@@ -259,4 +258,5 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
                 .totalPrice(cartDisassembler.getTotalPrice(cookieValue, Long.class, CartItem.class, CartItem::getTotalPrice))
                 .build();
     }
+
 }

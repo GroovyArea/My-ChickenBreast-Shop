@@ -1,16 +1,16 @@
-package com.daniel.mychickenbreastshop.domain.payment.application;
+package com.daniel.mychickenbreastshop.domain.payment.application.order;
 
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProduct;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoListResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderItemsInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderProductResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderResponse;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderPaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderInfoListMapper;
-import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderInfoMapper;
+import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderItemsInfoMapper;
 import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderProductListMapper;
+import com.daniel.mychickenbreastshop.domain.payment.mapper.order.OrderPaymentInfoMapper;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +29,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderInfoListMapper orderInfoListMapper;
-    private final OrderInfoMapper orderInfoMapper;
+    private final OrderItemsInfoMapper orderItemsInfoMapper;
     private final OrderProductListMapper orderProductListMapper;
+    private final OrderPaymentInfoMapper orderPaymentInfoMapper;
 
     public List<OrderInfoListResponseDto> getAllOrders(Long userId, int page) {
         PageRequest pageRequest = createPageRequest(page);
@@ -41,24 +42,24 @@ public class OrderService {
                 .toList();
     }
 
-    public OrderInfoResponseDto getOrderDetail(Long orderId) {
+    public OrderItemsInfoResponseDto getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new BadRequestException(ORDER_NOT_EXISTS.getMessage()));
         List<OrderProduct> orderProducts = order.getOrderProducts();
-        OrderInfoResponseDto orderInfoResponseDto = orderInfoMapper.toDTO(order);
+        OrderItemsInfoResponseDto orderItemsInfoResponseDto = orderItemsInfoMapper.toDTO(order);
         List<OrderProductResponseDto> orderProductResponseDtos = orderProducts.stream()
                 .map(orderProductListMapper::toDTO)
                 .toList();
-        orderInfoResponseDto.updateOrderProducts(orderProductResponseDtos);
+        orderItemsInfoResponseDto.updateOrderProducts(orderProductResponseDtos);
 
-        return orderInfoResponseDto;
+        return orderItemsInfoResponseDto;
+    }
+
+    public OrderPaymentInfoResponseDto getPaymentDetail(Long orderId) {
+        Order order = orderRepository.findByIdWithFetchJoin(orderId).orElseThrow(() -> new BadRequestException(ORDER_NOT_EXISTS.getMessage()));
+        return orderPaymentInfoMapper.toDTO(order);
     }
 
     private PageRequest createPageRequest(int page) {
         return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
-    }
-
-    public PaymentInfoResponseDto getPaymentDetail(Long orderId) {
-        Order order = orderRepository.findByIdWithFetchJoin(orderId).orElseThrow(ORDER_NOT_EXISTS.getMessage());
-
     }
 }

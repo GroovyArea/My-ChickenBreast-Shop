@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
+import com.daniel.mychickenbreastshop.domain.product.application.manage.FileManager;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.CategoryRepository;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.model.CategoryResponse;
@@ -13,6 +14,7 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.De
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.redis.RedisProductRepository;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
@@ -38,6 +40,7 @@ public class ProductService {
     private final FileManager fileManager;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final RedisProductRepository productRedisRepository;
     private final ItemDetailMapper itemDetailMapper;
     private final ItemListMapper itemListMapper;
     private final ItemRegisterMapper itemRegisterMapper;
@@ -61,18 +64,14 @@ public class ProductService {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> products = productRepository.findAllByCategoryName(category, pageRequest).getContent();
 
-        return products.stream()
-                .map(itemListMapper::toDTO)
-                .toList();
+        return products.stream().map(itemListMapper::toDTO).toList();
     }
 
     public List<ListResponseDto> searchProducts(int page, ChickenStatus status, ChickenCategory category, ItemSearchDto searchDto) {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> searchedItems = productRepository.findItemWithDynamicQuery(pageRequest, searchDto, category, status).getContent();
 
-        return searchedItems.stream()
-                .map(itemListMapper::toDTO)
-                .toList();
+        return searchedItems.stream().map(itemListMapper::toDTO).toList();
     }
 
     public Resource getItemImageResource(String fileName) {
@@ -94,8 +93,7 @@ public class ProductService {
 
         registerRequestDto.setImage(uploadFileName);
 
-        Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory())
-                .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
+        Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
         Product savableProduct = itemRegisterMapper.toEntity(registerRequestDto);
 
@@ -110,8 +108,7 @@ public class ProductService {
     public void modifyItem(ModifyRequestDto modifyRequestDto, MultipartFile file) {
         Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
         Product updatableProduct = itemModifyMapper.toEntity(modifyRequestDto);
-        Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory())
-                .orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
+        Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
         dbProduct.updateProductInfo(updatableProduct);
         dbProduct.updateCategoryInfo(updatableCategory);
@@ -143,4 +140,11 @@ public class ProductService {
     private PageRequest createPageRequest(int page) {
         return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
     }
+
+/*    @PostConstruct
+    protected void setAllItemsInRedis() {
+        List<Product> products = productRepository.findAll();
+        List<RedisProduct> redisProducts = products.stream().map(product -> new RedisProduct(product.getId() + ":lock", product.getQuantity())).toList();
+        productRedisRepository.saveAll(redisProducts);
+    }*/
 }

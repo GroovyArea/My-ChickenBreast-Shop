@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.payment.application.validate;
+package com.daniel.mychickenbreastshop.domain.payment.application.payment.validate;
 
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;

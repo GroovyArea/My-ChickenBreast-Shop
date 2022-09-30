@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum PassablePathProperty {
 
     JOIN("join/"),
-    EMAIL("join/email");
+    EMAIL("join/email"),
+    TEST("/api/test");
 
     private final String path;
 }

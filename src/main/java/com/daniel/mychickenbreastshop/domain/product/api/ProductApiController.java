@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service.KakaopayStrategyApplication;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ItemSearchDto;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 상품 컨트롤러
@@ -36,6 +40,7 @@ import java.util.List;
 public class ProductApiController {
 
     private final ProductService productService;
+    private final KakaopayStrategyApplication kakaopayStrategyApplication;
 
     /**
      * 단건 상품 조회
@@ -131,4 +136,27 @@ public class ProductApiController {
         productService.removeItem(productId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/test")
+    public void test() throws InterruptedException {
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    System.out.println(finalI +"번째 일꾼 일한다.");
+                    kakaopayStrategyApplication.test("lala");
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+    }
+
 }

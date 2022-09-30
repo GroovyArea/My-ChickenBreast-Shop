@@ -1,9 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.payment.api;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.OrderService;
+import com.daniel.mychickenbreastshop.domain.payment.application.order.OrderService;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoListResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderItemsInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.dto.response.OrderPaymentInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +36,17 @@ public class OrderApiController {
      * @return 주문 상세 내역
      */
     @GetMapping("/v1/orders/detail/{orderId}")
-    public ResponseEntity<OrderInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
+    public ResponseEntity<OrderItemsInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrderDetail(orderId));
     }
 
+    /**
+     * 결제 상세 조회
+     * @param orderId 주문 아이디
+     * @return 결제 상세 내역
+     */
     @GetMapping("/v1/orders/payment/{orderId}")
-    public ResponseEntity<PaymentInfoResponseDto> getPaymentInfo(@PathVariable Long orderId) {
+    public ResponseEntity<OrderPaymentInfoResponseDto> getPaymentInfo(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getPaymentDetail(orderId));
     }
 

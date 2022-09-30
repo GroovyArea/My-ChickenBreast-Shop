@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.product.application;
+package com.daniel.mychickenbreastshop.domain.product.application.manage;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;

@@ -22,8 +22,8 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
-    @Value("${spring.redis.password}")
-    private String password;
+/*    @Value("${spring.redis.password}")
+    private String password;*/
 
     @Value("${spring.redis.connectionTimeout}")
     private Long connectionTimeout;
@@ -38,7 +38,6 @@ public class RedisConfig {
                 new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setPassword(password);
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
@@ -49,12 +48,9 @@ public class RedisConfig {
      * @return redisTemplate
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate =
-                new RedisTemplate<>();
+    public RedisTemplate<?, ?> redisTemplate() {
+        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
 
@@ -74,7 +70,6 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(address)
-                .setPassword(password)
                 .setConnectTimeout(connectionTimeout.intValue());
 
         return Redisson.create(config);

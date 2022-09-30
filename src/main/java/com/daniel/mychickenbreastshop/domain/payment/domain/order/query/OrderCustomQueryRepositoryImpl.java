@@ -2,7 +2,6 @@ package com.daniel.mychickenbreastshop.domain.payment.domain.order.query;
 
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.payment.domain.order.QOrder;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.QCard;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,8 +44,6 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
                 .join(QOrder.order.payment, payment)
                 .fetchJoin().on(QOrder.order.id.eq(payment.order.id))
                 .where(orderIdEq(orderId))
-                .join(QOrder.order.payment.card, QCard.card).fetchJoin()
-                .on(QOrder.order.payment.id.eq(QCard.card.payment.id))
                 .fetchOne();
 
         return Optional.ofNullable(order);

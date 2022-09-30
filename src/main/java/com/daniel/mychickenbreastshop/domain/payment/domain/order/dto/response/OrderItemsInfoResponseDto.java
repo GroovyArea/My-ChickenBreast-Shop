@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderInfoResponseDto {
+public class OrderItemsInfoResponseDto {
 
     private Long orderId;
     private List<OrderProductResponseDto> orderInfoResponseDtos;

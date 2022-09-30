@@ -3,12 +3,15 @@ package com.daniel.mychickenbreastshop.domain.product.domain.item;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import static com.daniel.mychickenbreastshop.domain.payment.domain.order.model.OrderResponse.ORDER_QUANTITY_NOT_ENOUGH;
 
 @Entity
 @Getter
@@ -41,7 +44,16 @@ public class Product extends BaseTimeEntity {
 
     // <비즈니스 로직 메서드> //
 
+    public void checkStockQuantity(int requestQuantity) {
+        if(this.quantity < requestQuantity) {
+            throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
+        }
+    }
+
     public void decreaseItemQuantity(int quantity) {
+        if (this.quantity - quantity < 0) {
+            throw new BadRequestException("해당 상품은 재고량이 부족합니다.");
+        }
         this.quantity -= quantity;
     }
 
