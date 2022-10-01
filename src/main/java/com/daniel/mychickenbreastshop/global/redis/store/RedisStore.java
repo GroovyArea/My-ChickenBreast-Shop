@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.global.store;
+package com.daniel.mychickenbreastshop.global.redis.store;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

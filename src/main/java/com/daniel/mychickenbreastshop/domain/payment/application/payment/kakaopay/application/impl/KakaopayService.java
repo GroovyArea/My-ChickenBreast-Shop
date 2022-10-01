@@ -13,7 +13,7 @@ import com.daniel.mychickenbreastshop.domain.payment.application.payment.kakaopa
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartValue;
-import com.daniel.mychickenbreastshop.global.store.RedisStore;
+import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

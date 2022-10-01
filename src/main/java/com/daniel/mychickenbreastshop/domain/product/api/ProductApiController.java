@@ -10,6 +10,7 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.De
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -37,6 +38,7 @@ import java.util.concurrent.Executors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Slf4j
 public class ProductApiController {
 
     private final ProductService productService;
@@ -147,7 +149,7 @@ public class ProductApiController {
             int finalI = i;
             executorService.submit(() -> {
                 try {
-                    System.out.println(finalI +"번째 일꾼 일한다.");
+                    log.info(finalI +"번째 일꾼 일한다.");
                     kakaopayStrategyApplication.test("lala");
                 } finally {
                     latch.countDown();

@@ -14,7 +14,7 @@ import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserModifyMapper;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.global.store.RedisStore;
+import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

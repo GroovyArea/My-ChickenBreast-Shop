@@ -43,7 +43,7 @@ import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.Pr
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @Slf4j
 public class KakaopayStrategyApplication implements PaymentStrategyApplication<PaymentResult> {
 
@@ -200,14 +200,12 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @RedisLocked
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void test(String id) {
         log.info("일해라!");
         Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("에헤이"));
-        //log.info("상품 전 개수:" + product.getQuantity());
+        log.info("상품 전 개수:" + product.getQuantity());
         product.decreaseItemQuantity(1);
-        productRepository.flush();
-        //log.info("상품 후 개수:" + product.getQuantity());
+        log.info("상품 후 개수:" + product.getQuantity());
     }
 
     private void quantityDecrease(PayApproveResponse response) {
