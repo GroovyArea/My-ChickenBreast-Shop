@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 상품 컨트롤러
@@ -59,8 +56,6 @@ public class ProductApiController {
     /**
      * 상품 리스트 페이징 조회
      *
-     * @param categoryName 카테고리명
-     * @param pageable     페이지네이션
      * @return 상품 리스트
      */
     @GetMapping("/v1/products/category")
@@ -139,7 +134,7 @@ public class ProductApiController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/test")
+/*    @GetMapping("/test")
     public void test() throws InterruptedException {
         int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(100);
@@ -159,6 +154,6 @@ public class ProductApiController {
 
         latch.await();
 
-    }
+    }*/
 
 }

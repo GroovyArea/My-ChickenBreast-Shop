@@ -28,8 +28,6 @@ import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +41,6 @@ import static com.daniel.mychickenbreastshop.domain.product.domain.item.model.Pr
  */
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
 @Slf4j
 public class KakaopayStrategyApplication implements PaymentStrategyApplication<PaymentResult> {
 
@@ -59,8 +56,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
-    @RedisLocked(leaseTime = 3000)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RedisLocked(transactional = true)
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
         Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName());
 
@@ -95,8 +91,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
-    @RedisLocked(leaseTime = 3000)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RedisLocked(transactional = true)
     public PaymentResult payCart(String cookieValue, String requestUrl, String loginId) {
         CartValue cartValue = getCartValue(cookieValue);
 
@@ -132,8 +127,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
-    @RedisLocked(leaseTime = 3000)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RedisLocked(transactional = true)
     public PaymentResult completePayment(String payToken, String loginId) {
         PayApproveResponse response = kakaoPaymentService.completePayment(payToken, loginId);
         User savedUser = getSavedUser(loginId);
@@ -164,8 +158,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
-    @RedisLocked(leaseTime = 3000)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @RedisLocked(transactional = true)
     public PaymentResult cancelPayment(PayCancelRequestDto payCancelRequestDto, String loginId) {
         PayCancelResponse response = kakaoPaymentService.cancelPayment(payCancelRequestDto);
 
@@ -197,15 +190,6 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
             Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
             savedProduct.increaseItemQuantity(response.getQuantity());
         }
-    }
-
-    @RedisLocked
-    public void test(String id) {
-        log.info("일해라!");
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("에헤이"));
-        log.info("상품 전 개수:" + product.getQuantity());
-        product.decreaseItemQuantity(1);
-        log.info("상품 후 개수:" + product.getQuantity());
     }
 
     private void quantityDecrease(PayApproveResponse response) {
