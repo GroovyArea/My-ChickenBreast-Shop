@@ -18,7 +18,7 @@ public class CategoryApiController {
 
     /**
      * 닭가슴살 카테고리 등록
-     * @param registerRequestDto dto
+     * @param registerRequestDto 등록 dto
      */
     @PostMapping
     public ResponseEntity<Void> registerCategory(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
@@ -29,7 +29,7 @@ public class CategoryApiController {
     /**
      * 닭가슴살 카테고리명 수정
      * @param categoryId 카테고리 id
-     * @param modifyRequestDto dto
+     * @param modifyRequestDto 수정 dto
      */
     @PatchMapping("/{categoryId}")
     public ResponseEntity<Void> modifyCategory(

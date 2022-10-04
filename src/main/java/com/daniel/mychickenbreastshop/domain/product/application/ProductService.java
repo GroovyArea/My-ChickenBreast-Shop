@@ -54,7 +54,7 @@ public class ProductService {
 
         DetailResponseDto dto = itemDetailMapper.toDTO(product);
 
-        dto.setImage(downLoadURI);
+        dto.updateImageUrl(downLoadURI);
 
         return dto;
     }

@@ -74,7 +74,7 @@ public class UserApiController {
     /**
      * 회원 리스트 조회
      *
-     * @param pageable page 객체
+     * @param page page 번호
      * @return 회원 리스트
      */
     @GetMapping("/v2/users")

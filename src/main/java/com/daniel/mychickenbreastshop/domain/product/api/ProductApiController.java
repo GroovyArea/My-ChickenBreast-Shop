@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 상품 컨트롤러
@@ -43,9 +46,7 @@ public class ProductApiController {
 
     /**
      * 단건 상품 조회
-     *
-     * @param productId 상품 고유 번호
-     * @return 상품 디테일
+     * @param productId 상품 id
      */
     @GetMapping("/v1/products/{productId}")
     public ResponseEntity<DetailResponseDto> getProductDetail(@PathVariable Long productId) {
@@ -54,9 +55,9 @@ public class ProductApiController {
     }
 
     /**
-     * 상품 리스트 페이징 조회
-     *
-     * @return 상품 리스트
+     * 상품 리스트 페이징 조회 (카테고리 별)
+     * @param category 카테고리
+     * @param page 페이지 번호
      */
     @GetMapping("/v1/products/category")
     public ResponseEntity<List<ListResponseDto>> getProducts(@RequestParam(defaultValue = "BALL") ChickenCategory category,
@@ -64,6 +65,13 @@ public class ProductApiController {
         return ResponseEntity.ok(productService.getAllProduct(category, page));
     }
 
+    /**
+     * 상품 검색
+     * @param page 페이지 번호
+     * @param status 상품 상태
+     * @param category 카테고리
+     * @param searchDto 검색 조건
+     */
     @GetMapping("/v2/products/search")
     public ResponseEntity<List<ListResponseDto>> getSearchProducts(
             @RequestParam(defaultValue = "1") int page,
@@ -134,7 +142,7 @@ public class ProductApiController {
         return ResponseEntity.ok().build();
     }
 
-/*    @GetMapping("/test")
+    @GetMapping("/test")
     public void test() throws InterruptedException {
         int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(100);
@@ -154,6 +162,6 @@ public class ProductApiController {
 
         latch.await();
 
-    }*/
+    }
 
 }

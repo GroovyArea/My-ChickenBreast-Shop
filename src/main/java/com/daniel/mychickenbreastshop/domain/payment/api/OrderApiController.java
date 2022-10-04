@@ -41,7 +41,7 @@ public class OrderApiController {
     }
 
     /**
-     * 결제 상세 조회
+     * 결제 내역 상세 조회
      * @param orderId 주문 아이디
      * @return 결제 상세 내역
      */

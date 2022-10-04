@@ -28,6 +28,7 @@ import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -190,6 +191,15 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
             Product savedProduct = productRepository.findByName(response.getItemName()).orElseThrow(() -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
             savedProduct.increaseItemQuantity(response.getQuantity());
         }
+    }
+
+    @RedisLocked(transactional = true)
+    public void test(String id) {
+        log.info("일해라!");
+        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("에헤이"));
+        log.info("상품 전 개수:" + product.getQuantity());
+        product.decreaseItemQuantity(1);
+        log.info("상품 후 개수:" + product.getQuantity());
     }
 
     private void quantityDecrease(PayApproveResponse response) {
