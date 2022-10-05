@@ -1,15 +1,15 @@
-package com.daniel.mychickenbreastshop.global.aspect;
+package com.daniel.mychickenbreastshop.global.aspect.redisson;
 
 import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
+import com.daniel.mychickenbreastshop.global.redis.util.RedisFunctionProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -19,11 +19,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Order(value = 1)
 public class RedisLockAspect {
 
-    private final RedissonClient redissonClient;
-
     private static final String LOCK_SUFFIX = ":lock";
+
+    private final RedisFunctionProvider redisFunctionProvider;
 
     @Around("@annotation(com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked)")
     public Object executeWithLock(ProceedingJoinPoint joinPoint) {
@@ -31,13 +32,9 @@ public class RedisLockAspect {
         return execute(key, joinPoint);
     }
 
-
     private String getLockableKey(ProceedingJoinPoint joinPoint) {
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Method method = methodSignature.getMethod();
-        String methodName = method.getName();
-        String className = method.getDeclaringClass().toString();
-        return methodName + className + LOCK_SUFFIX;
+        Object[] args = joinPoint.getArgs();
+        return args[0] + LOCK_SUFFIX;
     }
 
     private Object execute(String key, ProceedingJoinPoint joinPoint) {
@@ -46,30 +43,25 @@ public class RedisLockAspect {
         long leaseTime = method.getAnnotation(RedisLocked.class).leaseTime();
         long waitTime = method.getAnnotation(RedisLocked.class).waitTime();
 
-        RLock lock = redissonClient.getLock(key);
-
         Object result;
 
         try {
-            boolean tryLock = lock.tryLock(waitTime, leaseTime, TimeUnit.MILLISECONDS);
+            boolean tryLock =  redisFunctionProvider.tryLock(key, TimeUnit.MILLISECONDS, waitTime, leaseTime);
 
             if (!tryLock) {
-                log.error("Lock 획득에 실패했습니다.");
+                throw new InternalErrorException("Redis locked failed!");
             }
 
             result = joinPoint.proceed();
+
         } catch (Throwable e) {
             throw new InternalErrorException(e);
         } finally {
-            unlock(lock);
+            if(redisFunctionProvider.canUnlock(key)) {
+                redisFunctionProvider.unlock(key);
+            }
             log.info("Redis unlocked!");
         }
         return result;
-    }
-
-    private void unlock(RLock lock) {
-        if (lock != null && lock.isLocked()) {
-            lock.unlock();
-        }
     }
 }

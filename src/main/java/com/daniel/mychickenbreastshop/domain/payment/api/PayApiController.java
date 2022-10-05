@@ -1,8 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.payment.api;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.crew.PaymentApplicationCrew;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.crew.PaymentApplicationCrew;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.Pay
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/payment")
+@RequestMapping("/api/v1/payments")
 public class PayApiController {
 
     private final PaymentApplicationCrew paymentApplicationCrew;
@@ -43,12 +44,21 @@ public class PayApiController {
     }*/
 
     /**
+     * 결제 정보(카드 정보) 조회
+     */
+    @GetMapping("/{paymentId}")
+    public ResponseEntity<PaymentInfoResponseDto> getPaymentInfo(@PathVariable Long paymentId) {
+        PaymentInfoResponseDto paymentInfoResponseDto = paymentApplicationCrew.getPaymentDetail(paymentId);
+        return ResponseEntity.ok(paymentInfoResponseDto);
+    }
+
+    /**
      * 외부 결제 API 에 결제 승인 요청
      */
     @GetMapping("/{paymentApi}/completed")
     public ResponseEntity<Void> approvalRequest(@PathVariable PaymentApi paymentApi,
-                                                                  @RequestParam("pg_token") String payToken,
-                                                                  HttpServletRequest request) {
+                                                @RequestParam("pg_token") String payToken,
+                                                HttpServletRequest request) {
         String loginId = getLoginId(request);
         paymentApplicationCrew.approvePayment(payToken, loginId, paymentApi);
         return ResponseEntity.ok().build();
@@ -59,7 +69,7 @@ public class PayApiController {
      */
     @GetMapping("/canceled")
     public ResponseEntity<String> redirectPayCanceled() {
-        return ResponseEntity.badRequest().body(CANCELED_PAY.getMessage());
+        return ResponseEntity.ok().body(CANCELED_PAY.getMessage());
     }
 
 
@@ -68,7 +78,7 @@ public class PayApiController {
      */
     @GetMapping("/failed")
     public ResponseEntity<String> redirectPayFailed() {
-        return ResponseEntity.badRequest().body(FAILED_PAY.getMessage());
+        return ResponseEntity.internalServerError().body(FAILED_PAY.getMessage());
     }
 
     /**

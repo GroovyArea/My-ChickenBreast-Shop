@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.domain.category;
 
+import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,9 @@ public class Category extends BaseTimeEntity {
     @Column(name = "category_name")
     private ChickenCategory categoryName;
 
+    /* <비즈니스 로직 메서드> */
+
+    public void updateCategoryName(ChickenCategory newCategoryName) {
+        this.categoryName = newCategoryName;
+    }
 }

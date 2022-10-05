@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.infra.application;
 
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.EmailRequestDto;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
-import com.daniel.mychickenbreastshop.global.store.RedisStore;
+import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;

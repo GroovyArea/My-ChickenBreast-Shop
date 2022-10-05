@@ -36,7 +36,6 @@ public class CartApiController {
      * 장바구니 상품 조회
      *
      * @param cookie 쿠키
-     * @return 장바구니 리스트
      */
     @GetMapping
     public ResponseEntity<List<CartResponseDto>> getCartList(@CookieValue(value = "chicken") Cookie cookie) {
@@ -50,7 +49,6 @@ public class CartApiController {
      * @param cookie            쿠키
      * @param addCartRequestDTO 추가할 상품
      * @param response          response
-     * @return ok 응답
      */
     @PostMapping
     public ResponseEntity<Void> addCart(@CookieValue(value = "chicken", required = false) Cookie cookie,
@@ -71,7 +69,6 @@ public class CartApiController {
      * @param cookie         쿠키
      * @param cartRequestDTO 수정할 상품
      * @param response       response
-     * @return ok 응답
      */
     @PutMapping
     public ResponseEntity<Void> modifyCart(@CookieValue(value = "chicken", required = false) Cookie cookie,
@@ -92,7 +89,6 @@ public class CartApiController {
      * @param cookie         쿠키
      * @param cartRequestDTO 삭제할 상품
      * @param response       response
-     * @return ok 응답
      */
     @DeleteMapping
     public ResponseEntity<Void> removeCart(@CookieValue(value = "chicken", required = false) Cookie cookie,

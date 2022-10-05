@@ -1,13 +1,13 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
+import com.daniel.mychickenbreastshop.domain.user.application.UserService;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.application.UserService;
+import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +32,8 @@ import java.util.List;
 public class UserApiController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
+
 
     /**
      * 회원 디테일 조회
@@ -72,27 +74,29 @@ public class UserApiController {
     /**
      * 회원 리스트 조회
      *
-     * @param pageable page 객체
+     * @param page page 번호
      * @return 회원 리스트
      */
     @GetMapping("/v2/users")
-    public ResponseEntity<List<ListResponseDto>> getAll(
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(userService.getAllUser(pageable));
+    public ResponseEntity<List<ListResponseDto>> getAll(@RequestParam(defaultValue = "1") int page) {
+        return ResponseEntity.ok(userService.getAllUsers(page));
     }
 
     /**
-     * 회원 검색
+     * 관리자용 회원 검색 (이름, 이메일, 아이디, 회원 등급)
      *
-     * @param loginId  로그인 아이디
-     * @param pageable page 객체
-     * @return 검색 회원 리스트
+     * @param page      페이지 번호
+     * @param role      회원 등급
+     * @param searchDto 검색 조건
+     * @return 회원 검색 리스트
      */
-    @GetMapping("/v1/users/search/{loginId}")
-    public ResponseEntity<List<ListResponseDto>> searchUserByLoginId(
-            @PathVariable String loginId,
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(userService.searchUser(loginId, pageable));
+    @GetMapping("/v2/users/search")
+    public ResponseEntity<List<ListResponseDto>> searchUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "ROLE_USER") Role role,
+            @RequestBody UserSearchDto searchDto) {
+
+        return ResponseEntity.ok(userService.searchUsers(page, searchDto, role));
     }
 
     private Long getUserId(HttpServletRequest request) {

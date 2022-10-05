@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.cart.application;
+package com.daniel.mychickenbreastshop.domain.cart.application.validate;
 
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;

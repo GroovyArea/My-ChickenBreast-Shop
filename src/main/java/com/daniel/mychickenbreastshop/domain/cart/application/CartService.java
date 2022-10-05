@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.cart.application;
 
 import com.daniel.mychickenbreastshop.domain.cart.application.manage.CartItemManager;
+import com.daniel.mychickenbreastshop.domain.cart.application.validate.CartValidator;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCartDto;
 import com.daniel.mychickenbreastshop.domain.cart.domain.dto.response.CartResponseDto;

@@ -1,11 +1,13 @@
-package com.daniel.mychickenbreastshop.domain.payment.application.crew;
+package com.daniel.mychickenbreastshop.domain.payment.application.payment.crew;
 
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.CommonPaymentService;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.PaymentStrategyFactory;
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.model.PaymentResult;
-import com.daniel.mychickenbreastshop.domain.payment.application.validate.ItemValidator;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service.PaymentStrategyApplication;
+import com.daniel.mychickenbreastshop.domain.payment.application.payment.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
+import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class PaymentApplicationCrew {
 
     private final PaymentStrategyFactory paymentStrategyFactory;
+    private final CommonPaymentService commonPaymentService;
     private final ItemValidator itemValidator;
 
     public String getSingleItemPayResultUrl(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId, PaymentApi paymentApi) {
@@ -32,8 +35,8 @@ public class PaymentApplicationCrew {
         return paymentApplication.payCart(cookieValue, requestUrl, loginId).getRedirectUrl();
     }
 
-    // 애매한 놈
-/*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentApi paymentApi) {
+/*    // 애매한 놈
+*//*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentApi paymentApi) {
         PaymentStrategyApplication<PaymentResult> paymentapplication = getPaymentStrategyApplication(paymentApi);
         return null;
     }*/
@@ -50,5 +53,9 @@ public class PaymentApplicationCrew {
 
     private PaymentStrategyApplication<PaymentResult> getPaymentStrategyApplication(PaymentApi paymentApi) {
         return paymentStrategyFactory.findStrategy(paymentApi);
+    }
+
+    public PaymentInfoResponseDto getPaymentDetail(Long paymentId) {
+        return commonPaymentService.getPaymentDetail(paymentId);
     }
 }

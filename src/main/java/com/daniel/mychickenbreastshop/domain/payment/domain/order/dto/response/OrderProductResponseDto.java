@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OrderProductResponseDto {
 
+    private Long orderProductId;
     private Integer count;
-    private String productName;
-    private Integer productPrice;
-    private String productImage;
+    private String name;
+    private Integer price;
+    private String image;
     private String content;
 }

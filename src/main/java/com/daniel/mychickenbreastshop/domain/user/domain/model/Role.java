@@ -9,9 +9,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum Role {
 
-    ROLE_WITHDRAWAL(0, "WITHDRAWAL"),
-    ROLE_USER(1, "USER"),
-    ROLE_ADMIN(9, "ADMIN");
+    ROLE_WITHDRAWAL(0, "탈퇴회원"),
+    ROLE_USER(1, "일반회원"),
+    ROLE_ADMIN(9, "관리자");
 
     private final int roleNumber;
     private final String roleName;

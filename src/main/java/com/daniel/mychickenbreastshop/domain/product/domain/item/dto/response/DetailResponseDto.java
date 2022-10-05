@@ -14,6 +14,9 @@ public class DetailResponseDto {
     private Integer price;
     private Integer quantity;
     private String content;
-    @Setter
     private String image;
+
+    public void updateImageUrl(String image) {
+        this.image = image;
+    }
 }
