@@ -140,7 +140,7 @@ public class UserService {
     }
 
     private PageRequest createPageRequest(int page) {
-        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
 }
