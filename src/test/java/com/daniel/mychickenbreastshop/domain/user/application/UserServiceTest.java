@@ -68,9 +68,11 @@ class UserServiceTest extends ApplicationTest {
     void searchUsersTest() {
         // given
         UserSearchDto userSearchDto = new UserSearchDto("loginId", "id");
+        int page = 1;
+        Role role = Role.ROLE_USER;
 
         // when
-        List<ListResponseDto> listResponseDtos = userService.searchUsers(1, userSearchDto, Role.ROLE_USER);
+        List<ListResponseDto> listResponseDtos = userService.searchUsers(page, userSearchDto, role);
 
         assertThat(listResponseDtos).hasSize(10);
     }

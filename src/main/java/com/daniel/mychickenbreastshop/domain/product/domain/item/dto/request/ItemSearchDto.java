@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ItemSearchDto {
 
-    private String searchKey; // 상품 이름, 상품 명
+    private String searchKey; // 상품 이름
     private String searchValue;
 }

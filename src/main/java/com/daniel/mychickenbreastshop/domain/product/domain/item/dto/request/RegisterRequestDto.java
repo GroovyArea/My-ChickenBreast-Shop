@@ -24,7 +24,6 @@ public class RegisterRequestDto {
     @NotBlank(message = "필수 입력 값입니다.")
     private String content;
 
-    @Setter
     private String image;
 
     private ChickenStatus status;
@@ -32,4 +31,7 @@ public class RegisterRequestDto {
     @NotBlank(message = "필수 입력 값입니다.")
     private ChickenCategory category;
 
+    public void updateImageName(String imageName) {
+        image = imageName;
+    }
 }

@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.product.application.manage;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -71,7 +72,7 @@ public class FileManager {
                 throw new BadRequestException(FILE_NOT_FOUND);
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            throw new InternalErrorException(e);
         }
     }
 
