@@ -6,30 +6,35 @@ import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
 import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.RegisterRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductServiceTest extends ApplicationTest {
+
+    @Value("${file.upload.location}")
+    String uploadPath;
 
     @Autowired
     private ProductService productService;
@@ -37,11 +42,8 @@ class ProductServiceTest extends ApplicationTest {
     @Autowired
     private FileManager fileManager;
 
-    @Autowired
-    ResourceLoader loader;
-
     @BeforeEach
-    void setUpItems() throws IOException {
+    void setUpItems() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
@@ -55,12 +57,12 @@ class ProductServiceTest extends ApplicationTest {
 
         for (int i = 0; i < 50; i++) {
             String imageFileName = "image" + i + ".png";
-            String uploadFileName = UUID.randomUUID() + "_" + imageFileName;
 
-            MockMultipartFile multipartFile = new MockMultipartFile("image" + i, "image" + i + ".png",
-                    MediaType.IMAGE_PNG_VALUE, ("image" + i).getBytes(StandardCharsets.UTF_8));
+            MockMultipartFile multipartFile = new MockMultipartFile(
+                    "image", imageFileName,
+                    MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
-            fileManager.uploadFile(multipartFile);
+            String uploadFileName = fileManager.uploadFile(multipartFile);
 
             Product build = Product.builder()
                     .id((long) i)
@@ -129,21 +131,87 @@ class ProductServiceTest extends ApplicationTest {
 
     @Test
     void getItemFilePath() {
+        // given
+        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+        String imageName = product.getImage();
+        Resource itemImageResource = productService.getItemImageResource(imageName);
+
+        // when
+        String itemFilePath = productService.getItemFilePath(itemImageResource);
+
+        assertThat(itemFilePath).startsWith(uploadPath);
     }
 
+    @DisplayName("상품을 등록한다.")
     @Test
     void registerItem() {
+        // given
+        RegisterRequestDto requestDto = RegisterRequestDto.builder()
+                .name("name")
+                .price(1000).quantity(200)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(ChickenCategory.STEAMED)
+                .build();
+
+        String imageFileName = "image.png";
+
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        // when
+        Long id = productService.registerItem(requestDto, multipartFile);
+
+        assertThat(id).isNotNull();
     }
 
+    @DisplayName("상품 정보를 수정한다.")
     @Test
     void modifyItem() {
+        // given
+        ModifyRequestDto modifyRequestDto = ModifyRequestDto.builder()
+                .id(1L)
+                .name("name")
+                .price(1000).quantity(200)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(ChickenCategory.STEAMED)
+                .build();
+
+        String imageFileName = "modifiedImage.png";
+
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        // when
+        productService.modifyItem(modifyRequestDto, multipartFile);
+        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않음"));
+
+        assertThat(product.getContent()).isEqualTo("content");
+        assertThat(product.getName()).isEqualTo("name");
+        assertThat(product.getImage()).contains("modifiedImage.png");
     }
 
+    @DisplayName("상품을 단종 상태로 변경한다.")
     @Test
     void removeItem() {
+        productService.removeItem(1L);
+        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않음"));
+
+        assertThat(product.getStatus()).isEqualTo(ChickenStatus.EXTINCTION);
     }
 
+    @DisplayName("결제할 상품 가격과 수량의 총 결제 금액의 유효성을 검사하며 불일치할 경우 예외를 발생시킨다.")
     @Test
     void validatePayAmount() {
+        // given
+        Long itemNo = 1L;
+        int itemQuantity = 10;
+        long totalPrice = 1000; // 원래 10,000원 이어야 함.
+
+        assertThatThrownBy(() -> productService.validatePayAmount(itemNo, itemQuantity, totalPrice))
+                .isInstanceOf(BadRequestException.class).hasMessageContaining("상품 총 가격이 잘못 되었습니다.");
     }
 }
