@@ -60,7 +60,7 @@ public class UserService {
         return users.stream()
                 .map(user -> {
                     ListResponseDto listResponseDto = userListMapper.toDTO(user);
-                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName());
+                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName()); //둘다
                     return listResponseDto;
                 })
                 .toList();

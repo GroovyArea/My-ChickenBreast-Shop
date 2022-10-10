@@ -2,6 +2,7 @@ package com.daniel.mychickenbreastshop.domain.user.application;
 
 import com.daniel.mychickenbreastshop.ApplicationTest;
 import com.daniel.mychickenbreastshop.domain.user.domain.User;
+import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
@@ -13,17 +14,23 @@ import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SpringBootTest(classes = {UserService.class})
 class UserServiceTest extends ApplicationTest {
 
     @Autowired
     private UserService userService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUpUsers() {

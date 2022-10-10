@@ -14,7 +14,7 @@ import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.Item
 import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.domain.payment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
@@ -23,12 +23,17 @@ import java.util.stream.Stream;
  * 카카오페이 결제 서비스 API 호출
  */
 @Service
-@RequiredArgsConstructor
 public class KakaopayService implements KakaoPaymentService {
 
     private final KakaoPayClient kakaoPayClient;
     private final KakaoPayClientProperty kakaoPayClientProperty;
     private final RedisStore redisStore;
+
+    public KakaopayService(KakaoPayClient kakaoPayClient, KakaoPayClientProperty kakaoPayClientProperty, StringRedisTemplate stringRedisTemplate) {
+        this.kakaoPayClient = kakaoPayClient;
+        this.kakaoPayClientProperty = kakaoPayClientProperty;
+        this.redisStore = new RedisStore(stringRedisTemplate);
+    }
 
     @Override
     public OrderInfoResponse getOrderInfo(String franchiseeId, String payId) {

@@ -14,7 +14,7 @@ class PasswordEncryptTest {
         String salt = PasswordEncrypt.getSalt();
         String password = "1234";
         String securedPassword = PasswordEncrypt.getSecurePassword(password, salt);
-
+// 1234 해쉬 문자열
         Assertions.assertThat(securedPassword).isNotNull();
     }
 }

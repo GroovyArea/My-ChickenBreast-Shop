@@ -8,6 +8,11 @@ import java.lang.annotation.*;
 public @interface RedisLocked {
 
     /**
+     * 사용자 정의 redisson lock Key
+     */
+    String key() default "";
+
+    /**
      * redisson lock 유지 시간 <br>
      * 단위 : milliseconds
      */
