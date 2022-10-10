@@ -60,7 +60,7 @@ public class UserService {
         return users.stream()
                 .map(user -> {
                     ListResponseDto listResponseDto = userListMapper.toDTO(user);
-                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName());
+                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName()); //둘다
                     return listResponseDto;
                 })
                 .toList();
@@ -140,7 +140,7 @@ public class UserService {
     }
 
     private PageRequest createPageRequest(int page) {
-        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
 }

@@ -14,7 +14,6 @@ import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.De
 import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ProductResponse;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.redis.RedisProductRepository;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
@@ -40,7 +39,6 @@ public class ProductService {
     private final FileManager fileManager;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final RedisProductRepository productRedisRepository;
     private final ItemDetailMapper itemDetailMapper;
     private final ItemListMapper itemListMapper;
     private final ItemRegisterMapper itemRegisterMapper;
@@ -64,14 +62,28 @@ public class ProductService {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> products = productRepository.findAllByCategoryName(category, pageRequest).getContent();
 
-        return products.stream().map(itemListMapper::toDTO).toList();
+        return products.stream()
+                .map(product -> {
+                    ListResponseDto listResponseDto = itemListMapper.toDTO(product);
+                    listResponseDto.changeStatusNameWithChickenStatus(product.getStatus().getStatusName());
+                    listResponseDto.changeCategoryNameWithChickenCategory(product.getCategory().getCategoryName().getChickenName());
+                    return listResponseDto;
+                })
+                .toList();
     }
 
     public List<ListResponseDto> searchProducts(int page, ChickenStatus status, ChickenCategory category, ItemSearchDto searchDto) {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> searchedItems = productRepository.findItemWithDynamicQuery(pageRequest, searchDto, category, status).getContent();
 
-        return searchedItems.stream().map(itemListMapper::toDTO).toList();
+        return searchedItems.stream()
+                .map(product -> {
+                    ListResponseDto listResponseDto = itemListMapper.toDTO(product);
+                    listResponseDto.changeStatusNameWithChickenStatus(product.getStatus().getStatusName());
+                    listResponseDto.changeCategoryNameWithChickenCategory(product.getCategory().getCategoryName().getChickenName());
+                    return listResponseDto;
+                })
+                .toList();
     }
 
     public Resource getItemImageResource(String fileName) {
@@ -91,7 +103,7 @@ public class ProductService {
     public Long registerItem(RegisterRequestDto registerRequestDto, MultipartFile file) {
         String uploadFileName = fileManager.uploadFile(file);
 
-        registerRequestDto.setImage(uploadFileName);
+        registerRequestDto.updateImageName(uploadFileName);
 
         Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
@@ -129,7 +141,7 @@ public class ProductService {
         dbProduct.delete();
     }
 
-    public void validatePayAmount(Long itemNo, long totalPrice, int itemQuantity) {
+    public void validatePayAmount(Long itemNo, int itemQuantity, long totalPrice) {
         Product dbProduct = productRepository.findById(itemNo).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
 
         if ((long) dbProduct.getPrice() * itemQuantity != totalPrice) {
@@ -138,13 +150,7 @@ public class ProductService {
     }
 
     private PageRequest createPageRequest(int page) {
-        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
-/*    @PostConstruct
-    protected void setAllItemsInRedis() {
-        List<Product> products = productRepository.findAll();
-        List<RedisProduct> redisProducts = products.stream().map(product -> new RedisProduct(product.getId() + ":lock", product.getQuantity())).toList();
-        productRedisRepository.saveAll(redisProducts);
-    }*/
 }

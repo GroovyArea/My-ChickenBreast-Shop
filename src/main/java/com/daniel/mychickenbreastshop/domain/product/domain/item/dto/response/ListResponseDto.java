@@ -1,7 +1,5 @@
 package com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,9 +18,18 @@ public class ListResponseDto {
     private Integer price;
     private Integer quantity;
     private String image;
-    private ChickenCategory category;
-    private ChickenStatus status;
+    private String category;
+    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
+    public void changeStatusNameWithChickenStatus(String statusName) {
+        status = statusName;
+    }
+
+    public void changeCategoryNameWithChickenCategory(String categoryName) {
+        category = categoryName;
+    }
+
 }

@@ -12,7 +12,7 @@ public class ItemValidator {
     private final ProductService productService;
 
     public void itemValidate(ItemPayRequestDto itemPayRequestDto) {
-        productService.validatePayAmount(itemPayRequestDto.getItemNumber(), itemPayRequestDto.getTotalAmount(),
-                itemPayRequestDto.getQuantity());
+        productService.validatePayAmount(itemPayRequestDto.getItemNumber(), itemPayRequestDto.getQuantity(),
+                itemPayRequestDto.getTotalAmount());
     }
 }

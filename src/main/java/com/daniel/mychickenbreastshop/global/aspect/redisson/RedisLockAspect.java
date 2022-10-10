@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@Order(value = 1)
+@Order(value = Integer.MIN_VALUE)
 public class RedisLockAspect {
 
     private static final String LOCK_SUFFIX = ":lock";

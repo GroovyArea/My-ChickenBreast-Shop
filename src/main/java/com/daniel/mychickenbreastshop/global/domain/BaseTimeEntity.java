@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-public class BaseTimeEntity {
+public abstract class BaseTimeEntity {
 
     @Column(updatable = false, name = "created_at", nullable = false)
     private LocalDateTime createdAt;

@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.global.redis.store;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -21,11 +22,13 @@ import java.time.Duration;
  * @author 김남영
  * @version 1.1
  */
+
+// 생각
 @Component
 @RequiredArgsConstructor
-public class RedisStore {
+public abstract class RedisStore {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisTemplate<String, Object> stringRedisTemplate;
 
     /* key를 통해 value 리턴 */
     public String getData(String key) {
