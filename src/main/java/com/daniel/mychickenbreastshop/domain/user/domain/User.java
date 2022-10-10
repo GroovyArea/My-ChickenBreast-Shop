@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.domain;
 
 
+import com.daniel.mychickenbreastshop.domain.payment.domain.order.Order;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -40,6 +45,13 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // 회원이 삭제 되어도 주문 데이터는 그냥 남아있어야 되기에, Cascade 사용 안함
+    @OneToMany(mappedBy = "user", fetch = LAZY)
+    private List<Order> orders = new ArrayList<>();
+
+
+    // <비즈니스 로직 메서드> //
+
     public void updateUserInfo(final User modifier, final String updatePassword) {
         updateName(modifier.getName());
         updateEmail(modifier.getEmail());
@@ -50,6 +62,7 @@ public class User extends BaseTimeEntity {
 
     public void remove() {
         updateToWithDrawRole();
+        this.delete();
     }
 
     private void updateName(final String name) {

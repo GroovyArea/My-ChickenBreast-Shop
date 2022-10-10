@@ -1,9 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.product.domain.category;
 
+import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,15 +19,20 @@ import java.util.List;
 @Builder
 public class Category extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_name")
     private ChickenCategory categoryName;
 
+    /* <비즈니스 로직 메서드> */
+
+    public void updateCategoryName(ChickenCategory newCategoryName) {
+        this.categoryName = newCategoryName;
+    }
 }

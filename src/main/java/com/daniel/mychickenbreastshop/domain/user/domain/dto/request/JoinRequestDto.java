@@ -21,7 +21,6 @@ public class JoinRequestDto {
     @Setter
     private String password;
 
-    @NotBlank(message = "필수 입력 값입니다.")
     @Setter
     private String salt;
 
@@ -38,7 +37,6 @@ public class JoinRequestDto {
     @NotBlank(message = "필수 입력 값입니다.")
     private String zipcode;
 
-    @NotBlank(message = "필수 입력 값입니다.")
     @Setter
     private Role role;
 

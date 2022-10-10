@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request;
 
-import com.daniel.mychickenbreastshop.domain.product.domain.category.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
 import lombok.*;
 
@@ -24,13 +24,14 @@ public class RegisterRequestDto {
     @NotBlank(message = "필수 입력 값입니다.")
     private String content;
 
-    @Setter
     private String image;
 
-    @NotBlank(message = "필수 입력 값입니다.")
     private ChickenStatus status;
 
     @NotBlank(message = "필수 입력 값입니다.")
     private ChickenCategory category;
 
+    public void updateImageName(String imageName) {
+        image = imageName;
+    }
 }

@@ -4,6 +4,7 @@ import com.daniel.mychickenbreastshop.domain.user.domain.User;
 import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
@@ -13,10 +14,11 @@ import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserModifyMapper;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.global.store.RedisStore;
+import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -45,26 +48,29 @@ public class UserService {
     private final UserListMapper userListMapper;
     private final UserModifyMapper userModifyMapper;
 
-    @Transactional(readOnly = true)
     public DetailResponseDto getUser(Long userId) {
         return userDetailMapper.toDTO(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
     }
 
-    @Transactional(readOnly = true)
-    public List<ListResponseDto> getAllUser(Pageable pageable) {
-        List<User> allList = userRepository.findAll(pageable).getContent();
+    public List<ListResponseDto> getAllUsers(int page) {
+        PageRequest pageRequest = createPageRequest(page);
+        List<User> users = userRepository.findAll(pageRequest).getContent();
 
-        return allList.stream()
-                .map(userListMapper::toDTO)
+        return users.stream()
+                .map(user -> {
+                    ListResponseDto listResponseDto = userListMapper.toDTO(user);
+                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName()); //둘다
+                    return listResponseDto;
+                })
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public List<ListResponseDto> searchUser(String loginId, Pageable pageable) {
-        List<User> searchList = userRepository.searchByLoginId(loginId, pageable);
+    public List<ListResponseDto> searchUsers(int page, UserSearchDto searchDto, Role role) {
+        PageRequest pageRequest = createPageRequest(page);
+        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, searchDto, role).getContent();
 
-        return searchList.stream()
+        return searchedUsers.stream()
                 .map(userListMapper::toDTO)
                 .toList();
     }
@@ -111,6 +117,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
+        user.delete();
         user.remove();
     }
 
@@ -130,6 +137,10 @@ public class UserService {
         if (!savedKey.equals(emailKey)) {
             throw new BadRequestException(UserResponse.MAIL_KEY_MISMATCH.getMessage());
         }
+    }
+
+    private PageRequest createPageRequest(int page) {
+        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
 }
