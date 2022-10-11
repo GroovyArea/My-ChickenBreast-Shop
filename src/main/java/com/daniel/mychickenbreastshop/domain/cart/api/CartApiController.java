@@ -2,9 +2,9 @@ package com.daniel.mychickenbreastshop.domain.cart.api;
 
 
 import com.daniel.mychickenbreastshop.domain.cart.application.CartService;
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCartDto;
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.response.CartResponseDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.CartRequestDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.UpdatableCartDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.response.CartResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

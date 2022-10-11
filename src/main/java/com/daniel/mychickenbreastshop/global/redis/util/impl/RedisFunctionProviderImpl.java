@@ -1,27 +1,18 @@
 package com.daniel.mychickenbreastshop.global.redis.util.impl;
 
 import com.daniel.mychickenbreastshop.global.redis.util.RedisFunctionProvider;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
-import org.redisson.api.RTransaction;
 import org.redisson.api.RedissonClient;
-import org.redisson.api.TransactionOptions;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.concurrent.TimeUnit;
 
 @Component
-@Getter
 @RequiredArgsConstructor
 public class RedisFunctionProviderImpl implements RedisFunctionProvider {
 
     private final RedissonClient redissonClient;
-    private final PlatformTransactionManager transactionManager;
 
     @Override
     public RLock lock(String lockKey) {
@@ -67,39 +58,6 @@ public class RedisFunctionProviderImpl implements RedisFunctionProvider {
     }
 
     @Override
-    public TransactionStatus startDBTransacton() {
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        def.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
-        return transactionManager.getTransaction(def);
-    }
-
-    @Override
-    public void commitDB(TransactionStatus status) {
-        transactionManager.commit(status);
-    }
-
-    @Override
-    public void rollbackDB(TransactionStatus status) {
-        transactionManager.rollback(status);
-    }
-
-    @Override
-    public RTransaction startRedisTransacton() {
-        return redissonClient.createTransaction(TransactionOptions.defaults());
-    }
-
-    @Override
-    public void commitRedis(RTransaction transaction) {
-        transaction.commit();
-    }
-
-    @Override
-    public void rollbackRedis(RTransaction transaction) {
-        transaction.rollback();
-    }
-
-    @Override
     public Object getValue(String key)
     {
         return redissonClient.getBucket(key).get();
@@ -110,7 +68,6 @@ public class RedisFunctionProviderImpl implements RedisFunctionProvider {
     {
         redissonClient.getBucket(key).set(value);
     }
-
 
     @Override
     public boolean canUnlock(String lockKey) {

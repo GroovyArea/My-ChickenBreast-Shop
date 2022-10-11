@@ -1,14 +1,14 @@
 package com.daniel.mychickenbreastshop.domain.user.application;
 
 import com.daniel.mychickenbreastshop.ApplicationTest;
-import com.daniel.mychickenbreastshop.domain.user.domain.User;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.User;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import org.junit.jupiter.api.BeforeEach;

@@ -9,7 +9,7 @@ import com.daniel.mychickenbreastshop.auth.security.error.handler.CustomAuthenti
 import com.daniel.mychickenbreastshop.auth.security.filter.JwtAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationFilter;
 import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenticationProvider;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

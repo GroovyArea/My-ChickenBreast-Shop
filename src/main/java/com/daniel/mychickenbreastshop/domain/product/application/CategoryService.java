@@ -1,15 +1,15 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.domain.product.domain.category.Category;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.dto.request.RegisterRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.category.Category;
+import com.daniel.mychickenbreastshop.domain.product.model.category.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.model.category.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.category.dto.request.RegisterRequestDto;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.daniel.mychickenbreastshop.domain.product.domain.category.model.CategoryResponse.CATEGORY_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.model.category.model.CategoryResponse.CATEGORY_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

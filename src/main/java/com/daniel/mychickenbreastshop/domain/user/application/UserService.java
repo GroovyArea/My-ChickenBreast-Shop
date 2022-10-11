@@ -1,18 +1,19 @@
 package com.daniel.mychickenbreastshop.domain.user.application;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.User;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
-import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserDetailMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserModifyMapper;
+import com.daniel.mychickenbreastshop.domain.user.model.User;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.UserStoreEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
@@ -42,7 +43,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RedisStore redisStore;
+    private final RedisStore userRedisStore;
     private final UserJoinMapper userJoinMapper;
     private final UserDetailMapper userDetailMapper;
     private final UserListMapper userListMapper;
@@ -128,7 +129,7 @@ public class UserService {
     }
 
     private void validateAuthKey(String email, String emailKey) {
-        String savedKey = redisStore.getData(email);
+        String savedKey = userRedisStore.getData(email, UserStoreEntity.class).getEmail();
 
         if (savedKey == null) {
             throw new BadRequestException(UserResponse.MAIL_KEY_EXPIRED.getMessage());

@@ -1,10 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.payment.api;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.crew.PaymentApplicationCrew;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.ItemPayRequestDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.dto.response.PaymentInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentApi;
+import com.daniel.mychickenbreastshop.domain.payment.application.crew.PaymentApplicationCrew;
+import com.daniel.mychickenbreastshop.domain.payment.model.dto.request.ItemPayRequestDto;
+import com.daniel.mychickenbreastshop.domain.payment.model.dto.request.PayCancelRequestDto;
+import com.daniel.mychickenbreastshop.domain.payment.model.dto.response.PaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse.CANCELED_PAY;
-import static com.daniel.mychickenbreastshop.domain.payment.domain.pay.model.PaymentResponse.FAILED_PAY;
+import static com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentResponse.CANCELED_PAY;
+import static com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentResponse.FAILED_PAY;
 
 /**
  * 결제 API

@@ -1,12 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

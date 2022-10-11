@@ -24,10 +24,5 @@ public @interface RedisLocked {
      */
     long waitTime() default 3000;
 
-    /**
-     * aop 처리시 트랜잭션 적용 여부
-     */
-    boolean transactional() default false;
-
 }
 

@@ -1,12 +1,12 @@
 package com.daniel.mychickenbreastshop;
 
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderProductRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.order.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.CardRepository;
-import com.daniel.mychickenbreastshop.domain.payment.domain.pay.PaymentRepository;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.ProductRepository;
-import com.daniel.mychickenbreastshop.domain.user.domain.UserRepository;
+import com.daniel.mychickenbreastshop.domain.payment.model.order.OrderProductRepository;
+import com.daniel.mychickenbreastshop.domain.payment.model.order.OrderRepository;
+import com.daniel.mychickenbreastshop.domain.payment.model.CardRepository;
+import com.daniel.mychickenbreastshop.domain.payment.model.PaymentRepository;
+import com.daniel.mychickenbreastshop.domain.product.model.category.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

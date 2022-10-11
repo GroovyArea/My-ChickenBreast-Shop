@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.mapper;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.User;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.User;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.global.mapper.GenericEntityMapper;
 import org.mapstruct.Mapper;
 

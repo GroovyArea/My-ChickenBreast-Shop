@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.product.mapper;
 
-import com.daniel.mychickenbreastshop.domain.product.domain.item.Product;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.global.mapper.GenericDtoMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

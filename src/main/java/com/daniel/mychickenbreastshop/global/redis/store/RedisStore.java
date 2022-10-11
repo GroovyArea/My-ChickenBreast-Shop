@@ -1,13 +1,5 @@
 package com.daniel.mychickenbreastshop.global.redis.store;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
-
-import java.time.Duration;
-
 /**
  * Redis Component 클래스
  *
@@ -15,43 +7,27 @@ import java.time.Duration;
  *     <History>
  *         1.0 2022.05 최초 작성
  *         1.1 2022.08.01 리팩토링
+ *         1.2 2022.10.11 확장을 위해 인터페이스로 변경
  *     </History>
  *
  * </pre>
  *
  * @author 김남영
- * @version 1.1
+ * @version 1.2
  */
 
-// 생각
-@Component
-@RequiredArgsConstructor
-public abstract class RedisStore {
-
-    private final RedisTemplate<String, Object> stringRedisTemplate;
+public interface RedisStore {
 
     /* key를 통해 value 리턴 */
-    public String getData(String key) {
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-        return valueOperations.get(key);
-    }
+    <T> T getData(String key, Class<T> type);
 
     /* 데이터 삽입 */
-    public void setData(String key, String value) {
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-        valueOperations.set(key, value);
-    }
+    void setData(String key, Object value);
 
     /* 유효 시간 동안 (key, value) 저장 */
-    public void setDataExpire(String key, String value, long duration) {
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-        Duration expireDuration = Duration.ofSeconds(duration);
-        valueOperations.set(key, value, expireDuration);
-    }
+    void setDataExpire(String key, Object value, long duration);
 
     /* 데이터 삭제 */
-    public Boolean deleteData(String key) {
-        return stringRedisTemplate.delete(key);
-    }
+    Boolean deleteData(String key);
 
 }

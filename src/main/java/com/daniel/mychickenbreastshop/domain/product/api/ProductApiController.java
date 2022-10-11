@@ -1,14 +1,14 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
-import com.daniel.mychickenbreastshop.domain.payment.application.payment.strategy.service.KakaopayStrategyApplication;
+import com.daniel.mychickenbreastshop.domain.payment.application.strategy.service.KakaopayStrategyApplication;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.model.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.request.RegisterRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.model.category.model.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.RegisterRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.model.ChickenStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;

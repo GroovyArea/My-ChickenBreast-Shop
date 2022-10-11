@@ -1,8 +1,6 @@
 package com.daniel.mychickenbreastshop.global.redis.util;
 
 import org.redisson.api.RLock;
-import org.redisson.api.RTransaction;
-import org.springframework.transaction.TransactionStatus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,18 +21,6 @@ public interface RedisFunctionProvider {
     public Object getValue(String key);
 
     public void setValue(String key, Object value);
-
-    public TransactionStatus startDBTransacton();
-
-    public void commitDB(TransactionStatus status);
-
-    public void rollbackDB(TransactionStatus status);
-
-    public RTransaction startRedisTransacton();
-
-    public void commitRedis(RTransaction transaction);
-
-    public void rollbackRedis(RTransaction transaction);
 
     public boolean canUnlock(String lockKey);
 }

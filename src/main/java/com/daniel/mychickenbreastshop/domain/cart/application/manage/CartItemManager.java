@@ -1,10 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.cart.application.manage;
 
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.CartRequestDto;
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.request.UpdatableCartDto;
-import com.daniel.mychickenbreastshop.domain.cart.domain.dto.response.CartResponseDto;
-import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartProperty;
-import com.daniel.mychickenbreastshop.domain.cart.domain.model.CartResponse;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.CartRequestDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.UpdatableCartDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.dto.response.CartResponseDto;
+import com.daniel.mychickenbreastshop.domain.cart.model.model.CartProperty;
+import com.daniel.mychickenbreastshop.domain.cart.model.model.CartResponse;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.util.CookieUtil;

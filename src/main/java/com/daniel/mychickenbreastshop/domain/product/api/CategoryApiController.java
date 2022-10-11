@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
 import com.daniel.mychickenbreastshop.domain.product.application.CategoryService;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.domain.category.dto.request.RegisterRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.category.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.category.dto.request.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,11 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.domain.user.domain.model.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.EmailRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.domain.dto.request.JoinRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.global.model.Response;
-import com.daniel.mychickenbreastshop.infra.application.MailService;
+import com.daniel.mychickenbreastshop.domain.user.application.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

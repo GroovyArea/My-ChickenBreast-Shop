@@ -79,7 +79,10 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
 
     // Redisson
-    implementation 'org.redisson:redisson-spring-boot-starter:3.17.6'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.7'
+
+    // apache common
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 
 }
 
