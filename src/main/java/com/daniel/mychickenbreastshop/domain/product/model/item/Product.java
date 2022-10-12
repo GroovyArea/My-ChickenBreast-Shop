@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.order.model.OrderResponse.ORDER_QUANTITY_NOT_ENOUGH;
+import static com.daniel.mychickenbreastshop.domain.product.model.item.model.ProductResponse.ITEM_QUANTITY_NOT_ENOUGH;
 
 @Entity
 @Getter
@@ -46,13 +46,13 @@ public class Product extends BaseTimeEntity {
 
     public void checkStockQuantity(int requestQuantity) {
         if(this.quantity < requestQuantity) {
-            throw new BadRequestException(ORDER_QUANTITY_NOT_ENOUGH.getMessage());
+            throw new BadRequestException(ITEM_QUANTITY_NOT_ENOUGH.getMessage());
         }
     }
 
     public void decreaseItemQuantity(int quantity) {
         if (this.quantity - quantity < 0) {
-            throw new BadRequestException("해당 상품은 재고량이 부족합니다.");
+            throw new BadRequestException(ITEM_QUANTITY_NOT_ENOUGH.getMessage());
         }
         this.quantity -= quantity;
     }

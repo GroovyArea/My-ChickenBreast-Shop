@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.payment.model;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.Order;
+import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.payment.model.model.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentType;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
@@ -50,7 +50,6 @@ public class Payment extends BaseTimeEntity {
         this.card = cardInfo;
         card.updatePaymentInfo(this);
     }
-
 
     // <비즈니스 로직 메서드> //
 

@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order.query;
+package com.daniel.mychickenbreastshop.domain.order.model.query;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.Order;
+import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response;
+package com.daniel.mychickenbreastshop.domain.order.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

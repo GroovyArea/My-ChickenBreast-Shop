@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order;
+package com.daniel.mychickenbreastshop.domain.order.model;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.query.OrderCustomQueryRepository;
+import com.daniel.mychickenbreastshop.domain.order.model.query.OrderCustomQueryRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderCustomQueryRepository {

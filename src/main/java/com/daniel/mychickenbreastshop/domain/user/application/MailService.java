@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.user.application;
 
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.redis.model.UserStoreEntity;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import lombok.RequiredArgsConstructor;
@@ -47,15 +47,15 @@ public class MailService {
             helper.setText(text + randomKey, true);
             javaMailSender.send(mimeMessage);
 
-            UserStoreEntity userStoreEntity = createEntity(emailRequestDto, randomKey);
+            UserRedisEntity redisEntity = createEntity(emailRequestDto, randomKey);
 
-            userRedisStore.setDataExpire(userStoreEntity.getEmail(), userStoreEntity, EXPIRED_TIME);
+            userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, EXPIRED_TIME);
         } catch (MessagingException | NoSuchAlgorithmException e) {
             throw new InternalErrorException(e);
         }
     }
 
-    private UserStoreEntity createEntity(EmailRequestDto emailRequestDto, int randomKey) {
-        return new UserStoreEntity(emailRequestDto.getEmail(), String.valueOf(randomKey));
+    private UserRedisEntity createEntity(EmailRequestDto emailRequestDto, int randomKey) {
+        return new UserRedisEntity(emailRequestDto.getEmail(), String.valueOf(randomKey));
     }
 }

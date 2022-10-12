@@ -1,16 +1,16 @@
 package com.daniel.mychickenbreastshop.domain.order.application;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.Order;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.OrderProduct;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderInfoListResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderItemsInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderProductResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderPaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.mapper.OrderInfoListMapper;
 import com.daniel.mychickenbreastshop.domain.order.mapper.OrderItemsInfoMapper;
-import com.daniel.mychickenbreastshop.domain.order.mapper.OrderProductListMapper;
 import com.daniel.mychickenbreastshop.domain.order.mapper.OrderPaymentInfoMapper;
+import com.daniel.mychickenbreastshop.domain.order.mapper.OrderProductListMapper;
+import com.daniel.mychickenbreastshop.domain.order.model.Order;
+import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
+import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderInfoListResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItemsInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderProductResponseDto;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.order.model.OrderResponse.ORDER_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.order.model.model.OrderResponse.ORDER_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

@@ -1,9 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.order.api;
 
 import com.daniel.mychickenbreastshop.domain.order.application.OrderService;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderInfoListResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderItemsInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.dto.response.OrderPaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderInfoListResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItemsInfoResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ public class OrderApiController {
      */
     @GetMapping("/v1/orders")
     public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(HttpServletRequest request,
-                                                                      @RequestParam(defaultValue = "1") int page) {
+                                                                       @RequestParam(defaultValue = "1") int page) {
         Long userId = getUserId(request);
         return ResponseEntity.ok(orderService.getAllOrders(userId, page));
     }

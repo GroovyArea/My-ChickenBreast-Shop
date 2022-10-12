@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order;
+package com.daniel.mychickenbreastshop.domain.order.model;
 
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;

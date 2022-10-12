@@ -1,7 +1,7 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order.query;
+package com.daniel.mychickenbreastshop.domain.order.model.query;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.Order;
-import com.daniel.mychickenbreastshop.domain.payment.model.order.QOrder;
+import com.daniel.mychickenbreastshop.domain.order.model.Order;
+import com.daniel.mychickenbreastshop.domain.order.model.QOrder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,8 +14,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.order.QOrder.order;
-import static com.daniel.mychickenbreastshop.domain.payment.model.pay.QPayment.payment;
+import static com.daniel.mychickenbreastshop.domain.order.model.QOrder.order;
+import static com.daniel.mychickenbreastshop.domain.payment.model.QPayment.payment;
+
 
 @Repository
 @RequiredArgsConstructor

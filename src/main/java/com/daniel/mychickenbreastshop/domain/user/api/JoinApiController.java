@@ -1,11 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.application.MailService;
+import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.global.model.Response;
-import com.daniel.mychickenbreastshop.domain.user.application.MailService;
+import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,17 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/join")
-public class JoinController {
+public class JoinApiController {
 
     private final UserService userService;
     private final MailService mailService;
 
     @PostMapping
-    public Response<Long> join(@RequestBody JoinRequestDto joinRequestDto) {
-        return Response.<Long>builder()
-                .data(userService.join(joinRequestDto))
-                .message(UserResponse.JOIN_SUCCEED.getMessage())
-                .build();
+    public ResponseEntity<Long> join(@RequestBody JoinRequestDto joinRequestDto) {
+        return ResponseEntity.ok(userService.join(joinRequestDto));
     }
 
     @PostMapping("/email")

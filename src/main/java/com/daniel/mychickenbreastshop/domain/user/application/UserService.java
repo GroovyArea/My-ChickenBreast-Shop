@@ -13,7 +13,7 @@ import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailRespo
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
 import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.redis.model.UserStoreEntity;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
@@ -129,7 +129,7 @@ public class UserService {
     }
 
     private void validateAuthKey(String email, String emailKey) {
-        String savedKey = userRedisStore.getData(email, UserStoreEntity.class).getEmail();
+        String savedKey = userRedisStore.getData(email, UserRedisEntity.class).getEmail();
 
         if (savedKey == null) {
             throw new BadRequestException(UserResponse.MAIL_KEY_EXPIRED.getMessage());

@@ -1,6 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.order;
+package com.daniel.mychickenbreastshop.domain.order.model;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.order.model.OrderStatus;
+import com.daniel.mychickenbreastshop.domain.order.model.model.OrderStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
@@ -79,10 +79,13 @@ public class Order extends BaseTimeEntity {
     }
 
     // <비즈니스 로직 메서드> //
+
+
     public void orderCancel() {
         this.updateOrderStatus(OrderStatus.CANCEL_ORDER);
         this.delete();
     }
+
 
     public void updateOrderStatus(OrderStatus orderStatus) {
         this.status = orderStatus;
