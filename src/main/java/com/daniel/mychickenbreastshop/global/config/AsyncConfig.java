@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.global.config;
 
-import com.daniel.mychickenbreastshop.global.config.model.EmailAsyncProperty;
+import com.daniel.mychickenbreastshop.global.async.model.EmailAsyncProperty;
 import com.daniel.mychickenbreastshop.global.async.error.handler.AsyncApiExceptionAdvice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;

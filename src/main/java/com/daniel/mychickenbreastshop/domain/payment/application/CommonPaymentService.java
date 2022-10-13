@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentResponse.PAYMENT_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentResponse.PAYMENT_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

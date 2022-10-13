@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.payment.model.dto.response;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.model.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentType;
+import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
+import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

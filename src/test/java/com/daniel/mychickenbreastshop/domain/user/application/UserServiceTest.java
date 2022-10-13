@@ -2,35 +2,34 @@ package com.daniel.mychickenbreastshop.domain.user.application;
 
 import com.daniel.mychickenbreastshop.ApplicationTest;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(classes = {UserService.class})
+//  @SpringBootTest(classes = {UserService.class})
 class UserServiceTest extends ApplicationTest {
 
     @Autowired
     private UserService userService;
 
-    @Mock
-    private UserRepository userRepository;
+    @Autowired
+    private RedisStore userRedisStore;
 
     @BeforeEach
     void setUpUsers() {
@@ -98,7 +97,9 @@ class UserServiceTest extends ApplicationTest {
                 .build();
 
         int emailRandomKey = 123456;
-        redisStore.setDataExpire(joinUser.getEmail(), String.valueOf(emailRandomKey), 5 * 60 * 1000L);
+
+        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
+        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
 
         // when
         Long joinUserId = userService.join(joinUser);
@@ -120,7 +121,10 @@ class UserServiceTest extends ApplicationTest {
                 .build();
 
         int emailRandomKey = 123456;
-        redisStore.setDataExpire(joinUser.getEmail(), String.valueOf(emailRandomKey), 5 * 60 * 1000L);
+
+        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
+
+        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("이미 동일 회원 정보가 존재합니다.");
@@ -140,7 +144,9 @@ class UserServiceTest extends ApplicationTest {
                 .build();
 
         int emailRandomKey = 123456;
-        redisStore.setDataExpire(joinUser.getEmail(), String.valueOf(emailRandomKey), 5 * 60 * 1000L);
+
+        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
+        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");

@@ -118,7 +118,6 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
 
-        user.delete();
         user.remove();
     }
 
@@ -129,7 +128,7 @@ public class UserService {
     }
 
     private void validateAuthKey(String email, String emailKey) {
-        String savedKey = userRedisStore.getData(email, UserRedisEntity.class).getEmail();
+        String savedKey = userRedisStore.getData(email, UserRedisEntity.class).getEmailRandomKey();
 
         if (savedKey == null) {
             throw new BadRequestException(UserResponse.MAIL_KEY_EXPIRED.getMessage());

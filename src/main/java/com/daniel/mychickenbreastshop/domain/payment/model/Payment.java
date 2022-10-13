@@ -1,8 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.payment.model;
 
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
-import com.daniel.mychickenbreastshop.domain.payment.model.model.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.model.PaymentType;
+import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
+import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.global.aspect.redisson;
 
 import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
-import com.daniel.mychickenbreastshop.global.redis.util.RedisFunctionProvider;
+import com.daniel.mychickenbreastshop.global.redis.function.RedisFunctionProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Order(value = Integer.MIN_VALUE)
 public class RedisLockAspect {
 
-    private static final String LOCK_SUFFIX = ":lock";
+    private static final String LOCK_SUFFIX = " :lock";
 
     private final RedisFunctionProvider redisFunctionProvider;
 
@@ -33,8 +33,9 @@ public class RedisLockAspect {
     }
 
     private String getLockableKey(ProceedingJoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
-        return args[0] + LOCK_SUFFIX;
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        return method.getAnnotation(RedisLocked.class).key() + LOCK_SUFFIX;
     }
 
     private Object execute(String key, ProceedingJoinPoint joinPoint) {
@@ -46,7 +47,7 @@ public class RedisLockAspect {
         Object result;
 
         try {
-            boolean tryLock =  redisFunctionProvider.tryLock(key, TimeUnit.MILLISECONDS, waitTime, leaseTime);
+            boolean tryLock = redisFunctionProvider.tryLock(key, TimeUnit.MILLISECONDS, waitTime, leaseTime);
 
             if (!tryLock) {
                 throw new InternalErrorException("Redis locked failed!");
@@ -57,7 +58,7 @@ public class RedisLockAspect {
         } catch (Throwable e) {
             throw new InternalErrorException(e);
         } finally {
-            if(redisFunctionProvider.canUnlock(key)) {
+            if (redisFunctionProvider.canUnlock(key)) {
                 redisFunctionProvider.unlock(key);
             }
             log.info("Redis unlocked!");
