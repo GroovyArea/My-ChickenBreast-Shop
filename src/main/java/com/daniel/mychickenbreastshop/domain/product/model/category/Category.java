@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.model.category;
 
-import com.daniel.mychickenbreastshop.domain.product.model.category.model.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;

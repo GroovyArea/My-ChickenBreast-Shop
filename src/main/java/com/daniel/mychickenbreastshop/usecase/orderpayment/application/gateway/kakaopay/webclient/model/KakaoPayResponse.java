@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model;
 
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

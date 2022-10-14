@@ -111,8 +111,8 @@ public class JwtProvider {
      * @param token 토큰
      * @return 회원 구별 정보
      */
-    public String getUserPk(String token) {
-        return (String) Jwts.parserBuilder()
+    public Long getUserPk(String token) {
+        return (Long) Jwts.parserBuilder()
                 .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token)

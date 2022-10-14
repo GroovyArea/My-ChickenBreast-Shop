@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.domain.user.application.MailService;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

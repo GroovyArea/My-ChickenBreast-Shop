@@ -1,10 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.product.model.item.query;
 
 import com.daniel.mychickenbreastshop.domain.product.model.category.QCategory;
-import com.daniel.mychickenbreastshop.domain.product.model.category.model.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;

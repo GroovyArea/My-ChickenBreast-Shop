@@ -1,17 +1,15 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -32,8 +30,6 @@ import java.util.List;
 public class UserApiController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-
 
     /**
      * 회원 디테일 조회
@@ -41,8 +37,7 @@ public class UserApiController {
      * @return 회원 정보
      */
     @GetMapping("/v1/users")
-    public ResponseEntity<DetailResponseDto> getUserDetail(HttpServletRequest request) {
-        Long userId = getUserId(request);
+    public ResponseEntity<DetailResponseDto> getUserDetail(@RequestAttribute Long userId) {
         DetailResponseDto userDTO = userService.getUser(userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -53,9 +48,8 @@ public class UserApiController {
      * @param modifyDTO 회원 수정 정보
      */
     @PatchMapping("/v1/users")
-    public ResponseEntity<Void> modifyUser(HttpServletRequest request,
+    public ResponseEntity<Void> modifyUser(@RequestAttribute Long userId,
                                            @Valid @RequestBody ModifyRequestDto modifyDTO) {
-        Long userId = getUserId(request);
         userService.modifyUser(userId, modifyDTO);
         return ResponseEntity.ok().build();
     }
@@ -98,9 +92,4 @@ public class UserApiController {
 
         return ResponseEntity.ok(userService.searchUsers(page, searchDto, role));
     }
-
-    private Long getUserId(HttpServletRequest request) {
-        return (Long) request.getAttribute("userId");
-    }
-
 }

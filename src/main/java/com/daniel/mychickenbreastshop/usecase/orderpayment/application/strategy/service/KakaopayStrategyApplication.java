@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
 import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.order.model.model.OrderStatus;
+import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.Card;
 import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
@@ -12,13 +12,13 @@ import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
 import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
 import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.CartDisassembler;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartItem;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.model.item.model.ProductResponse.ITEM_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.model.item.enums.ProductResponse.ITEM_NOT_EXISTS;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway.KAKAO;
 

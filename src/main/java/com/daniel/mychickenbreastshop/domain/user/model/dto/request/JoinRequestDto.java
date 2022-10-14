@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.model.dto.request;
 
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

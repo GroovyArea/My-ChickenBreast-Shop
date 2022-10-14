@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.domain.user.model;
 
 
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

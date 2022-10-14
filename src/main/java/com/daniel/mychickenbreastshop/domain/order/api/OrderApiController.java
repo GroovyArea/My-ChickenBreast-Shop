@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -24,9 +23,8 @@ public class OrderApiController {
      * @return 주문 내역
      */
     @GetMapping("/v1/orders")
-    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(HttpServletRequest request,
+    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(@RequestAttribute Long userId,
                                                                        @RequestParam(defaultValue = "1") int page) {
-        Long userId = getUserId(request);
         return ResponseEntity.ok(orderService.getAllOrders(userId, page));
     }
 
@@ -50,7 +48,4 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getPaymentDetail(orderId));
     }
 
-    private Long getUserId(HttpServletRequest request) {
-        return (Long) request.getAttribute("userId");
-    }
 }

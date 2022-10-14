@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.
 
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.error.KakaoPayException;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.config.KakaoPayClientProperty;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayProperty;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayErrorProperty;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse;
 import com.daniel.mychickenbreastshop.global.util.ParamConverter;
@@ -32,8 +32,8 @@ public class KakaoPayClient {
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
                 .bodyValue(ParamConverter.convert(objectMapper, orderInfoRequest))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
                 .bodyToMono(KakaoPayResponse.OrderInfoResponse.class)
                 .block();
     }
@@ -45,8 +45,8 @@ public class KakaoPayClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(ParamConverter.convert(objectMapper, payReadyRequest))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
                 .bodyToMono(KakaoPayResponse.PayReadyResponse.class)
                 .block();
     }
@@ -57,8 +57,8 @@ public class KakaoPayClient {
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
                 .bodyValue(ParamConverter.convert(objectMapper, payApproveRequest))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
                 .bodyToMono(KakaoPayResponse.PayApproveResponse.class)
                 .block();
     }
@@ -69,8 +69,8 @@ public class KakaoPayClient {
                 .headers(httpHeaders -> httpHeaders.addAll(setHeaders()))
                 .bodyValue(ParamConverter.convert(objectMapper, payCancelRequest))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoPayException(KakaoPayErrorProperty.FAILED_POST.getMessage())))
                 .bodyToMono(KakaoPayResponse.PayCancelResponse.class)
                 .block();
     }

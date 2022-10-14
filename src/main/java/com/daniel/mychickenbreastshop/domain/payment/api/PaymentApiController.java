@@ -44,6 +44,4 @@ public class PaymentApiController {
         PaymentInfoResponseDto paymentInfoResponseDto = commonPaymentService.getPaymentDetail(paymentId);
         return ResponseEntity.ok(paymentInfoResponseDto);
     }
-
-
 }

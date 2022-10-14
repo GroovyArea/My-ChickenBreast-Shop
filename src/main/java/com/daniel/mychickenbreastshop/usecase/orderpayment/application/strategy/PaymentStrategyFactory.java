@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway;
 import org.springframework.beans.factory.annotation.Autowired;

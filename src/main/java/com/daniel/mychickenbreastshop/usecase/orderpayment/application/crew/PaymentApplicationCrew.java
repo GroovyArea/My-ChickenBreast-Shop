@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.application.crew;
 import com.daniel.mychickenbreastshop.domain.payment.application.CommonPaymentService;
 import com.daniel.mychickenbreastshop.domain.payment.model.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.PaymentStrategyFactory;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;

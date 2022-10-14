@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.product.model.item.dto.request;
 
-import com.daniel.mychickenbreastshop.domain.product.model.category.model.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.model.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
