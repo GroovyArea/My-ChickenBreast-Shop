@@ -2,8 +2,8 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.application.crew;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.CommonPaymentService;
 import com.daniel.mychickenbreastshop.domain.payment.model.dto.response.PaymentInfoResponseDto;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
@@ -35,8 +35,8 @@ public class PaymentApplicationCrew {
         return paymentApplication.payCart(cookieValue, requestUrl, loginId).getRedirectUrl();
     }
 
-/*    // 애매한 놈
-*//*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentGateway paymentGateway) {
+    // api 결제 조회
+/*    public ApiPayInfoDto getApiPaymentDetail(String franchiseeId, String payId, PaymentGateway paymentGateway) {
         PaymentStrategyApplication<PaymentResult> paymentapplication = getPaymentStrategyApplication(paymentGateway);
         return null;
     }*/

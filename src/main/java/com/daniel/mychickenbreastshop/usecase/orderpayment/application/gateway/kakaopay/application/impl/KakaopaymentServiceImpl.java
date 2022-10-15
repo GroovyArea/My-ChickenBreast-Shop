@@ -62,7 +62,7 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
     }
 
     private void savePayableData(KakaoPayResponse.PayReadyResponse response, PayReadyRequest request, String loginId) {
-        KakaoPayParamsRedisEntity entity = new KakaoPayParamsRedisEntity(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
+        KakaoPayParamsRedisEntity entity = KakaoPayParamsRedisEntity.of(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
         kakaopayRedisStore.setData(entity.getLoginId(), entity);
     }
 

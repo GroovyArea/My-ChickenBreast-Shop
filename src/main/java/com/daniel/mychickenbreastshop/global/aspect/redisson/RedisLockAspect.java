@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.global.aspect.redisson;
 
 import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
-import com.daniel.mychickenbreastshop.global.redis.function.RedisFunctionProvider;
+import com.daniel.mychickenbreastshop.global.redis.function.RedissonFunctionProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,7 +24,7 @@ public class RedisLockAspect {
 
     private static final String LOCK_SUFFIX = " :lock";
 
-    private final RedisFunctionProvider redisFunctionProvider;
+    private final RedissonFunctionProvider redissonFunctionProvider;
 
     @Around("@annotation(com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked)")
     public Object executeWithLock(ProceedingJoinPoint joinPoint) {
@@ -47,7 +47,7 @@ public class RedisLockAspect {
         Object result;
 
         try {
-            boolean tryLock = redisFunctionProvider.tryLock(key, TimeUnit.MILLISECONDS, waitTime, leaseTime);
+            boolean tryLock = redissonFunctionProvider.tryLock(key, TimeUnit.MILLISECONDS, waitTime, leaseTime);
 
             if (!tryLock) {
                 throw new InternalErrorException("Redis locked failed!");
@@ -58,8 +58,8 @@ public class RedisLockAspect {
         } catch (Throwable e) {
             throw new InternalErrorException(e);
         } finally {
-            if (redisFunctionProvider.canUnlock(key)) {
-                redisFunctionProvider.unlock(key);
+            if (redissonFunctionProvider.canUnlock(key)) {
+                redissonFunctionProvider.unlock(key);
             }
             log.info("Redis unlocked!");
         }

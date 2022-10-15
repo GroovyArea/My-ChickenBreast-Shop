@@ -4,7 +4,7 @@ import org.redisson.api.RLock;
 
 import java.util.concurrent.TimeUnit;
 
-public interface RedisFunctionProvider {
+public interface RedissonFunctionProvider {
 
     RLock lock(String lockKey);
 

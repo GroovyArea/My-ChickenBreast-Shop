@@ -13,4 +13,8 @@ public class KakaoPayParamsRedisEntity {
     private String tid;
     private String partnerOrderId;
     private Integer totalAmount;
+
+    public static KakaoPayParamsRedisEntity of(String loginId, String tid, String partnerOrderId, Integer totalAmount) {
+        return new KakaoPayParamsRedisEntity(loginId, tid, partnerOrderId, totalAmount);
+    }
 }

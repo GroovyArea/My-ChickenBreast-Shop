@@ -49,8 +49,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             if (token != null && jwtValidator.validateAccessToken(token)) {
                 Authentication authentication = getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                request.setAttribute("userId", jwtProvider.getUserPk(token));
-                request.setAttribute("loginId", jwtProvider.getLoginId(token));
             }
         } catch (Exception e) {
             request.setAttribute("exception", e.getMessage());
@@ -69,7 +67,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         PrincipalDetails principalDetails = (PrincipalDetails) jwtAuthenticator.getAuthentication(token).getPrincipal();
 
         return new UsernamePasswordAuthenticationToken(
-                principalDetails.getLoginId(), principalDetails.getPassword(), principalDetails.getAuthorities()
+                principalDetails, principalDetails.getPassword(), principalDetails.getAuthorities()
         );
     }
 }

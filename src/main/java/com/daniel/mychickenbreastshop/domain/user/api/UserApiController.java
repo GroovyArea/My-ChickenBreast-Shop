@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
+import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
@@ -8,6 +9,7 @@ import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListRespons
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,7 +39,8 @@ public class UserApiController {
      * @return 회원 정보
      */
     @GetMapping("/v1/users")
-    public ResponseEntity<DetailResponseDto> getUserDetail(@RequestAttribute Long userId) {
+    public ResponseEntity<DetailResponseDto> getUserDetail() {
+        Long userId = getUserId();
         DetailResponseDto userDTO = userService.getUser(userId);
         return ResponseEntity.ok(userDTO);
     }
@@ -48,8 +51,8 @@ public class UserApiController {
      * @param modifyDTO 회원 수정 정보
      */
     @PatchMapping("/v1/users")
-    public ResponseEntity<Void> modifyUser(@RequestAttribute Long userId,
-                                           @Valid @RequestBody ModifyRequestDto modifyDTO) {
+    public ResponseEntity<Void> modifyUser(@Valid @RequestBody ModifyRequestDto modifyDTO) {
+        Long userId = getUserId();
         userService.modifyUser(userId, modifyDTO);
         return ResponseEntity.ok().build();
     }
@@ -91,5 +94,10 @@ public class UserApiController {
             @RequestBody UserSearchDto searchDto) {
 
         return ResponseEntity.ok(userService.searchUsers(page, searchDto, role));
+    }
+
+    private Long getUserId() {
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalDetails.getId();
     }
 }

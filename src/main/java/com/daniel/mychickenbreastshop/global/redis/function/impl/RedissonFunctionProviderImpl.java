@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.global.redis.function.impl;
 
-import com.daniel.mychickenbreastshop.global.redis.function.RedisFunctionProvider;
+import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
+import com.daniel.mychickenbreastshop.global.redis.function.RedissonFunctionProvider;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class RedisFunctionProviderImpl implements RedisFunctionProvider {
+public class RedissonFunctionProviderImpl implements RedissonFunctionProvider {
 
     private final RedissonClient redissonClient;
 
@@ -41,8 +42,7 @@ public class RedisFunctionProviderImpl implements RedisFunctionProvider {
         try {
             return lock.tryLock(waitTime, leaseTime, unit);
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new InternalErrorException(e);
         }
     }
 

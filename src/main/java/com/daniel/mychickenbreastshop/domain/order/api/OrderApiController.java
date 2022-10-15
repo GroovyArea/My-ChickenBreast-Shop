@@ -1,11 +1,13 @@
 package com.daniel.mychickenbreastshop.domain.order.api;
 
+import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.order.application.OrderService;
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItemsInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class OrderApiController {
      * @return 주문 내역
      */
     @GetMapping("/v1/orders")
-    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(@RequestAttribute Long userId,
-                                                                       @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(@RequestParam(defaultValue = "1") int page) {
+        Long userId = getUserId();
         return ResponseEntity.ok(orderService.getAllOrders(userId, page));
     }
 
@@ -48,4 +50,8 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getPaymentDetail(orderId));
     }
 
+    private Long getUserId() {
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalDetails.getId();
+    }
 }

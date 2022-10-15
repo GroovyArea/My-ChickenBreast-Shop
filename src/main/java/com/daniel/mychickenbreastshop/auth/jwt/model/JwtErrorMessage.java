@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum JwtErrorMessage {
+
     MALFORMED("유효하지 않는 토큰입니다."),
     EXPIRED("토큰 유효기간이 만료되었습니다. 재로그인 요망."),
     UNSUPPORTED("지원하지 않는 토큰입니다."),

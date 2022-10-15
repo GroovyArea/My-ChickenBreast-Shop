@@ -29,19 +29,14 @@ class UserServiceLittleTest {
 
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private RedisStore userRedisStore;
-
     @Mock
     private UserJoinMapper userJoinMapper;
-
     @Mock
     private UserDetailMapper userDetailMapper;
-
     @Mock
     private UserListMapper userListMapper;
-
     @Mock
     private UserModifyMapper userModifyMapper;
 
