@@ -37,7 +37,7 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceLittleTest {
+class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -89,9 +89,9 @@ class UserServiceLittleTest {
                     .updatedAt(user.getUpdatedAt())
                     .build();
             listResponseDtos.add(listResponseDto);
-
-            userService = new UserService(userRepository, userRedisStore, userJoinMapper, userDetailMapper, userListMapper, userModifyMapper);
         }
+
+        userService = new UserService(userRepository, userRedisStore, userJoinMapper, userDetailMapper, userListMapper, userModifyMapper);
     }
 
     @DisplayName("회원 번호로 회원을 조회한다.")

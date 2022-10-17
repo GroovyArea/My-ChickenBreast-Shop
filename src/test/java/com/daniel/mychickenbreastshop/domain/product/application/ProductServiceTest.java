@@ -1,10 +1,15 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.ApplicationTest;
 import com.daniel.mychickenbreastshop.domain.product.application.manage.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
+import com.daniel.mychickenbreastshop.domain.product.mapper.ItemRegisterMapper;
 import com.daniel.mychickenbreastshop.domain.product.model.category.Category;
+import com.daniel.mychickenbreastshop.domain.product.model.category.CategoryRepository;
 import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
+import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.RegisterRequestDto;
@@ -15,88 +20,141 @@ import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-class ProductServiceTest extends ApplicationTest {
+@ExtendWith(MockitoExtension.class)
+class ProductServiceTest {
 
-    @Value("${file.upload.location}")
-    String uploadPath;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
+    @Mock
     private FileManager fileManager;
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private ItemDetailMapper itemDetailMapper;
+
+    @Mock
+    private ItemListMapper itemListMapper;
+
+    @Mock
+    private ItemRegisterMapper itemRegisterMapper;
+
+    @Mock
+    private ItemModifyMapper itemModifyMapper;
+
+    private ProductService productService;
+    private List<Product> products;
+    private List<ListResponseDto> listResponseDtos;
+
+    private Category category;
 
     @BeforeEach
     void setUpItems() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        products = new ArrayList<>();
+        listResponseDtos = new ArrayList<>();
 
-        Category category = Category.builder()
+        category = Category.builder()
                 .id(1L)
                 .categoryName(ChickenCategory.STEAMED)
                 .products(new ArrayList<>())
                 .build();
 
-        categoryRepository.save(category);
-
-        for (int i = 0; i < 50; i++) {
-            String imageFileName = "image" + i + ".png";
-
-            MockMultipartFile multipartFile = new MockMultipartFile(
-                    "image", imageFileName,
-                    MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
-
-            String uploadFileName = fileManager.uploadFile(multipartFile);
-
-            Product build = Product.builder()
+        for (int i = 1; i <= 50; i++) {
+            Product product = Product.builder()
                     .id((long) i)
                     .name("name" + i)
                     .price(i * 1000)
                     .quantity(i * 100)
+                    .image("image" + i)
                     .content("content" + i)
-                    .image(uploadFileName)
                     .status(ChickenStatus.SALE)
                     .build();
 
-            build.updateCategoryInfo(category);
-            build.create();
+            product.updateCategoryInfo(category);
 
-            productRepository.save(build);
+            products.add(product);
+
+            ListResponseDto listResponseDto = ListResponseDto.builder()
+                    .id((long) i)
+                    .name("name" + i)
+                    .price(i * 1000)
+                    .quantity(i * 100)
+                    .image("image" + i)
+                    .status(ChickenStatus.SALE.getStatusName())
+                    .category(category.getCategoryName().getChickenName())
+                    .build();
+
+            listResponseDtos.add(listResponseDto);
         }
+
+        productService = new ProductService(fileManager, productRepository, categoryRepository, itemDetailMapper, itemListMapper, itemRegisterMapper, itemModifyMapper);
     }
 
     @DisplayName("상품 상세 정보를 조회한다.")
     @Test
     void getProduct() {
-        DetailResponseDto product = productService.getProduct(1L);
+        // given
+        String downLoadURI = "/api/v1/products/download/image1";
 
-        assertThat(product.getName()).isEqualTo("name1");
-        assertThat(product.getPrice()).isEqualTo(1000);
+        DetailResponseDto detailResponseDto = DetailResponseDto.builder()
+                .id(1L)
+                .name("name1")
+                .price(1000)
+                .quantity(100)
+                .image(downLoadURI)
+                .content("content1")
+                .categoryName(ChickenCategory.STEAMED.getChickenName())
+                .build();
+
+        Optional<Product> optionalProduct = Optional.ofNullable(products.get(0));
+
+        // when
+        when(productRepository.findById(products.get(0).getId())).thenReturn(optionalProduct);
+        when(fileManager.getDownloadURI(products.get(0).getImage())).thenReturn(downLoadURI);
+        when(itemDetailMapper.toDTO(products.get(0))).thenReturn(detailResponseDto);
+
+        assertThat(productService.getProduct(products.get(0).getId())).isEqualTo(detailResponseDto);
     }
 
-    @DisplayName("전달 받은 카테고리에 해당하는 상품 목록을 반환한다.")
+    @DisplayName("상품 카테고리에 해당하는 상품 목록을 조회한다.")
     @Test
     void getAllProduct() {
-        List<ListResponseDto> products = productService.getAllProduct(ChickenCategory.STEAMED, 1);
+        // given
+        int pageNumber = 1;
+        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Product> page = new PageImpl<>(List.of(products.get(0), products.get(1), products.get(2), products.get(3), products.get(4),
+                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageRequest, 10);
 
-        assertThat(products).hasSize(10);
-        products.forEach(product -> assertThat(product.getCategory()).isEqualTo(ChickenCategory.STEAMED.getChickenName()));
+        ChickenCategory category = ChickenCategory.STEAMED;
+
+        // when
+        when(productRepository.findAllByCategoryName(category, pageRequest)).thenReturn(page);
+        when(itemListMapper.toDTO(any(Product.class))).thenReturn(listResponseDtos.get(0));
+
+        assertThat(productService.getAllProduct(category, pageNumber)).hasSize(10);
     }
 
     @DisplayName("검색 조건에 맞는 상품 목록을 반환한다.")
@@ -104,11 +162,19 @@ class ProductServiceTest extends ApplicationTest {
     void searchProducts() {
         // given
         ItemSearchDto itemSearchDto = new ItemSearchDto("name", "name");
-        int page = 1;
+        int pageNumber = 1;
         ChickenStatus status = ChickenStatus.SALE;
         ChickenCategory category = ChickenCategory.STEAMED;
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Product> page = new PageImpl<>(List.of(products.get(0), products.get(1), products.get(2), products.get(3), products.get(4),
+                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageRequest, 10);
+
         // when
-        List<ListResponseDto> listResponseDtos = productService.searchProducts(page, status, category, itemSearchDto);
+        when(productRepository.findItemWithDynamicQuery(pageRequest, itemSearchDto, category, status)).thenReturn(page);
+        when(itemListMapper.toDTO(any(Product.class))).thenReturn(listResponseDtos.get(0));
+
+        List<ListResponseDto> listResponseDtos = productService.searchProducts(pageNumber, status, category, itemSearchDto);
 
         assertThat(listResponseDtos).hasSize(10);
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(category.getChickenName()));
@@ -116,36 +182,16 @@ class ProductServiceTest extends ApplicationTest {
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getName()).contains("name"));
     }
 
-    @DisplayName("이미지 파일의 리소스를 반환한다.")
-    @Test
-    void getItemImageResource() {
-        // given
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
-        String imageName = product.getImage();
-
-        // when
-        Resource itemImageResource = productService.getItemImageResource(imageName);
-
-        assertThat(itemImageResource.getFilename()).isEqualTo(imageName);
-    }
-
-    @Test
-    void getItemFilePath() {
-        // given
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
-        String imageName = product.getImage();
-        Resource itemImageResource = productService.getItemImageResource(imageName);
-
-        // when
-        String itemFilePath = productService.getItemFilePath(itemImageResource);
-
-        assertThat(itemFilePath).startsWith(uploadPath);
-    }
-
     @DisplayName("상품을 등록한다.")
     @Test
     void registerItem() {
         // given
+        String imageFileName = "image.png";
+        MockMultipartFile multipartFile = new MockMultipartFile("image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        String uploadFilename = UUID.randomUUID() + "_" + imageFileName;
+
         RegisterRequestDto requestDto = RegisterRequestDto.builder()
                 .name("name")
                 .price(1000).quantity(200)
@@ -154,16 +200,15 @@ class ProductServiceTest extends ApplicationTest {
                 .category(ChickenCategory.STEAMED)
                 .build();
 
-        String imageFileName = "image.png";
-
-        MockMultipartFile multipartFile = new MockMultipartFile(
-                "image", imageFileName,
-                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
-
         // when
-        Long id = productService.registerItem(requestDto, multipartFile);
+        when(fileManager.uploadFile(multipartFile)).thenReturn(uploadFilename);
+        when(categoryRepository.findByCategoryName(requestDto.getCategory())).thenReturn(Optional.ofNullable(category));
+        when(productRepository.save(products.get(0))).thenReturn(products.get(0));
+        when(itemRegisterMapper.toEntity(requestDto)).thenReturn(products.get(0));
 
-        assertThat(id).isNotNull();
+        Long itemId = productService.registerItem(requestDto, multipartFile);
+
+        assertThat(itemId).isEqualTo(1L);
     }
 
     @DisplayName("상품 정보를 수정한다.")
@@ -185,22 +230,41 @@ class ProductServiceTest extends ApplicationTest {
                 "image", imageFileName,
                 MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
-        // when
-        productService.modifyItem(modifyRequestDto, multipartFile);
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않음"));
+        String uploadFilename = UUID.randomUUID() + "_" + imageFileName;
 
-        assertThat(product.getContent()).isEqualTo("content");
-        assertThat(product.getName()).isEqualTo("name");
-        assertThat(product.getImage()).contains("modifiedImage.png");
+        Product modifiedProduct = Product.builder()
+                .id(1L)
+                .name("name")
+                .price(1000).quantity(200)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(category)
+                .image("originalImage.png")
+                .build();
+
+        // when
+        when(fileManager.uploadFile(multipartFile)).thenReturn(uploadFilename);
+        when(categoryRepository.findByCategoryName(modifyRequestDto.getCategory())).thenReturn(Optional.ofNullable(category));
+        when(productRepository.findById(modifyRequestDto.getId())).thenReturn(Optional.ofNullable(modifiedProduct));
+        when(itemModifyMapper.toEntity(modifyRequestDto)).thenReturn(modifiedProduct);
+
+        productService.modifyItem(modifyRequestDto, multipartFile);
+
+        assertThat(modifiedProduct.getImage()).isEqualTo(uploadFilename);
     }
 
-    @DisplayName("상품을 단종 상태로 변경한다.")
+    @DisplayName("상품 상태를 단종으로 변경한다.")
     @Test
     void removeItem() {
-        productService.removeItem(1L);
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않음"));
+        // given
+        Long itemNo = 1L;
 
-        assertThat(product.getStatus()).isEqualTo(ChickenStatus.EXTINCTION);
+        // when
+        when(productRepository.findById(itemNo)).thenReturn(Optional.ofNullable(products.get(0)));
+
+        productService.removeItem(itemNo);
+
+        assertThat(products.get(0).getStatus()).isEqualTo(ChickenStatus.EXTINCTION);
     }
 
     @DisplayName("결제할 상품 가격과 수량의 총 결제 금액의 유효성을 검사하며 불일치할 경우 예외를 발생시킨다.")
@@ -210,6 +274,9 @@ class ProductServiceTest extends ApplicationTest {
         Long itemNo = 1L;
         int itemQuantity = 10;
         long totalPrice = 1000; // 원래 10,000원 이어야 함.
+
+        // when
+        when(productRepository.findById(itemNo)).thenReturn(Optional.ofNullable(products.get(0)));
 
         assertThatThrownBy(() -> productService.validatePayAmount(itemNo, itemQuantity, totalPrice))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("상품 총 가격이 잘못 되었습니다.");

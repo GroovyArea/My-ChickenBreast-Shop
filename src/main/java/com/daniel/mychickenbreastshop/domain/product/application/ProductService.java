@@ -44,20 +44,23 @@ public class ProductService {
     private final ItemRegisterMapper itemRegisterMapper;
     private final ItemModifyMapper itemModifyMapper;
 
-    // 상품 단건 조회
+    /**
+     * 상품 단건 조회
+     */
     public DetailResponseDto getProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
 
         String downLoadURI = fileManager.getDownloadURI(product.getImage());
 
         DetailResponseDto dto = itemDetailMapper.toDTO(product);
-
         dto.updateImageUrl(downLoadURI);
 
         return dto;
     }
 
-    // 상품 리스트 조회
+    /**
+     * 상품 목록 조회
+     */
     public List<ListResponseDto> getAllProduct(ChickenCategory category, int page) {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> products = productRepository.findAllByCategoryName(category, pageRequest).getContent();
@@ -72,6 +75,9 @@ public class ProductService {
                 .toList();
     }
 
+    /**
+     * 검색 조건에 따른 상품 목록 10개 반환
+     */
     public List<ListResponseDto> searchProducts(int page, ChickenStatus status, ChickenCategory category, ItemSearchDto searchDto) {
         PageRequest pageRequest = createPageRequest(page);
         List<Product> searchedItems = productRepository.findItemWithDynamicQuery(pageRequest, searchDto, category, status).getContent();
@@ -98,7 +104,9 @@ public class ProductService {
         }
     }
 
-    // 상품 등록
+    /**
+     * 상품 등록
+     */
     @Transactional
     public Long registerItem(RegisterRequestDto registerRequestDto, MultipartFile file) {
         String uploadFileName = fileManager.uploadFile(file);
@@ -115,7 +123,9 @@ public class ProductService {
         return productRepository.save(savableProduct).getId();
     }
 
-    // 상품 수정
+    /**
+     * 상품 수정
+     */
     @Transactional
     public void modifyItem(ModifyRequestDto modifyRequestDto, MultipartFile file) {
         Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
@@ -134,6 +144,9 @@ public class ProductService {
         }
     }
 
+    /**
+     * 상품 삭제 처리
+     */
     @Transactional
     public void removeItem(Long productId) {
         Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
@@ -141,6 +154,9 @@ public class ProductService {
         dbProduct.delete();
     }
 
+    /**
+     * 결제 상품 가격 정보 유효성 검사
+     */
     public void validatePayAmount(Long itemNo, int itemQuantity, long totalPrice) {
         Product dbProduct = productRepository.findById(itemNo).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
 
