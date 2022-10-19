@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.KakaopayStrategyApplication;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay.KakaopayStrategyApplication;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
 import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;

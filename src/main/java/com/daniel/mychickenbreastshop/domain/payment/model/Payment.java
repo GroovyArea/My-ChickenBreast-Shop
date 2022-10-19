@@ -40,8 +40,16 @@ public class Payment extends BaseTimeEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    // <연관관계 편의 메서드> //
+    // <팩토리 메서드> //
+    public static Payment createPayment(long totalPrice) {
+        return Payment.builder()
+                .totalPrice(totalPrice)
+                .status(PayStatus.READY)
+                .card(null)
+                .build();
+    }
 
+    // <연관관계 편의 메서드> //
     public void updateOrderInfo(final Order orderInfo) {
         this.order = orderInfo;
     }
@@ -52,7 +60,6 @@ public class Payment extends BaseTimeEntity {
     }
 
     // <비즈니스 로직 메서드> //
-
     public void updatePaymentTypeInfo(final PaymentType paymentType) {
         this.paymentType = paymentType;
     }

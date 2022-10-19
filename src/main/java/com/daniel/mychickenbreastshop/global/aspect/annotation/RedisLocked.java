@@ -10,7 +10,7 @@ public @interface RedisLocked {
     /**
      * 사용자 정의 redisson lock Key
      */
-    String key() default "";
+    String lockKey() default "";
 
     /**
      * redisson lock 유지 시간 <br>

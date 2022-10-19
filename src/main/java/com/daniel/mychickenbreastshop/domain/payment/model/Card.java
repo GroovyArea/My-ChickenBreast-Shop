@@ -34,12 +34,9 @@ public class Card extends BaseTimeEntity {
     private Payment payment;
 
     // <연관 관계 편의 메서드> //
-
     public void updatePaymentInfo(Payment payment) {
         this.payment = payment;
     }
-
-    // <비즈니스 로직 메서드> //
 
     // <카드 생성 메서드> //
     public static Card createCard(String bin, String cardType, String installMonth, String interestFreeInstall) {

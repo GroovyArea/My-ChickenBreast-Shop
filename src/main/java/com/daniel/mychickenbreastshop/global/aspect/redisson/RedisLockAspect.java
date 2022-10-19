@@ -35,7 +35,7 @@ public class RedisLockAspect {
     private String getLockableKey(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        return method.getAnnotation(RedisLocked.class).key() + LOCK_SUFFIX;
+        return method.getAnnotation(RedisLocked.class).lockKey() + LOCK_SUFFIX;
     }
 
     private Object execute(String key, ProceedingJoinPoint joinPoint) {

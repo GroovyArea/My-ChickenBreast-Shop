@@ -68,7 +68,6 @@ class ProductServiceTest {
     private ProductService productService;
     private List<Product> products;
     private List<ListResponseDto> listResponseDtos;
-
     private Category category;
 
     @BeforeEach

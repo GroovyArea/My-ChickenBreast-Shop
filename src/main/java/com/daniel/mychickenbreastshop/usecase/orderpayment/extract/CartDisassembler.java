@@ -2,11 +2,12 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.extract;
 
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.util.CookieUtil;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartItem;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * 장바구니 쿠키 분해 및 프로퍼티 제공
@@ -14,41 +15,40 @@ import java.util.function.Function;
 @Component
 public class CartDisassembler {
 
-    public <K, V> List<Long> getItemNumbers(String cookieValue, Class<K> kClass, Class<V> vClass, Function<V, Long> function) {
+    private List<Long> getItemNumbers(String cookieValue) {
         try {
-            return getCookieValues(cookieValue, kClass, vClass).stream()
-                    .map(function)
+            return getCookieValues(cookieValue).stream()
+                    .map(CartItem::getItemNo)
                     .toList();
         } catch (UnsupportedEncodingException e) {
             throw new InternalErrorException(e);
         }
     }
 
-
-    public <K, V> List<String> getItemNames(String cookieValue, Class<K> kClass, Class<V> vClass, Function<V, String> function) {
+    private List<String> getItemNames(String cookieValue) {
         try {
-            return getCookieValues(cookieValue, kClass, vClass).stream()
-                    .map(function)
+            return getCookieValues(cookieValue).stream()
+                    .map(CartItem::getItemName)
                     .toList();
         } catch (UnsupportedEncodingException e) {
             throw new InternalErrorException(e);
         }
     }
 
-    public <K, V> List<Integer> getItemQuantities(String cookieValue, Class<K> kClass, Class<V> vClass, Function<V, Integer> function) {
+    private List<Integer> getItemQuantities(String cookieValue) {
         try {
-            return getCookieValues(cookieValue, kClass, vClass).stream()
-                    .map(function)
+            return getCookieValues(cookieValue).stream()
+                    .map(CartItem::getItemQuantity)
                     .toList();
         } catch (UnsupportedEncodingException e) {
             throw new InternalErrorException(e);
         }
     }
 
-    public <K, V> Long getTotalPrice(String cookieValue, Class<K> kClass, Class<V> vClass, Function<V, Long> function) {
+    private Long getTotalPrice(String cookieValue) {
         try {
-            return getCookieValues(cookieValue, kClass, vClass).stream()
-                    .map(function)
+            return getCookieValues(cookieValue).stream()
+                    .map(CartItem::getTotalPrice)
                     .mapToLong(Long::valueOf)
                     .sum();
         } catch (UnsupportedEncodingException e) {
@@ -56,7 +56,16 @@ public class CartDisassembler {
         }
     }
 
-    private <K, V> List<V> getCookieValues(String cookieValue, Class<K> kClass, Class<V> vClass) throws UnsupportedEncodingException {
-        return CookieUtil.getCookieValueList(cookieValue, kClass, vClass);
+    private List<CartItem> getCookieValues(String cookieValue) throws UnsupportedEncodingException {
+        return CookieUtil.getCookieValueList(cookieValue, Long.class, CartItem.class);
+    }
+
+    public CartValue getCartValue(String cookieValue) {
+            return CartValue.builder()
+                    .itemNumbers(getItemNumbers(cookieValue))
+                    .itemNames(getItemNames(cookieValue))
+                    .itemQuantities(getItemQuantities(cookieValue))
+                    .totalPrice(getTotalPrice(cookieValue))
+                    .build();
     }
 }
