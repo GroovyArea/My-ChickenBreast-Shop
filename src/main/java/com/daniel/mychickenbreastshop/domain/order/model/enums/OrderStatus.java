@@ -11,5 +11,5 @@ public enum OrderStatus {
     ORDER_COMPLETE("주문 완료"),
     CANCEL_ORDER("주문 취소");
 
-    private final String status;
+    private final String statusName;
 }

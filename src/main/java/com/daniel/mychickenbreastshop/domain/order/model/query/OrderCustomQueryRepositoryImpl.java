@@ -2,6 +2,7 @@ package com.daniel.mychickenbreastshop.domain.order.model.query;
 
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.order.model.QOrder;
+import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,9 +26,9 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Order> findAllByUserId(Pageable pageable, Long userId) {
+    public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
-                .where(userIdEq(userId))
+                .where(userIdEq(userId), statusEq(orderStatus))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -56,6 +57,10 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
     private BooleanExpression orderIdEq(Long orderIdCond) {
         return orderIdCond != null ? order.id.eq(orderIdCond) : null;
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        return statusCond != null ? order.status.eq(statusCond) : null;
     }
 
 }
