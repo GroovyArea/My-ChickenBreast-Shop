@@ -18,9 +18,10 @@ public class OrderItemsInfoResponseDto {
     private List<OrderProductResponseDto> orderInfoResponseDtos;
     private Integer totalCount;
     private Long orderPrice;
-    private OrderStatus status;
+    private OrderStatus orderStatus;
 
     public void updateOrderProducts(List<OrderProductResponseDto> dtos) {
         orderInfoResponseDtos = dtos;
     }
+
 }

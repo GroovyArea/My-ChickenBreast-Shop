@@ -39,11 +39,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findAllByUserId(userId, orderStatus, pageRequest).getContent();
 
         return orders.stream()
-                .map(order -> {
-                    OrderInfoListResponseDto responseDto = orderInfoListMapper.toDTO(order);
-                    responseDto.updateStatusName(order.getStatus().getStatusName());
-                    return responseDto;
-                })
+                .map(orderInfoListMapper::toDTO)
                 .toList();
     }
 
@@ -57,7 +53,6 @@ public class OrderService {
                 .toList();
 
         orderItemsInfoResponseDto.updateOrderProducts(orderProductResponseDtos);
-        orderItemsInfoResponseDto.updateOrderStatus(order.getStatus().getStatusName());
 
         return orderItemsInfoResponseDto;
     }

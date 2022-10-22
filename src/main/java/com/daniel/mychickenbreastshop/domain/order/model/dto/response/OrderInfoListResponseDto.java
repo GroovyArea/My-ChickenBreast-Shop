@@ -19,4 +19,5 @@ public class OrderInfoListResponseDto {
     private Long orderPrice;
     private OrderStatus orderStatus;
     private LocalDateTime createAt;
+
 }

@@ -16,9 +16,9 @@ public class OrderPaymentInfoResponseDto {
 
     private Long orderId;
     private Integer totalCount;
-    private OrderStatus status;
+    private OrderStatus orderStatus;
     private Long paymentId;
-    private Integer totalPrice;
+    private Long totalPrice;
     private PaymentType paymentType;
     private PayStatus payStatus;
 
