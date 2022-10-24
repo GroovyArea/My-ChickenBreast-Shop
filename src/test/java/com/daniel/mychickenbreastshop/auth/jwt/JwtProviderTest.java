@@ -22,19 +22,19 @@ class JwtProviderTest {
 
     private static final long EXPIRED_TIME = 30 * 60 * 1000L; // 30분
     private static final String SECRET_KEY = "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret";
-
-    private JwtProvider jwtProvider;
-
     private static final String USER_PK = "1L";
     private static final String LOGIN_ID = "loginId";
     private static final String ROLE = "ROLE_USER";
+
+    private JwtProvider jwtProvider;
+
 
     private String token;
 
     @BeforeEach
     void setUp() {
         jwtProvider = new JwtProvider();
-        ReflectionTestUtils.setField(jwtProvider, "secretKey", "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret");
+        ReflectionTestUtils.setField(jwtProvider, "secretKey", SECRET_KEY);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + EXPIRED_TIME);
@@ -42,9 +42,9 @@ class JwtProviderTest {
         Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
         token = Jwts.builder()
-                .claim(JwtProperties.ID.getKey(), USER_PK)
-                .claim(JwtProperties.LOGIN_ID.getKey(), LOGIN_ID)
-                .claim(JwtProperties.ROLE.getKey(), ROLE)
+                .claim("id", USER_PK)
+                .claim("loginId", LOGIN_ID)
+                .claim("role", ROLE)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
