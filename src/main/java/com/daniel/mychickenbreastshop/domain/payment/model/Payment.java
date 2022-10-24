@@ -54,7 +54,7 @@ public class Payment extends BaseTimeEntity {
         this.order = orderInfo;
     }
 
-    public void setCardInfo(final Card cardInfo) {
+    public void updateCardInfo(final Card cardInfo) {
         this.card = cardInfo;
         card.updatePaymentInfo(this);
     }

@@ -134,7 +134,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
                     response.getCardInfo().getInterestFreeInstall());
 
             savedPayment.updatePaymentTypeInfo(PaymentType.CARD);
-            savedPayment.setCardInfo(card);
+            savedPayment.updateCardInfo(card);
         } else {
             savedPayment.updatePaymentTypeInfo(PaymentType.CASH);
         }
