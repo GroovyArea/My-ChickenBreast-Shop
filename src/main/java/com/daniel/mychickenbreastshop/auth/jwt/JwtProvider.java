@@ -4,7 +4,6 @@ import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -40,7 +39,7 @@ public class JwtProvider {
 
     @Value("${spring.jwt.key}")
     private String secretKey;
-    @Getter
+
     private static final long EXPIRED_TIME = 30 * 60 * 1000L; // 30분
 
     /**
@@ -111,8 +110,8 @@ public class JwtProvider {
      * @param token 토큰
      * @return 회원 구별 정보
      */
-    public Long getUserPk(String token) {
-        return (Long) Jwts.parserBuilder()
+    public String getUserPk(String token) {
+        return (String) Jwts.parserBuilder()
                 .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token)
