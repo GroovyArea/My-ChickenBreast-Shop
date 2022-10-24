@@ -76,7 +76,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
                 savedProduct.getImage(),
                 savedProduct.getContent()
         );
-        Payment payment = Payment.createPayment((long) itemPayRequestDto.getTotalAmount());
+        Payment payment = Payment.createPayment(itemPayRequestDto.getTotalAmount());
 
         order.addOrderProduct(orderProduct);
         order.setPaymentInfo(payment);

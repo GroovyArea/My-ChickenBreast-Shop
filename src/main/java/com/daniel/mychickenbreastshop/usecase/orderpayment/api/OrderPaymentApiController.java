@@ -70,7 +70,7 @@ public class OrderPaymentApiController {
                                           @RequestAttribute String loginId,
                                           HttpServletRequest request) {
         String requestUrl = getRequestURL(request);
-        String payableUrl = paymentApplicationCrew.getSingleItemPayResultUrl(itemPayRequestDto, requestUrl, loginId, paymentGateway);
+        String payableUrl = paymentApplicationCrew.getSingleItemPayUrl(itemPayRequestDto, requestUrl, loginId, paymentGateway);
 
         return ResponseEntity.ok(payableUrl);
     }
