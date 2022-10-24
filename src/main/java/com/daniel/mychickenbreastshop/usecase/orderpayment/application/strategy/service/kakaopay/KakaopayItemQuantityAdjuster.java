@@ -22,6 +22,7 @@ public class KakaopayItemQuantityAdjuster implements ItemQuantityAdjuster {
 
     private final ProductRepository productRepository;
 
+    @Override
     public void quantityIncrease(String itemCode, String itemName, int quantity) {
         if (itemCode.isEmpty()) { // 다중 상품 결제 시
             String[] itemCodes = getItemCodes(itemCode);
@@ -38,6 +39,7 @@ public class KakaopayItemQuantityAdjuster implements ItemQuantityAdjuster {
         }
     }
 
+    @Override
     public void quantityDecrease(String itemCode, String itemName, int quantity) {
         if (!itemCode.isEmpty()) { // 다중 상품 결제 시
             String[] itemCodes = getItemCodes(itemCode);
