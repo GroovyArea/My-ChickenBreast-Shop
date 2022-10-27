@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
@@ -33,12 +34,12 @@ class JwtAuthenticatorTest {
     @Mock
     private UserDetailsService userDetailsService;
 
+    @InjectMocks
     private JwtAuthenticator jwtAuthenticator;
 
     private String token;
     @BeforeEach
     void setUp() {
-        jwtAuthenticator = new JwtAuthenticator(userDetailsService);
         ReflectionTestUtils.setField(jwtAuthenticator, "secretKey", SECRET_KEY);
 
         Date now = new Date();

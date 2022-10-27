@@ -7,10 +7,10 @@ import com.daniel.mychickenbreastshop.domain.payment.model.PaymentRepository;
 import com.daniel.mychickenbreastshop.domain.payment.model.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,12 +28,8 @@ class CommonPaymentServiceTest {
     @Mock
     private PaymentInfoMapper paymentInfoMapper;
 
+    @InjectMocks
     private CommonPaymentService commonPaymentService;
-
-    @BeforeEach
-    void setUp() {
-        commonPaymentService = new CommonPaymentService(paymentRepository, paymentInfoMapper);
-    }
 
     @DisplayName("결제 고유 id를 통해 상세 정보를 조회한다.")
     @Test

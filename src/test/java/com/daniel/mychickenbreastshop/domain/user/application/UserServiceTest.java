@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,7 @@ class UserServiceTest {
     @Mock
     private UserModifyMapper userModifyMapper;
 
+    @InjectMocks
     private UserService userService;
 
     private List<User> users;
@@ -91,7 +93,6 @@ class UserServiceTest {
             listResponseDtos.add(listResponseDto);
         }
 
-        userService = new UserService(userRepository, userRedisStore, userJoinMapper, userDetailMapper, userListMapper, userModifyMapper);
     }
 
     @DisplayName("회원 번호로 회원을 조회한다.")

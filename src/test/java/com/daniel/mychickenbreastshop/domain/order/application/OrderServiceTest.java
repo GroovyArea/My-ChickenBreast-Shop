@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,9 @@ class OrderServiceTest {
     @Mock
     private OrderPaymentInfoMapper orderPaymentInfoMapper;
 
+    @InjectMocks
     private OrderService orderService;
+
     private List<Order> orders;
     private List<OrderProduct> orderProducts;
     private List<OrderInfoListResponseDto> responseDtos;
@@ -121,8 +124,6 @@ class OrderServiceTest {
 
             orderProductResponseDtos.add(orderProductResponseDto);
         }
-
-        orderService = new OrderService(orderRepository, orderInfoListMapper, orderItemsInfoMapper, orderProductListMapper, orderPaymentInfoMapper);
     }
 
     @DisplayName("회원의 주문 완료된 주문 목록들을 조회한다.")

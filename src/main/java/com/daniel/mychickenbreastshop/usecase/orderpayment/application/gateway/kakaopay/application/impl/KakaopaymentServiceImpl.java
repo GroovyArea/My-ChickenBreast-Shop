@@ -8,6 +8,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.k
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayApproveRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayCancelRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayReadyRequest;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
@@ -33,17 +34,17 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
     }
 
     @Override
-    public KakaoPayResponse.PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
+    public PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
         PayReadyRequest request = createItemPayRequest(itemPayRequestDto, requestUrl, loginId);
-        KakaoPayResponse.PayReadyResponse response = kakaoPayClient.ready(kakaoPayClientProperty.getUri().getReady(), request);
+        PayReadyResponse response = kakaoPayClient.ready(kakaoPayClientProperty.getUri().getReady(), request);
         savePayableData(response, request, loginId);
         return response;
     }
 
     @Override
-    public KakaoPayResponse.PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId) {
+    public PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId) {
         PayReadyRequest request = createCartPayRequest(cartValue, requestUrl, loginId);
-        KakaoPayResponse.PayReadyResponse response = kakaoPayClient.ready(kakaoPayClientProperty.getUri().getReady(), request);
+        PayReadyResponse response = kakaoPayClient.ready(kakaoPayClientProperty.getUri().getReady(), request);
         savePayableData(response, request, loginId);
         return response;
     }
@@ -61,7 +62,7 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
         return kakaoPayClient.cancel(kakaoPayClientProperty.getUri().getCancel(), request);
     }
 
-    private void savePayableData(KakaoPayResponse.PayReadyResponse response, PayReadyRequest request, String loginId) {
+    private void savePayableData(PayReadyResponse response, PayReadyRequest request, String loginId) {
         KakaoPayParamsRedisEntity entity = KakaoPayParamsRedisEntity.of(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
         kakaopayRedisStore.setData(entity.getLoginId(), entity);
     }

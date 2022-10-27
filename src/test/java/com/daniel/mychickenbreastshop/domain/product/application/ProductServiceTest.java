@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -65,7 +66,9 @@ class ProductServiceTest {
     @Mock
     private ItemModifyMapper itemModifyMapper;
 
+    @InjectMocks
     private ProductService productService;
+
     private List<Product> products;
     private List<ListResponseDto> listResponseDtos;
     private Category category;
@@ -108,8 +111,6 @@ class ProductServiceTest {
 
             listResponseDtos.add(listResponseDto);
         }
-
-        productService = new ProductService(fileManager, productRepository, categoryRepository, itemDetailMapper, itemListMapper, itemRegisterMapper, itemModifyMapper);
     }
 
     @DisplayName("상품 상세 정보를 조회한다.")
