@@ -28,15 +28,6 @@ public class PaymentApiController {
     private final CommonPaymentService commonPaymentService;
 
     /**
-     * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민 좀 해보자)
-     */
-/*    @GetMapping("/{paymentGateway}")
-    public ResponseEntity<ApiPayInfoDto> getPayDetail(@PathVariable PaymentGateway paymentGateway,
-                                                      @RequestParam String franchiseeId, @RequestParam String payId) {
-        return ResponseEntity.ok(payService.getApiPaymentDetail(franchiseeId, payId, paymentGateway));
-    }*/
-
-    /**
      * 결제 정보(카드 정보) 조회
      */
     @GetMapping("/{paymentId}")

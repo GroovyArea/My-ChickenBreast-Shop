@@ -58,6 +58,11 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     }
 
     @Override
+    public PaymentResult getOrderInfo(String franchiseeId, String payId, String requestUrl) {
+        return kakaoPaymentService.getOrderInfo(franchiseeId, payId, requestUrl);
+    }
+
+    @Override
     @RedisLocked(lockKey = "payItem")
     @Transactional
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {

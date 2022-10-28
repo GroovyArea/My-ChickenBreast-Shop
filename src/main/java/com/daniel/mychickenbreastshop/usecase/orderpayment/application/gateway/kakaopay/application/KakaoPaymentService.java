@@ -15,7 +15,7 @@ import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.ga
  */
 public interface KakaoPaymentService extends PaymentService {
 
-    OrderInfoResponse getOrderInfo(String franchiseeId, String payId);
+    OrderInfoResponse getOrderInfo(String franchiseeId, String payId, String requestUrl);
 
     PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId);
 

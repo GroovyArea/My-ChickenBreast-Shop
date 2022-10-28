@@ -2,19 +2,20 @@ package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.
 
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.KakaoPayClient;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.config.KakaoPayClientProperty;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.OrderInfoRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayApproveRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayCancelRequest;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayRequest.PayReadyRequest;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayParamsRedisEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.*;
 
 /**
  * 카카오페이 결제 서비스 API 호출
@@ -29,8 +30,9 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
 
 
     @Override
-    public KakaoPayResponse.OrderInfoResponse getOrderInfo(String franchiseeId, String payId) {
-        return null;
+    public OrderInfoResponse getOrderInfo(String franchiseeId, String payId, String requestUrl) {
+        OrderInfoRequest request = createOrderInfoRequest(franchiseeId, payId);
+        return kakaoPayClient.getOrderInfo(requestUrl, request);
     }
 
     @Override
@@ -50,14 +52,14 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
     }
 
     @Override
-    public KakaoPayResponse.PayApproveResponse completePayment(String payToken, String loginId) {
+    public PayApproveResponse completePayment(String payToken, String loginId) {
         KakaoPayParamsRedisEntity entity = kakaopayRedisStore.getData(loginId, KakaoPayParamsRedisEntity.class);
         PayApproveRequest request = createPayApproveRequest(payToken, entity, loginId);
         return kakaoPayClient.approve(kakaoPayClientProperty.getUri().getApprove(), request);
     }
 
     @Override
-    public KakaoPayResponse.PayCancelResponse cancelPayment(PayCancelRequestDto payCancelRequestDto) {
+    public PayCancelResponse cancelPayment(PayCancelRequestDto payCancelRequestDto) {
         PayCancelRequest request = createPayCancelRequest(payCancelRequestDto);
         return kakaoPayClient.cancel(kakaoPayClientProperty.getUri().getCancel(), request);
     }
@@ -65,6 +67,13 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
     private void savePayableData(PayReadyResponse response, PayReadyRequest request, String loginId) {
         KakaoPayParamsRedisEntity entity = KakaoPayParamsRedisEntity.of(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
         kakaopayRedisStore.setData(entity.getLoginId(), entity);
+    }
+
+    private OrderInfoRequest createOrderInfoRequest(String franchiseeId, String payId) {
+        return OrderInfoRequest.builder()
+                .cid(franchiseeId)
+                .tid(payId)
+                .build();
     }
 
     private PayReadyRequest createItemPayRequest(ItemPayRequestDto dto, String requestUrl, String loginId) {

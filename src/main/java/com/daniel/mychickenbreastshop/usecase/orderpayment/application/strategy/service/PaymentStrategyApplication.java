@@ -12,9 +12,11 @@ public interface PaymentStrategyApplication <T extends PaymentResult> {
 
     PaymentGateway getPaymentGatewayName();
 
+    T getOrderInfo(String franchiseeId, String payId, String requestUrl);
+
     T payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId);
 
-    T payCart(String cookieValue, String requestURL, String loginId);
+    T payCart(String cookieValue, String requestUrl, String loginId);
 
     T completePayment(String payToken, String loginId);
 
