@@ -25,6 +25,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 **/application-local-dev.yml
+**/application-local-test.yml
 
 
 ### NetBeans ###

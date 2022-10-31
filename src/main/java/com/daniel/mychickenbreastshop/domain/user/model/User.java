@@ -15,6 +15,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
+@Table(name = "users")
 @Entity
 @Getter
 @Builder
