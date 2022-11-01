@@ -25,7 +25,7 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
+    @Override // 이거 다시 볼 것 배치 사이즈 페치 조인 페이징 불가하다.
     public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
                 .where(userIdEq(userId), statusEq(orderStatus))
