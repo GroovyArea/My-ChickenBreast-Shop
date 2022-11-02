@@ -177,8 +177,8 @@ class ProductServiceTest {
         List<ListResponseDto> listResponseDtos = productService.searchProducts(pageNumber, status, category, itemSearchDto);
 
         assertThat(listResponseDtos).hasSize(10);
-        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(category.getChickenName()));
-        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getStatus()).isEqualTo(status.getStatusName()));
+        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(category));
+        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getStatus()).isEqualTo(status));
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getName()).contains("name"));
     }
 
