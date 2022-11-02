@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-class UserCustomQueryRepositoryImplTest {
+class UserCustomQueryRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;

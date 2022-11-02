@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-class ItemCustomQueryRepositoryImplTest {
+class ItemCustomQueryRepositoryTest {
 
     @Autowired
     private CategoryRepository categoryRepository;

@@ -66,12 +66,7 @@ public class ProductService {
         List<Product> products = productRepository.findAllByCategoryName(category, pageRequest).getContent();
 
         return products.stream()
-                .map(product -> {
-                    ListResponseDto listResponseDto = itemListMapper.toDTO(product);
-                    listResponseDto.changeStatusNameWithChickenStatus(product.getStatus().getStatusName());
-                    listResponseDto.changeCategoryNameWithChickenCategory(product.getCategory().getCategoryName().getChickenName());
-                    return listResponseDto;
-                })
+                .map(itemListMapper::toDTO)
                 .toList();
     }
 
@@ -83,12 +78,7 @@ public class ProductService {
         List<Product> searchedItems = productRepository.findItemWithDynamicQuery(pageRequest, searchDto, category, status).getContent();
 
         return searchedItems.stream()
-                .map(product -> {
-                    ListResponseDto listResponseDto = itemListMapper.toDTO(product);
-                    listResponseDto.changeStatusNameWithChickenStatus(product.getStatus().getStatusName());
-                    listResponseDto.changeCategoryNameWithChickenCategory(product.getCategory().getCategoryName().getChickenName());
-                    return listResponseDto;
-                })
+                .map(itemListMapper::toDTO)
                 .toList();
     }
 

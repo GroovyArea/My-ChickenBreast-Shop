@@ -25,12 +25,13 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
     private final JPAQueryFactory queryFactory;
 
-    @Override // 이거 다시 볼 것 배치 사이즈 페치 조인 페이징 불가하다.
+    @Override //
     public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
                 .where(userIdEq(userId), statusEq(orderStatus))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(order.createdAt.desc())
                 .fetch();
 
         JPAQuery<Order> count = queryFactory.selectFrom(order)
@@ -44,7 +45,7 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
     public Optional<Order> findByIdWithFetchJoin(Long orderId) {
         Order order = queryFactory.selectFrom(QOrder.order)
                 .join(QOrder.order.payment, payment)
-                .fetchJoin().on(QOrder.order.id.eq(payment.order.id))
+                .fetchJoin()
                 .where(orderIdEq(orderId))
                 .fetchOne();
 

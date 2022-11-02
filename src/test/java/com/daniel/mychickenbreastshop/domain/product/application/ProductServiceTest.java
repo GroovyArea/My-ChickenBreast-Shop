@@ -105,8 +105,8 @@ class ProductServiceTest {
                     .price(i * 1000)
                     .quantity(i * 100)
                     .image("image" + i)
-                    .status(ChickenStatus.SALE.getStatusName())
-                    .category(category.getCategoryName().getChickenName())
+                    .status(ChickenStatus.SALE)
+                    .category(category.getCategoryName())
                     .build();
 
             listResponseDtos.add(listResponseDto);
