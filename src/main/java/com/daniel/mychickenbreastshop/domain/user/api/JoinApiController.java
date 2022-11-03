@@ -4,7 +4,6 @@ import com.daniel.mychickenbreastshop.domain.user.application.MailService;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +36,9 @@ public class JoinApiController {
     }
 
     @PostMapping("/email")
-    public ResponseEntity<String> sendEmailKey(@RequestBody EmailRequestDto emailRequestDto) {
+    public ResponseEntity<Void> sendEmailKey(@RequestBody EmailRequestDto emailRequestDto) {
         mailService.sendMail(emailRequestDto);
-        return ResponseEntity.ok(UserResponse.MAIL_SEND.getMessage());
+        return ResponseEntity.ok().build();
     }
 
 }
