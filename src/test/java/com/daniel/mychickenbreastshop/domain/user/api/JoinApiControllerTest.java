@@ -67,8 +67,8 @@ class JoinApiControllerTest {
         given(userService.join(any(JoinRequestDto.class))).willReturn(1L);
 
         mockMvc.perform(post("/join")
-                .content(parseObject(dto))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(parseObject(dto))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"))
                 .andDo(print());

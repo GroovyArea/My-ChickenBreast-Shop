@@ -3,7 +3,6 @@ package com.daniel.mychickenbreastshop.domain.user.application;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserDetailMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
 import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
-import com.daniel.mychickenbreastshop.domain.user.mapper.UserModifyMapper;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
@@ -22,10 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +46,7 @@ class UserServiceTest {
     private UserDetailMapper userDetailMapper;
     @Mock
     private UserListMapper userListMapper;
-    @Mock
-    private UserModifyMapper userModifyMapper;
+
 
     @InjectMocks
     private UserService userService;
@@ -80,13 +75,13 @@ class UserServiceTest {
             users.add(user);
 
             ListResponseDto listResponseDto = ListResponseDto.builder()
-                    .userId("" + i)
+                    .userId(i)
                     .loginId("id" + i)
                     .name("name" + i)
                     .email("email" + i + "@gogo.com")
                     .address("address" + i)
                     .zipcode("zipcode" + i)
-                    .role(Role.ROLE_USER.getRoleName())
+                    .role(Role.ROLE_USER)
                     .createdAt(user.getCreatedAt())
                     .updatedAt(user.getUpdatedAt())
                     .build();
@@ -145,10 +140,10 @@ class UserServiceTest {
         Role role = Role.ROLE_USER;
 
         // when
-        when(userRepository.findUserWithDynamicQuery(pageRequest, userSearchDto, role)).thenReturn(page);
+        when(userRepository.findUserWithDynamicQuery(any(Pageable.class), any(UserSearchDto.class), any(Role.class))).thenReturn(page);
         when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(userService.searchUsers(pageNumber, userSearchDto, role)).hasSize(10);
+        assertThat(userService.searchUsers(pageNumber, role, userSearchDto.getSearchKey(), userSearchDto.getSearchValue())).hasSize(10);
     }
 
     @DisplayName("회원 가입을 진행한다.")

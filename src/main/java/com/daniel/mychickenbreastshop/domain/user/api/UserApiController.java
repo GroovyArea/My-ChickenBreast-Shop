@@ -3,11 +3,11 @@ package com.daniel.mychickenbreastshop.domain.user.api;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +38,10 @@ public class UserApiController {
      *
      * @return 회원 정보
      */
-    @GetMapping("/v1/users")
-    public ResponseEntity<DetailResponseDto> getUserDetail() {
-        Long userId = getUserId();
+    @GetMapping("/v1/users/{userId}")
+    public ResponseEntity<DetailResponseDto> getUserDetail(@PathVariable Long userId) {
         DetailResponseDto userDTO = userService.getUser(userId);
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userDTO);
     }
 
     /**
@@ -82,18 +81,20 @@ public class UserApiController {
     /**
      * 관리자용 회원 검색 (이름, 이메일, 아이디, 회원 등급)
      *
-     * @param page      페이지 번호
-     * @param role      회원 등급
-     * @param searchDto 검색 조건
+     * @param page        페이지 번호
+     * @param role        회원 등급
+     * @param searchKey   검색 조건
+     * @param searchValue 검색 값
      * @return 회원 검색 리스트
      */
-    @GetMapping("/v2/users/search")
+    @GetMapping("/v2/users/search/{role}")
     public ResponseEntity<List<ListResponseDto>> searchUsers(
+            @PathVariable Role role,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "ROLE_USER") Role role,
-            @RequestBody UserSearchDto searchDto) {
+            @RequestParam(defaultValue = "name") String searchKey,
+            @RequestParam(defaultValue = "") String searchValue) {
 
-        return ResponseEntity.ok(userService.searchUsers(page, searchDto, role));
+        return ResponseEntity.ok(userService.searchUsers(page, role, searchKey, searchValue));
     }
 
     private Long getUserId() {
