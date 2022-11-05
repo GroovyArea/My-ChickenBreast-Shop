@@ -143,7 +143,7 @@ class UserServiceTest {
         when(userRepository.findUserWithDynamicQuery(any(Pageable.class), any(UserSearchDto.class), any(Role.class))).thenReturn(page);
         when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(userService.searchUsers(pageNumber, role, userSearchDto.getSearchKey(), userSearchDto.getSearchValue())).hasSize(10);
+        assertThat(userService.searchUsers(pageNumber, role, userSearchDto)).hasSize(10);
     }
 
     @DisplayName("회원 가입을 진행한다.")

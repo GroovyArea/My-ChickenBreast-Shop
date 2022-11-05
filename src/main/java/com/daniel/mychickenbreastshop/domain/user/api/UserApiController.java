@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.domain.user.api;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
@@ -93,8 +94,11 @@ public class UserApiController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "name") String searchKey,
             @RequestParam(defaultValue = "") String searchValue) {
-
-        return ResponseEntity.ok(userService.searchUsers(page, role, searchKey, searchValue));
+        UserSearchDto userSearchDto = UserSearchDto.builder()
+                .searchKey(searchKey)
+                .searchValue(searchValue)
+                .build();
+        return ResponseEntity.ok(userService.searchUsers(page, role, userSearchDto));
     }
 
     private Long getUserId() {

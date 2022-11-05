@@ -3,6 +3,7 @@ package com.daniel.mychickenbreastshop.domain.user.api;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
@@ -152,7 +153,7 @@ class UserApiControllerTest {
         params.add("searchKey", "name");
         params.add("searchValue", "name");
 
-        given(userService.searchUsers(anyInt(), any(Role.class), anyString(), anyString())).willReturn(pageOneSearchUsers);
+        given(userService.searchUsers(anyInt(), any(Role.class), any(UserSearchDto.class))).willReturn(pageOneSearchUsers);
 
         mockMvc.perform(get("/api/v2/users/search/{role}", role)
                         .params(params))

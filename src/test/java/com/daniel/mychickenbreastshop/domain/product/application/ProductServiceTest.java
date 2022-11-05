@@ -120,13 +120,13 @@ class ProductServiceTest {
         String downLoadURI = "/api/v1/products/download/image1";
 
         DetailResponseDto detailResponseDto = DetailResponseDto.builder()
-                .id(1L)
+                .id(1)
                 .name("name1")
                 .price(1000)
                 .quantity(100)
                 .image(downLoadURI)
                 .content("content1")
-                .categoryName(ChickenCategory.STEAMED.getChickenName())
+                .categoryName(ChickenCategory.STEAMED)
                 .build();
 
         Optional<Product> optionalProduct = Optional.ofNullable(products.get(0));

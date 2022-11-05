@@ -62,10 +62,9 @@ public class UserService {
                 .map(userListMapper::toDTO)
                 .toList();
     }
-    public List<ListResponseDto> searchUsers(int page, Role role, String searchKey, String searchValue) {
+    public List<ListResponseDto> searchUsers(int page, Role role, UserSearchDto userSearchDto) {
         PageRequest pageRequest = createPageRequest(page);
-        UserSearchDto searchDto = UserSearchDto.builder().searchValue(searchKey).searchValue(searchValue).build();
-        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, searchDto, role).getContent();
+        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, userSearchDto, role).getContent();
 
         return searchedUsers.stream()
                 .map(userListMapper::toDTO)

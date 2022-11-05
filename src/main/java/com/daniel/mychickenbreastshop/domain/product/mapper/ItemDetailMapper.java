@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ItemDetailMapper extends GenericDtoMapper<DetailResponseDto, Product> {
 
-    @Mapping(target = "categoryName", source = "product.category.categoryName.chickenName")
+    @Mapping(target = "categoryName", source = "product.category.categoryName")
     @Override
     DetailResponseDto toDTO(Product product);
 }
