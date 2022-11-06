@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,16 +16,16 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class ModifyRequestDto {
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "필수 입력 값입니다.")
     private Long id;
 
     @NotBlank(message = "필수 입력 값입니다.")
     private String name;
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "필수 입력 값입니다.")
     private Integer price;
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "필수 입력 값입니다.")
     private Integer quantity;
 
     @NotBlank(message = "필수 입력 값입니다.")
@@ -32,9 +33,9 @@ public class ModifyRequestDto {
 
     private String image;
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "필수 입력 값입니다.")
     private ChickenStatus status;
 
-    @NotBlank(message = "필수 입력 값입니다.")
+    @NotNull(message = "필수 입력 값입니다.")
     private ChickenCategory category;
 }

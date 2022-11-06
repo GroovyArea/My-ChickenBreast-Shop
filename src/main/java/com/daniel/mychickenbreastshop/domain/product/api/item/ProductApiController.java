@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.product.api;
+package com.daniel.mychickenbreastshop.domain.product.api.item;
 
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
 import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
@@ -9,14 +9,10 @@ import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.Det
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -85,24 +81,6 @@ public class ProductApiController {
     }
 
     /**
-     * 상품 이미지 파일 다운로드
-     *
-     * @param fileName 이미지 파일 이름
-     * @param request  HttpServletRequest
-     * @return 파일 리소스
-     */
-    @GetMapping("/v1/products/download/{fileName}")
-    public ResponseEntity<Resource> getDownloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = productService.getItemImageResource(fileName);
-        String imageFilePath = productService.getItemFilePath(resource);
-        String contentType = request.getServletContext().getMimeType(imageFilePath);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + resource.getFilename())
-                .body(resource);
-    }
-
-    /**
      * 상품 등록
      *
      * @param registerRequestDto 등록 Dto
@@ -112,10 +90,6 @@ public class ProductApiController {
     @PostMapping("/v2/products")
     public ResponseEntity<Long> registerProduct(@RequestPart RegisterRequestDto registerRequestDto,
                                                 @RequestPart(value = "image") MultipartFile file) {
-        if (file == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
         Long productId = productService.registerItem(registerRequestDto, file);
         return ResponseEntity.ok().body(productId);
     }
@@ -124,12 +98,10 @@ public class ProductApiController {
      * 상품 수정
      *
      * @param modifyRequestDto 수정 Dto
-     * @param file             이미지 파일
      */
     @PatchMapping("/v2/products")
-    public ResponseEntity<Void> modifyProduct(@RequestPart ModifyRequestDto modifyRequestDto,
-                                              @RequestPart("image") MultipartFile file) {
-        productService.modifyItem(modifyRequestDto, file);
+    public ResponseEntity<Void> modifyProduct(@RequestBody ModifyRequestDto modifyRequestDto) {
+        productService.modifyItem(modifyRequestDto);
         return ResponseEntity.ok().build();
     }
 

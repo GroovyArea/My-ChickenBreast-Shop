@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.product.application.manage;
+package com.daniel.mychickenbreastshop.domain.product.application.file;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;

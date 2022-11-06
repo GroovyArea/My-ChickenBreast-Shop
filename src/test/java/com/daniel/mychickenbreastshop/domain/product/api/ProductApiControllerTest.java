@@ -1,8 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
+import com.daniel.mychickenbreastshop.domain.product.api.item.ProductApiController;
 import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
 import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.RegisterRequestDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
@@ -12,17 +15,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.net.MalformedURLException;
-import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -112,6 +114,7 @@ class ProductApiControllerTest {
         given(productService.searchProducts(anyInt(), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
                 .willReturn(pageOneSearchItems);
 
+        // when & then
         mockMvc.perform(get("/api/v2/products/search/{category}", category)
                         .params(params))
                 .andExpect(status().isOk())
@@ -119,30 +122,74 @@ class ProductApiControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("API 요청을 통해 상품 이미지 파일을 다운로드한다.")
+    @DisplayName("API 요청을 통해 상품 정보를 서버에 등록한다.")
     @Test
-    void getDownloadFile() throws MalformedURLException {
+    void registerProduct() throws Exception {
         // given
-        String fileName = "fileName";
-        Resource resource = new UrlResource(URI.create("/test_file_path"));
-        String imageFilePath = "test_image_file_path";
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        RegisterRequestDto dto = RegisterRequestDto.builder()
+                .name("name")
+                .price(10000)
+                .quantity(100)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(ChickenCategory.STEAMED)
+                .build();
 
-        given(productService.getItemImageResource(fileName)).willReturn(resource);
-        given(productService.getItemFilePath(resource)).willReturn(imageFilePath);
+        String parsedObject = parseObject(dto);
+        MockMultipartFile dtoFile = new MockMultipartFile("registerRequestDto", "registerRequestDto", MediaType.APPLICATION_JSON_VALUE, parsedObject.getBytes(StandardCharsets.UTF_8));
 
+        String imageFileName = "image.png";
+        MockMultipartFile imageFile = new MockMultipartFile("image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        Long registeredItemId = 1L;
+
+        given(productService.registerItem(any(RegisterRequestDto.class), any(MultipartFile.class))).willReturn(registeredItemId);
+
+        // when & then
+        mockMvc.perform(multipart("/api/v2/products")
+                        .file(dtoFile)
+                        .file(imageFile))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"))
+                .andDo(print());
     }
 
+    @DisplayName("API 요청을 통해 상품 정보를 수정한다.")
     @Test
-    void registerProduct() {
+    void modifyProduct() throws Exception {
+        // given
+        ModifyRequestDto dto = ModifyRequestDto.builder()
+                .id(1L)
+                .name("name")
+                .price(20000)
+                .quantity(200)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(ChickenCategory.STEAMED)
+                .build();
+
+        String imageFileName = "image.png";
+        MockMultipartFile imageFile = new MockMultipartFile("image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        // when & then
+        mockMvc.perform(patch("/api/v2/products")
+                        .content(parseObject(dto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
+    @DisplayName("API 요청을 통해 상품 상태를 단종 상태로 변경한다.")
     @Test
-    void modifyProduct() {
-    }
+    void removeProduct() throws Exception {
+        // given
+        Long productId = 1L;
 
-    @Test
-    void removeProduct() {
+        mockMvc.perform(delete("/api/v2/products/{productId}", productId))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     private String parseObject(Object object) {

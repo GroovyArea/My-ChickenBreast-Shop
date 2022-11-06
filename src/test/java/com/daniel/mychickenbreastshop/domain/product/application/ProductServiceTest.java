@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.domain.product.application.manage.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.application.file.FileManager;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
 import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
@@ -217,11 +217,49 @@ class ProductServiceTest {
         // given
         ModifyRequestDto modifyRequestDto = ModifyRequestDto.builder()
                 .id(1L)
-                .name("name")
+                .name("change_name")
                 .price(1000).quantity(200)
-                .content("content")
+                .content("change_content")
                 .status(ChickenStatus.SALE)
                 .category(ChickenCategory.STEAMED)
+                .build();
+
+        Product original = Product.builder()
+                .id(1L)
+                .name("name")
+                .price(3000).quantity(200)
+                .content("content")
+                .status(ChickenStatus.SALE)
+                .category(category)
+                .build();
+
+        Product modified = Product.builder()
+                .id(1L)
+                .name("change_name")
+                .price(1000).quantity(200)
+                .content("change_content")
+                .status(ChickenStatus.SALE)
+                .category(category)
+                .build();
+        // when
+        when(categoryRepository.findByCategoryName(modifyRequestDto.getCategory())).thenReturn(Optional.ofNullable(category));
+        when(productRepository.findById(modifyRequestDto.getId())).thenReturn(Optional.ofNullable(original));
+        when(itemModifyMapper.toEntity(modifyRequestDto)).thenReturn(modified);
+
+        productService.modifyItem(modifyRequestDto);
+
+        assertThat(original.getName()).isEqualTo(modified.getName());
+        assertThat(original.getPrice()).isEqualTo(modified.getPrice());
+        assertThat(original.getContent()).isEqualTo(modified.getContent());
+    }
+
+    @DisplayName("상품 이미지 파일을 변경한다.")
+    @Test
+    void changeImage() {
+        // given
+        Product original = Product.builder()
+                .id(1L)
+                .image("originalImage.jpg")
                 .build();
 
         String imageFileName = "modifiedImage.png";
@@ -232,25 +270,13 @@ class ProductServiceTest {
 
         String uploadFilename = UUID.randomUUID() + "_" + imageFileName;
 
-        Product modifiedProduct = Product.builder()
-                .id(1L)
-                .name("name")
-                .price(1000).quantity(200)
-                .content("content")
-                .status(ChickenStatus.SALE)
-                .category(category)
-                .image("originalImage.png")
-                .build();
-
         // when
         when(fileManager.uploadFile(multipartFile)).thenReturn(uploadFilename);
-        when(categoryRepository.findByCategoryName(modifyRequestDto.getCategory())).thenReturn(Optional.ofNullable(category));
-        when(productRepository.findById(modifyRequestDto.getId())).thenReturn(Optional.ofNullable(modifiedProduct));
-        when(itemModifyMapper.toEntity(modifyRequestDto)).thenReturn(modifiedProduct);
+        when(productRepository.findById(original.getId())).thenReturn(Optional.of(original));
 
-        productService.modifyItem(modifyRequestDto, multipartFile);
+        productService.changeImage(original.getId(), multipartFile);
 
-        assertThat(modifiedProduct.getImage()).isEqualTo(uploadFilename);
+        assertThat(original.getImage()).isEqualTo(uploadFilename);
     }
 
     @DisplayName("상품 상태를 단종으로 변경한다.")

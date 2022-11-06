@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.domain.product.application.manage.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.application.file.FileManager;
 import com.daniel.mychickenbreastshop.domain.product.model.category.Category;
 import com.daniel.mychickenbreastshop.domain.product.model.category.CategoryRepository;
 import com.daniel.mychickenbreastshop.domain.product.model.category.enums.CategoryResponse;
@@ -95,6 +95,22 @@ public class ProductService {
     }
 
     /**
+     * 상품 이미지 파일 변경
+     */
+    @Transactional
+    public void changeImage(Long productId, MultipartFile file) {
+        Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+
+        if (file != null) {
+            String savedImageName = dbProduct.getImage();
+            fileManager.deleteFile(savedImageName);
+
+            String uploadFileName = fileManager.uploadFile(file);
+            dbProduct.updateImageInfo(uploadFileName);
+        }
+    }
+
+    /**
      * 상품 등록
      */
     @Transactional
@@ -117,21 +133,13 @@ public class ProductService {
      * 상품 수정
      */
     @Transactional
-    public void modifyItem(ModifyRequestDto modifyRequestDto, MultipartFile file) {
+    public void modifyItem(ModifyRequestDto modifyRequestDto) {
         Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
         Product updatableProduct = itemModifyMapper.toEntity(modifyRequestDto);
         Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
 
         dbProduct.updateProductInfo(updatableProduct);
         dbProduct.updateCategoryInfo(updatableCategory);
-
-        if (file != null) {
-            String savedImageName = dbProduct.getImage();
-            fileManager.deleteFile(savedImageName);
-
-            String uploadFileName = fileManager.uploadFile(file);
-            dbProduct.updateImageInfo(uploadFileName);
-        }
     }
 
     /**
