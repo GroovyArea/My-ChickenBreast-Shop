@@ -1,5 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.product.model.item.dto.response;
 
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,23 +19,25 @@ import java.time.LocalDateTime;
 @Builder
 public class ListResponseDto {
 
-    private Long id;
+    private long id;
     private String name;
-    private Integer price;
-    private Integer quantity;
+    private int price;
+    private int quantity;
     private String image;
-    private String category;
-    private String status;
+    private ChickenCategory category;
+    private ChickenStatus status;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdAt;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime updatedAt;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime deletedAt;
 
-    public void changeStatusNameWithChickenStatus(String statusName) {
-        status = statusName;
-    }
-
-    public void changeCategoryNameWithChickenCategory(String categoryName) {
-        category = categoryName;
-    }
 
 }

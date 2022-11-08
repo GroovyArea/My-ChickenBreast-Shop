@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.order.model;
 
-import com.daniel.mychickenbreastshop.domain.order.model.model.OrderStatus;
+import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;

@@ -1,24 +1,28 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application;
 
 import com.daniel.mychickenbreastshop.domain.payment.application.PaymentService;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayReadyResponse;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
+
+import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.OrderInfoResponse;
+import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayCancelResponse;
 
 /**
  * 카카오페이 서비스 인터페이스
  */
 public interface KakaoPaymentService extends PaymentService {
 
-    KakaoPayResponse.OrderInfoResponse getOrderInfo(String franchiseeId, String payId);
+    OrderInfoResponse getOrderInfo(String franchiseeId, String payId, String requestUrl);
 
-    KakaoPayResponse.PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId);
+    PayReadyResponse payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId);
 
-    KakaoPayResponse.PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId);
+    PayReadyResponse payCart(CartValue cartValue, String requestUrl, String loginId);
 
-    KakaoPayResponse.PayApproveResponse completePayment(String payToken, String loginId);
+    PayApproveResponse completePayment(String payToken, String loginId);
 
-    KakaoPayResponse.PayCancelResponse cancelPayment(PayCancelRequestDto payCancelRequestDto);
+    PayCancelResponse cancelPayment(PayCancelRequestDto payCancelRequestDto);
 
 }

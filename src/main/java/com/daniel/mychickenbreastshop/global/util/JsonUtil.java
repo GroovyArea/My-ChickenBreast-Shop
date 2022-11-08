@@ -18,7 +18,10 @@ import java.util.Map;
 @UtilityClass
 public class JsonUtil {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//            .registerModule(new JavaTimeModule())
+//            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     public static String objectToString(Object object) {
         try {

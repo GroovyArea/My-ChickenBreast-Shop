@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PaymentInfoResponseDto {
 
-    private Long paymentId;
-    private Integer totalPrice;
+    private long paymentId;
+    private long totalPrice;
     private PaymentType paymentType;
     private PayStatus payStatus;
-    private Long cardId;
+    private long cardId;
     private String cardBin;
     private String cardType;
     private String installMonth;

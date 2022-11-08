@@ -1,16 +1,14 @@
 package com.daniel.mychickenbreastshop.domain.user.model.dto.request;
 
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class JoinRequestDto {
 

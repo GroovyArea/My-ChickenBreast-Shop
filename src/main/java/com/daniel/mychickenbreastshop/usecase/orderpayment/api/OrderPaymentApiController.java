@@ -23,6 +23,17 @@ public class OrderPaymentApiController {
     private final PaymentApplicationCrew paymentApplicationCrew;
 
     /**
+     * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민 좀 해보자)
+     */
+/*
+    @GetMapping("/{paymentGateway}")
+    public ResponseEntity<ApiPayInfoDto> getPayDetail(@PathVariable PaymentGateway paymentGateway,
+                                                      @RequestParam String franchiseeId, @RequestParam String payId) {
+        return ResponseEntity.ok(paymentApplicationCrew.getApiPaymentDetail(franchiseeId, payId, paymentGateway));
+    }
+*/
+
+    /**
      * 외부 결제 API 에 결제 승인 요청
      */
     @GetMapping("/{paymentGateway}/completed")
@@ -70,7 +81,7 @@ public class OrderPaymentApiController {
                                           @RequestAttribute String loginId,
                                           HttpServletRequest request) {
         String requestUrl = getRequestURL(request);
-        String payableUrl = paymentApplicationCrew.getSingleItemPayResultUrl(itemPayRequestDto, requestUrl, loginId, paymentGateway);
+        String payableUrl = paymentApplicationCrew.getSingleItemPayUrl(itemPayRequestDto, requestUrl, loginId, paymentGateway);
 
         return ResponseEntity.ok(payableUrl);
     }

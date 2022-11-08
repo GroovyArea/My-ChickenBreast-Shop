@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.product.model.item;
 
 import com.daniel.mychickenbreastshop.domain.product.model.category.Category;
-import com.daniel.mychickenbreastshop.domain.product.model.item.model.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static com.daniel.mychickenbreastshop.domain.product.model.item.model.ProductResponse.ITEM_QUANTITY_NOT_ENOUGH;
+import static com.daniel.mychickenbreastshop.domain.product.model.item.enums.ProductResponse.ITEM_QUANTITY_NOT_ENOUGH;
 
 @Entity
 @Getter

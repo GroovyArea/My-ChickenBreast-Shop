@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.model.item.dto.response;
 
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import lombok.*;
 
 @AllArgsConstructor
@@ -8,11 +9,11 @@ import lombok.*;
 @Builder
 public class DetailResponseDto {
     
-    private Long id;
+    private long id;
     private String name;
-    private String categoryName;
-    private Integer price;
-    private Integer quantity;
+    private ChickenCategory categoryName;
+    private int price;
+    private int quantity;
     private String content;
     private String image;
 

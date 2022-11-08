@@ -1,13 +1,15 @@
 package com.daniel.mychickenbreastshop.domain.user.application;
 
-import com.daniel.mychickenbreastshop.ApplicationTest;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserDetailMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserJoinMapper;
+import com.daniel.mychickenbreastshop.domain.user.mapper.UserListMapper;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
+import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
@@ -15,26 +17,50 @@ import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.when;
 
-//  @SpringBootTest(classes = {UserService.class})
-class UserServiceTest extends ApplicationTest {
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
 
-    @Autowired
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private RedisStore userRedisStore;
+    @Mock
+    private UserJoinMapper userJoinMapper;
+    @Mock
+    private UserDetailMapper userDetailMapper;
+    @Mock
+    private UserListMapper userListMapper;
+
+
+    @InjectMocks
     private UserService userService;
 
-    @Autowired
-    private RedisStore userRedisStore;
+    private List<User> users;
+    private List<ListResponseDto> listResponseDtos;
 
     @BeforeEach
     void setUpUsers() {
-        for (int i = 0; i < 100; i++) {
-            User build = User.builder()
+        users = new ArrayList<>();
+        listResponseDtos = new ArrayList<>();
+
+        for (int i = 1; i <= 100; i++) {
+            User user = User.builder()
                     .id((long) i)
                     .loginId("id" + i)
                     .password("password")
@@ -45,28 +71,61 @@ class UserServiceTest extends ApplicationTest {
                     .zipcode("zipcode" + i)
                     .role(Role.ROLE_USER)
                     .build();
+            user.create();
+            users.add(user);
 
-            build.create();
-            userRepository.save(build);
+            ListResponseDto listResponseDto = ListResponseDto.builder()
+                    .userId(i)
+                    .loginId("id" + i)
+                    .name("name" + i)
+                    .email("email" + i + "@gogo.com")
+                    .address("address" + i)
+                    .zipcode("zipcode" + i)
+                    .role(Role.ROLE_USER)
+                    .createdAt(user.getCreatedAt())
+                    .updatedAt(user.getUpdatedAt())
+                    .build();
+            listResponseDtos.add(listResponseDto);
         }
+
     }
 
-    @DisplayName("유저를 찾는다.")
+    @DisplayName("회원 번호로 회원을 조회한다.")
     @Test
     void getUserTest() {
-        DetailResponseDto user = userService.getUser(1L);
+        // given
+        DetailResponseDto responseDto = DetailResponseDto.builder()
+                .userId(1L)
+                .loginId("loginId")
+                .email("email@naver.com")
+                .address("address")
+                .zipcode("zipcode")
+                .role(Role.ROLE_USER)
+                .build();
 
-        assertThat(user.getUserId()).isEqualTo(1L);
-        assertThat(user.getName()).isEqualTo("name1");
-        assertThat(user.getLoginId()).isEqualTo("id1");
+        Optional<User> optionalUser = Optional.ofNullable(users.get(0));
+
+        // when
+        when(userRepository.findById(anyLong())).thenReturn(optionalUser);
+        when(userDetailMapper.toDTO(any(User.class))).thenReturn(responseDto);
+
+        assertThat(userService.getUser(users.get(0).getId()).getUserId()).isEqualTo(1L);
     }
 
     @DisplayName("유저 목록을 반환한다.")
     @Test
     void getAllUsersTest() {
-        List<ListResponseDto> allUsers = userService.getAllUsers(1);
+        // given
+        int pageNumber = 1;
+        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<User> page = new PageImpl<>(List.of(users.get(0), users.get(1), users.get(2), users.get(3), users.get(4),
+                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageRequest, 10);
 
-        assertThat(allUsers).hasSize(10);
+        // when
+        when(userRepository.findAll(pageRequest)).thenReturn(page);
+        when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
+
+        assertThat(userService.getAllUsers(pageNumber)).hasSize(10);
     }
 
     @DisplayName("검색 조건에 맞는 유저 목록을 반환한다.")
@@ -74,13 +133,17 @@ class UserServiceTest extends ApplicationTest {
     void searchUsersTest() {
         // given
         UserSearchDto userSearchDto = new UserSearchDto("loginId", "id");
-        int page = 1;
+        int pageNumber = 1;
+        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<User> page = new PageImpl<>(List.of(users.get(0), users.get(1), users.get(2), users.get(3), users.get(4),
+                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageRequest, 10);
         Role role = Role.ROLE_USER;
 
         // when
-        List<ListResponseDto> listResponseDtos = userService.searchUsers(page, userSearchDto, role);
+        when(userRepository.findUserWithDynamicQuery(any(Pageable.class), any(UserSearchDto.class), any(Role.class))).thenReturn(page);
+        when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(listResponseDtos).hasSize(10);
+        assertThat(userService.searchUsers(pageNumber, role, userSearchDto)).hasSize(10);
     }
 
     @DisplayName("회원 가입을 진행한다.")
@@ -96,27 +159,12 @@ class UserServiceTest extends ApplicationTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        int emailRandomKey = 123456;
-
-        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
-        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
-
-        // when
-        Long joinUserId = userService.join(joinUser);
-
-        assertThat(joinUserId).isNotNull();
-    }
-
-    @DisplayName("회원 가입 시 중복된 유저가 있을 경우 예외를 발생시킨다.")
-    @Test
-    void duplicatedUserTest() {
-        // given
-        JoinRequestDto joinUser = JoinRequestDto.builder()
-                .loginId("id1")
+        User user = User.builder()
+                .id(1L)
+                .loginId("loginId")
                 .password("password")
                 .name("name")
                 .email("email@naver.com")
-                .emailAuthKey(String.valueOf(123456))
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -124,7 +172,29 @@ class UserServiceTest extends ApplicationTest {
 
         UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
-        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
+        // when
+        when(userRedisStore.getData(redisEntity.getEmail(), UserRedisEntity.class)).thenReturn(redisEntity);
+        when(userJoinMapper.toEntity(any(JoinRequestDto.class))).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
+
+        assertThat(userService.join(joinUser)).isEqualTo(1L);
+    }
+
+    @DisplayName("회원 가입 시 중복된 유저가 있을 경우 에외를 발생시킨다.")
+    @Test
+    void duplicatedUserTest() {
+        // given
+        JoinRequestDto joinUser = JoinRequestDto.builder()
+                .loginId("loginId")
+                .password("password")
+                .name("name")
+                .email("email@naver.com")
+                .emailAuthKey(String.valueOf(123456))
+                .role(Role.ROLE_USER)
+                .build();
+
+        // when
+        when(userRepository.existsByLoginId(joinUser.getLoginId())).thenReturn(true); // 중복된 회원이 있을 경우.
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("이미 동일 회원 정보가 존재합니다.");
@@ -146,36 +216,11 @@ class UserServiceTest extends ApplicationTest {
         int emailRandomKey = 123456;
 
         UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
-        userRedisStore.setDataExpire(redisEntity.getEmail(), redisEntity, 5 * 60 * 1000L);
+
+        // when
+        when(userRedisStore.getData(redisEntity.getEmail(), UserRedisEntity.class)).thenReturn(redisEntity);
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");
-    }
-
-    @DisplayName("회원 정보 수정을 진행한다.")
-    @Test
-    void modifyUserTest() {
-        // given
-        ModifyRequestDto requestDto = ModifyRequestDto.builder()
-                .name("changedName")
-                .email("changedEmail")
-                .password("changedPassword")
-                .address("changedAddress")
-                .zipcode("changedZipcode")
-                .build();
-
-        // when
-        userService.modifyUser(1L, requestDto);
-
-        assertThat(userService.getUser(1L).getName()).isEqualTo(requestDto.getName());
-        assertThat(userService.getUser(1L).getEmail()).isEqualTo(requestDto.getEmail());
-    }
-
-    @DisplayName("회원 등급을 탈퇴 회원으로 변경한다.")
-    @Test
-    void removeUserTest() {
-        userService.removeUser(1L);
-
-        assertThat(userService.getUser(1L).getRole()).isEqualTo(Role.ROLE_WITHDRAWAL);
     }
 }

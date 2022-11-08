@@ -1,17 +1,18 @@
 package com.daniel.mychickenbreastshop.domain.user.api;
 
+import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -32,19 +33,16 @@ import java.util.List;
 public class UserApiController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-
 
     /**
      * 회원 디테일 조회
      *
      * @return 회원 정보
      */
-    @GetMapping("/v1/users")
-    public ResponseEntity<DetailResponseDto> getUserDetail(HttpServletRequest request) {
-        Long userId = getUserId(request);
+    @GetMapping("/v1/users/{userId}")
+    public ResponseEntity<DetailResponseDto> getUserDetail(@PathVariable Long userId) {
         DetailResponseDto userDTO = userService.getUser(userId);
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userDTO);
     }
 
     /**
@@ -53,9 +51,8 @@ public class UserApiController {
      * @param modifyDTO 회원 수정 정보
      */
     @PatchMapping("/v1/users")
-    public ResponseEntity<Void> modifyUser(HttpServletRequest request,
-                                           @Valid @RequestBody ModifyRequestDto modifyDTO) {
-        Long userId = getUserId(request);
+    public ResponseEntity<Void> modifyUser(@Valid @RequestBody ModifyRequestDto modifyDTO) {
+        Long userId = getUserId();
         userService.modifyUser(userId, modifyDTO);
         return ResponseEntity.ok().build();
     }
@@ -85,22 +82,27 @@ public class UserApiController {
     /**
      * 관리자용 회원 검색 (이름, 이메일, 아이디, 회원 등급)
      *
-     * @param page      페이지 번호
-     * @param role      회원 등급
-     * @param searchDto 검색 조건
+     * @param page        페이지 번호
+     * @param role        회원 등급
+     * @param searchKey   검색 조건
+     * @param searchValue 검색 값
      * @return 회원 검색 리스트
      */
-    @GetMapping("/v2/users/search")
+    @GetMapping("/v2/users/search/{role}")
     public ResponseEntity<List<ListResponseDto>> searchUsers(
+            @PathVariable Role role,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "ROLE_USER") Role role,
-            @RequestBody UserSearchDto searchDto) {
-
-        return ResponseEntity.ok(userService.searchUsers(page, searchDto, role));
+            @RequestParam(defaultValue = "name") String searchKey,
+            @RequestParam(defaultValue = "") String searchValue) {
+        UserSearchDto userSearchDto = UserSearchDto.builder()
+                .searchKey(searchKey)
+                .searchValue(searchValue)
+                .build();
+        return ResponseEntity.ok(userService.searchUsers(page, role, userSearchDto));
     }
 
-    private Long getUserId(HttpServletRequest request) {
-        return (Long) request.getAttribute("userId");
+    private Long getUserId() {
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalDetails.getId();
     }
-
 }

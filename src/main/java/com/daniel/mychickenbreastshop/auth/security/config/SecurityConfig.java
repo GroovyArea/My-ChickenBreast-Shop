@@ -12,14 +12,15 @@ import com.daniel.mychickenbreastshop.auth.security.filter.custom.CustomAuthenti
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * 서버 보안 설정 클래스
@@ -27,15 +28,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  * <pre>
  *     <b>history</b>
  *     1.0, 2022.08.13 최초 작성
+ *     1.1, 2022.10.14 Deprecated 클래스 제거 및 최신화
  * </pre>
  *
  * @author 김남영
- * @version 1.0
+ * @version 1.1
  */
-@Slf4j
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final JwtValidator jwtValidator;
@@ -45,14 +46,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PrincipalDetailService principalDetailService;
     private final ObjectMapper objectMapper;
 
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/static/**"); // 테스트 시 path 수정할 것.
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .antMatchers("/static/**",
+                        "/db/**",
+                        "/template/**");
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .addFilter(corsConfig.corsFilter())
                 .csrf().disable()
@@ -63,17 +66,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
 
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/v2/**").hasRole("ADMIN")// 테스트 시 path 관리할 것
+                .anyRequest().permitAll()
 
                 .and()
-                .addFilter(new CustomAuthenticationFilter(authenticationManager(), jwtProvider, objectMapper))
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider, jwtValidator, jwtAuthenticator))
+                .addFilter(new CustomAuthenticationFilter(authenticationManager, jwtProvider, objectMapper))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider, jwtValidator, jwtAuthenticator))
 
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .accessDeniedHandler(new CustomAccessDeniedHandler());
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

@@ -11,4 +11,5 @@ public class KakaopayRedisStore extends RedisStore {
     public KakaopayRedisStore(RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
         super(redisTemplate, objectMapper);
     }
+
 }

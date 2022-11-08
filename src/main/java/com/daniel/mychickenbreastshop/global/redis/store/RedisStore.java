@@ -34,8 +34,7 @@ public abstract class RedisStore {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    /* key를 통해 value 리턴 */
-    public <T> T getData(String key, Class<T> type) {
+    public <T> T getData(String key, Class<T> valueType) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         String value = (String) valueOperations.get(key);
 
@@ -44,7 +43,7 @@ public abstract class RedisStore {
         }
 
         try {
-            return objectMapper.readValue(value, type);
+            return objectMapper.readValue(value, valueType);
         } catch (JsonProcessingException e) {
             throw new InternalErrorException(e);
         }

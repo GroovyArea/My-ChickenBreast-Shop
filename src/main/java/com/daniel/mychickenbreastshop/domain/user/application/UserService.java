@@ -11,8 +11,8 @@ import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyReques
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
 import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
@@ -59,17 +59,12 @@ public class UserService {
         List<User> users = userRepository.findAll(pageRequest).getContent();
 
         return users.stream()
-                .map(user -> {
-                    ListResponseDto listResponseDto = userListMapper.toDTO(user);
-                    listResponseDto.changeNameWithUserRole(user.getRole().getRoleName()); //둘다
-                    return listResponseDto;
-                })
+                .map(userListMapper::toDTO)
                 .toList();
     }
-
-    public List<ListResponseDto> searchUsers(int page, UserSearchDto searchDto, Role role) {
+    public List<ListResponseDto> searchUsers(int page, Role role, UserSearchDto userSearchDto) {
         PageRequest pageRequest = createPageRequest(page);
-        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, searchDto, role).getContent();
+        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, userSearchDto, role).getContent();
 
         return searchedUsers.stream()
                 .map(userListMapper::toDTO)

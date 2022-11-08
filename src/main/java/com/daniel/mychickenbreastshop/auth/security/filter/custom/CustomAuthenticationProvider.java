@@ -3,10 +3,11 @@ package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -37,10 +38,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
 
-        if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {
-            throw new RuntimeException(UserResponse.WITHDRAW_USER.getMessage());
-        }
-
         try {
             String encryptedLoginPassword = PasswordEncrypt.getSecurePassword(loginPassword, dbSalt);
 
@@ -48,10 +45,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 throw new BadCredentialsException(SecurityMessage.PASSWORD_MISMATCH.getMessage());
             }
 
+            if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {
+                throw new BadRequestException(UserResponse.WITHDRAW_USER.getMessage());
+            }
+
             PrincipalDetails principalDetails = (PrincipalDetails) principalDetailService.loadUserByUsername(loginId);
 
             return new UsernamePasswordAuthenticationToken(principalDetails, principalDetails.getPassword(), principalDetails.getAuthorities());
-
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(e);
         }

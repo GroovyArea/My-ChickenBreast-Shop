@@ -44,7 +44,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         try {
             LoginRequestDto loginRequestDto = objectMapper
                     .readValue(request.getInputStream(), LoginRequestDto.class);
@@ -74,6 +73,5 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         response.addHeader(JwtProperties.TOKEN_HEADER_KEY.getKey(), JwtProperties.AUTH_TYPE.getKey() + token);
     }
-
 
 }

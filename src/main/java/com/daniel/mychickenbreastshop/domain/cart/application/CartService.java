@@ -22,18 +22,21 @@ public class CartService {
     }
 
     public UpdatableCartDto addCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
-        cartValidator.cartValidate(cartRequestDto);
+        validateCart(cartRequestDto);
         return cartItemManager.store(updatableCartDto, cartRequestDto);
-
     }
 
     public UpdatableCartDto modifyCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
-        cartValidator.cartValidate(cartRequestDto);
+        validateCart(cartRequestDto);
         return cartItemManager.update(updatableCartDto, cartRequestDto);
     }
 
     public UpdatableCartDto removeCart(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
-        cartValidator.cartValidate(cartRequestDto);
+        validateCart(cartRequestDto);
         return cartItemManager.delete(updatableCartDto, cartRequestDto);
+    }
+
+    private void validateCart(CartRequestDto cartRequestDto) {
+        cartValidator.cartValidate(cartRequestDto);
     }
 }

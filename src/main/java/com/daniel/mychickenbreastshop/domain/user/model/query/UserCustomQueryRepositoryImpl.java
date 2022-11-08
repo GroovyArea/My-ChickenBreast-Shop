@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.domain.user.model.query;
 
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.model.model.Role;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -43,7 +43,7 @@ public class UserCustomQueryRepositoryImpl implements UserCustomQueryRepository 
     }
 
     private BooleanExpression searchDtoEq(UserSearchDto searchDto) {
-        if (searchDto.getSearchValue() != "" && searchDto.getSearchKey() != null) {
+        if (searchDto.getSearchValue().isBlank() && searchDto.getSearchKey() != null) {
             return switch (searchDto.getSearchKey()) {
                 case "loginId" -> user.loginId.startsWith(searchDto.getSearchValue());
                 case "name" -> user.name.startsWith(searchDto.getSearchValue());

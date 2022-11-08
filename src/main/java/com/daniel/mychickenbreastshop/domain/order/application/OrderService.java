@@ -11,6 +11,7 @@ import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderInfoL
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItemsInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderProductResponseDto;
+import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.order.model.model.OrderResponse.ORDER_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.order.model.enums.OrderResponse.ORDER_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +34,9 @@ public class OrderService {
     private final OrderProductListMapper orderProductListMapper;
     private final OrderPaymentInfoMapper orderPaymentInfoMapper;
 
-    public List<OrderInfoListResponseDto> getAllOrders(Long userId, int page) {
+    public List<OrderInfoListResponseDto> getAllOrders(Long userId, OrderStatus orderStatus, int page) {
         PageRequest pageRequest = createPageRequest(page);
-        List<Order> orders = orderRepository.findAllByUserId(pageRequest, userId).getContent();
+        List<Order> orders = orderRepository.findAllByUserId(userId, orderStatus, pageRequest).getContent();
 
         return orders.stream()
                 .map(orderInfoListMapper::toDTO)
@@ -45,10 +46,12 @@ public class OrderService {
     public OrderItemsInfoResponseDto getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new BadRequestException(ORDER_NOT_EXISTS.getMessage()));
         List<OrderProduct> orderProducts = order.getOrderProducts();
+
         OrderItemsInfoResponseDto orderItemsInfoResponseDto = orderItemsInfoMapper.toDTO(order);
         List<OrderProductResponseDto> orderProductResponseDtos = orderProducts.stream()
                 .map(orderProductListMapper::toDTO)
                 .toList();
+
         orderItemsInfoResponseDto.updateOrderProducts(orderProductResponseDtos);
 
         return orderItemsInfoResponseDto;
@@ -60,6 +63,6 @@ public class OrderService {
     }
 
     private PageRequest createPageRequest(int page) {
-        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "created_at"));
+        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

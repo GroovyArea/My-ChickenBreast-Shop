@@ -3,7 +3,8 @@ package com.daniel.mychickenbreastshop.auth.security.application;
 import com.daniel.mychickenbreastshop.auth.security.mapper.PrincipalDetailMapper;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.model.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,15 +24,11 @@ import org.springframework.stereotype.Service;
  * @version 1.1
  */
 @Service
+@RequiredArgsConstructor
 public class PrincipalDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PrincipalDetailMapper principalDetailMapper;
-
-    public PrincipalDetailService(UserRepository userRepository, PrincipalDetailMapper principalDetailMapper) {
-        this.userRepository = userRepository;
-        this.principalDetailMapper = principalDetailMapper;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {

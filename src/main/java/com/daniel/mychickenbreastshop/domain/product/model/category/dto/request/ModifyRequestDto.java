@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.model.category.dto.request;
 
-import com.daniel.mychickenbreastshop.domain.product.model.category.model.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model;
 
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.model.PaymentResult;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -19,6 +19,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonInclude(NON_NULL)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class OrderInfoResponse implements PaymentResult{
 
         String cid; // 가맹점 코드
@@ -53,6 +54,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class Amount {
 
         private Integer total; // 전체 결제 금액
@@ -65,6 +67,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class CanceledAmount {
 
         private Integer total; // 전체 취소 금액
@@ -77,6 +80,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class CancelAvailableAmount {
 
         private Integer total; // 전체 취소 가능 금액
@@ -89,6 +93,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class SelectedCardInfo {
 
         private String cardBin; // 카드 BIN
@@ -99,6 +104,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class PaymentActionDetails {
 
         private String aid; // Request 고유 번호
@@ -137,6 +143,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @JsonInclude(NON_NULL)
+    @Builder
     public static class PayApproveResponse implements PaymentResult {
 
         private String aid; // 요청 고유 번호
@@ -168,6 +175,7 @@ public class KakaoPayResponse {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @Builder
     public static class CardInfo {
 
         private String purchaseCorp; // 매입 카드사 한글명
@@ -190,6 +198,7 @@ public class KakaoPayResponse {
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @JsonInclude(NON_NULL)
+    @Builder
     public static class PayCancelResponse implements PaymentResult {
 
         private String aid; // 요청 고유 번호
