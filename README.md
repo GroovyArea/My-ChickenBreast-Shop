@@ -2,17 +2,15 @@
 
 
 ## 프로젝트 개요
-닭가슴살 쇼핑몰 API 입니다.  
-상품 조회, 검색 기능이 있습니다.  
-Kakaopay REST API를 이용해 테스트 구매와 주문까지 가능하며,  
-네이버 SMTP를 이용해 회원가입 유저는 이메일로 인증번호를 전송 받습니다.  
+닭가슴살 주문, 구매 API 입니다.  
+단순 기능 구현보다 `객체지향`을 공부하며 이를 최대한 지키는 코드 구성으로 작성하려 시작했습니다.  
 
----
+<br>
 
 ## 프로젝트 기간
 - 2022.04.28 ~ 
 
----
+<br>
 
 ## 사용 기술 스택
 ```
@@ -24,7 +22,7 @@ Mysql 8.0.17
 Redis
 ```
 
----
+<br>
 
 ## ERD Model
 <details>
@@ -69,17 +67,6 @@ Redis
 - FK 
   - 컬럼명 : order_id 주문 고유 번호
   - 컬럼명 : payment_id 결제 고유 번호
-  
-  
-### Outbox-email
-- PK 
-  - 컬럼명 : id Auto_Increment 사용
-- Outbox 패턴 사용 테이블 -> 이메일 전송 시 사용
-
-### Outbox-order
-- PK 
-  - 컬럼명 : id Auto_Increment 사용
-- Outbox 패턴 사용 테이블 -> 주문 재고 파악 시 사용
 
 </div>
 </details>
