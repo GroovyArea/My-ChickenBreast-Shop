@@ -84,6 +84,7 @@ dependencies {
     // apache common
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

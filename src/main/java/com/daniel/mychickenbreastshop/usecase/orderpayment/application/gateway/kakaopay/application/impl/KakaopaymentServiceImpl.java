@@ -11,7 +11,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.k
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayParamsRedisEntity;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayRedisParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,7 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
 
     @Override
     public PayApproveResponse completePayment(String payToken, String loginId) {
-        KakaoPayParamsRedisEntity entity = kakaopayRedisStore.getData(loginId, KakaoPayParamsRedisEntity.class);
+        KakaoPayRedisParam entity = kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class);
         PayApproveRequest request = createPayApproveRequest(payToken, entity, loginId);
         return kakaoPayClient.approve(kakaoPayClientProperty.getUri().getApprove(), request);
     }
@@ -65,7 +65,7 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
     }
 
     private void savePayableData(PayReadyResponse response, PayReadyRequest request, String loginId) {
-        KakaoPayParamsRedisEntity entity = KakaoPayParamsRedisEntity.of(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
+        KakaoPayRedisParam entity = KakaoPayRedisParam.of(loginId, response.getTid(), request.getPartnerOrderId(), request.getTotalAmount());
         kakaopayRedisStore.setData(entity.getLoginId(), entity);
     }
 
@@ -115,7 +115,7 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
                 .build();
     }
 
-    private PayApproveRequest createPayApproveRequest(String payToken, KakaoPayParamsRedisEntity entity, String loginId) {
+    private PayApproveRequest createPayApproveRequest(String payToken, KakaoPayRedisParam entity, String loginId) {
         String tid = entity.getTid();
         String orderId = entity.getPartnerOrderId();
         Integer totalPrice = entity.getTotalAmount();

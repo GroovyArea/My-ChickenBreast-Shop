@@ -53,41 +53,17 @@ public class User extends BaseTimeEntity {
 
     // <비즈니스 로직 메서드> //
 
-    public void updateUserInfo(final User modifier, final String updatePassword) {
-        updateName(modifier.getName());
-        updateEmail(modifier.getEmail());
-        updateAddress(modifier.getAddress());
-        updateZipcode(modifier.getZipcode());
-        updatePassword(updatePassword);
-    }
-
-    public void remove() {
-        updateToWithDrawRole();
-        this.delete();
-    }
-
-    private void updateName(final String name) {
-        this.name = name;
-    }
-
-    private void updateEmail(final String email) {
-        this.email = email;
-    }
-
-    private void updateAddress(final String address) {
-        this.address = address;
-    }
-
-    private void updateZipcode(final String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    private void updatePassword(final String updatePassword) {
+    public void updateUserInfo(final User modifiableEntity, final String updatePassword) {
+        this.name = modifiableEntity.getName();
+        this.email = modifiableEntity.getEmail();
+        this.address = modifiableEntity.getAddress();
+        this.zipcode = modifiableEntity.getZipcode();
         this.password = updatePassword;
     }
 
-    private void updateToWithDrawRole() {
+    public void remove() {
         this.role = Role.ROLE_WITHDRAWAL;
+        this.delete();
     }
 
 }

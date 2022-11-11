@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay;
 
-import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
-import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
+import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
+import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.adjust.ItemQuantityAdjuster;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.model.item.enums.ProductResponse.ITEM_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse.ITEM_NOT_EXISTS;
 
 /**
  * 카카오페이 결제 상품

@@ -22,10 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,18 +128,18 @@ class OrderServiceTest {
     void getAllOrders() {
         // given
         int pageNumber = 1;
-        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Order> page = new PageImpl<>(List.of(orders.get(0), orders.get(1), orders.get(2), orders.get(3), orders.get(4),
-                orders.get(5), orders.get(6), orders.get(7), orders.get(8), orders.get(9)), pageRequest, 10);
+                orders.get(5), orders.get(6), orders.get(7), orders.get(8), orders.get(9)), pageable, 10);
 
         OrderStatus orderStatus = OrderStatus.ORDER_COMPLETE;
         Long userId = 1L;
 
         // when
-        when(orderRepository.findAllByUserId(userId, orderStatus, pageRequest)).thenReturn(page);
+        when(orderRepository.findAllByUserId(userId, orderStatus, pageable)).thenReturn(page);
         when(orderInfoListMapper.toDTO(any(Order.class))).thenReturn(responseDtos.get(0));
 
-        assertThat(orderService.getAllOrders(userId, orderStatus, pageNumber)).hasSize(10);
+        assertThat(orderService.getAllOrders(userId, orderStatus, pageable)).hasSize(10);
     }
 
     @DisplayName("주문 상세 내역을 조회한다.")

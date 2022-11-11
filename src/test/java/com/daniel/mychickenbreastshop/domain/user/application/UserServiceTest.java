@@ -117,15 +117,15 @@ class UserServiceTest {
     void getAllUsersTest() {
         // given
         int pageNumber = 1;
-        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<User> page = new PageImpl<>(List.of(users.get(0), users.get(1), users.get(2), users.get(3), users.get(4),
-                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageRequest, 10);
+                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageable, 10);
 
         // when
-        when(userRepository.findAll(pageRequest)).thenReturn(page);
+        when(userRepository.findAll(pageable)).thenReturn(page);
         when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(userService.getAllUsers(pageNumber)).hasSize(10);
+        assertThat(userService.getAllUsers(pageable)).hasSize(10);
     }
 
     @DisplayName("검색 조건에 맞는 유저 목록을 반환한다.")
@@ -134,16 +134,16 @@ class UserServiceTest {
         // given
         UserSearchDto userSearchDto = new UserSearchDto("loginId", "id");
         int pageNumber = 1;
-        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<User> page = new PageImpl<>(List.of(users.get(0), users.get(1), users.get(2), users.get(3), users.get(4),
-                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageRequest, 10);
+                users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageable, 10);
         Role role = Role.ROLE_USER;
 
         // when
         when(userRepository.findUserWithDynamicQuery(any(Pageable.class), any(UserSearchDto.class), any(Role.class))).thenReturn(page);
         when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(userService.searchUsers(pageNumber, role, userSearchDto)).hasSize(10);
+        assertThat(userService.searchUsers(pageable, role, userSearchDto)).hasSize(10);
     }
 
     @DisplayName("회원 가입을 진행한다.")

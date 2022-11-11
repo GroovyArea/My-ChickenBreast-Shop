@@ -1,6 +1,8 @@
 package com.daniel.mychickenbreastshop.domain.product.api.item;
 
-import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
+import com.daniel.mychickenbreastshop.domain.product.item.api.FileApiController;
+import com.daniel.mychickenbreastshop.domain.product.item.api.ProductApiController;
+import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

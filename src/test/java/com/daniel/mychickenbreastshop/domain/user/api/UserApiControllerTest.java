@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -131,7 +132,7 @@ class UserApiControllerTest {
         List<ListResponseDto> pageOneUsers = getPageUsers();
         int page = 1;
 
-        given(userService.getAllUsers(anyInt())).willReturn(pageOneUsers);
+        given(userService.getAllUsers(any(Pageable.class))).willReturn(pageOneUsers);
 
         mockMvc.perform(get("/api/v2/users")
                         .param("page", String.valueOf(page)))
@@ -145,15 +146,13 @@ class UserApiControllerTest {
     void searchUsers() throws Exception {
         // given
         List<ListResponseDto> pageOneSearchUsers = getPageUsers();
-        int page = 1;
         Role role = Role.ROLE_USER;
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("page", String.valueOf(page));
         params.add("searchKey", "name");
         params.add("searchValue", "name");
 
-        given(userService.searchUsers(anyInt(), any(Role.class), any(UserSearchDto.class))).willReturn(pageOneSearchUsers);
+        given(userService.searchUsers(any(Pageable.class), any(Role.class), any(UserSearchDto.class))).willReturn(pageOneSearchUsers);
 
         mockMvc.perform(get("/api/v2/users/search/{role}", role)
                         .params(params))

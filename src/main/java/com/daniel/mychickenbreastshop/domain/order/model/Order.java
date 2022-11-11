@@ -80,16 +80,12 @@ public class Order extends BaseTimeEntity {
 
     // <비즈니스 로직 메서드> //
 
-
-    public void orderCancel() {
+    public void cancelOrder() {
         this.updateOrderStatus(OrderStatus.CANCEL_ORDER);
         this.delete();
     }
 
-
     public void updateOrderStatus(OrderStatus orderStatus) {
         this.status = orderStatus;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.application.file;
 
+import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileManager;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

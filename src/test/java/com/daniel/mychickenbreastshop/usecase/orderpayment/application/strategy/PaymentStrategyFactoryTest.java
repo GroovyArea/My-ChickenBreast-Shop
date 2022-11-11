@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy;
 
 import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
+import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;

@@ -18,8 +18,7 @@ import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,17 +53,15 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
     }
 
-    public List<ListResponseDto> getAllUsers(int page) {
-        PageRequest pageRequest = createPageRequest(page);
-        List<User> users = userRepository.findAll(pageRequest).getContent();
+    public List<ListResponseDto> getAllUsers(Pageable pageable) {
+        List<User> users = userRepository.findAll(pageable).getContent();
 
         return users.stream()
                 .map(userListMapper::toDTO)
                 .toList();
     }
-    public List<ListResponseDto> searchUsers(int page, Role role, UserSearchDto userSearchDto) {
-        PageRequest pageRequest = createPageRequest(page);
-        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageRequest, userSearchDto, role).getContent();
+    public List<ListResponseDto> searchUsers(Pageable pageable, Role role, UserSearchDto userSearchDto) {
+        List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageable, userSearchDto, role).getContent();
 
         return searchedUsers.stream()
                 .map(userListMapper::toDTO)
@@ -132,10 +129,6 @@ public class UserService {
         if (!savedKey.equals(emailKey)) {
             throw new BadRequestException(UserResponse.MAIL_KEY_MISMATCH.getMessage());
         }
-    }
-
-    private PageRequest createPageRequest(int page) {
-        return PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
 }

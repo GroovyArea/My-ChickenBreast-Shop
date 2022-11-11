@@ -1,21 +1,22 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.domain.product.application.file.FileManager;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemDetailMapper;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemListMapper;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemModifyMapper;
-import com.daniel.mychickenbreastshop.domain.product.mapper.ItemRegisterMapper;
-import com.daniel.mychickenbreastshop.domain.product.model.category.Category;
-import com.daniel.mychickenbreastshop.domain.product.model.category.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
-import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.RegisterRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
+import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemDetailMapper;
+import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemListMapper;
+import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemModifyMapper;
+import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemRegisterMapper;
+import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
+import com.daniel.mychickenbreastshop.domain.product.category.model.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
+import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.RegisterRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -100,7 +98,7 @@ class ProductServiceTest {
             products.add(product);
 
             ListResponseDto listResponseDto = ListResponseDto.builder()
-                    .id((long) i)
+                    .id(i)
                     .name("name" + i)
                     .price(i * 1000)
                     .quantity(i * 100)
@@ -144,17 +142,17 @@ class ProductServiceTest {
     void getAllProduct() {
         // given
         int pageNumber = 1;
-        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Product> page = new PageImpl<>(List.of(products.get(0), products.get(1), products.get(2), products.get(3), products.get(4),
-                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageRequest, 10);
+                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageable, 10);
 
         ChickenCategory category = ChickenCategory.STEAMED;
 
         // when
-        when(productRepository.findAllByCategoryName(category, pageRequest)).thenReturn(page);
+        when(productRepository.findAllByCategoryName(category, pageable)).thenReturn(page);
         when(itemListMapper.toDTO(any(Product.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(productService.getAllProduct(category, pageNumber)).hasSize(10);
+        assertThat(productService.getAllProduct(category, pageable)).hasSize(10);
     }
 
     @DisplayName("검색 조건에 맞는 상품 목록을 반환한다.")
@@ -166,15 +164,15 @@ class ProductServiceTest {
         ChickenStatus status = ChickenStatus.SALE;
         ChickenCategory category = ChickenCategory.STEAMED;
 
-        PageRequest pageRequest = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Product> page = new PageImpl<>(List.of(products.get(0), products.get(1), products.get(2), products.get(3), products.get(4),
-                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageRequest, 10);
+                products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageable, 10);
 
         // when
-        when(productRepository.findItemWithDynamicQuery(pageRequest, itemSearchDto, category, status)).thenReturn(page);
+        when(productRepository.findItemWithDynamicQuery(pageable, itemSearchDto, category, status)).thenReturn(page);
         when(itemListMapper.toDTO(any(Product.class))).thenReturn(listResponseDtos.get(0));
 
-        List<ListResponseDto> listResponseDtos = productService.searchProducts(pageNumber, status, category, itemSearchDto);
+        List<ListResponseDto> listResponseDtos = productService.searchProducts(pageable, status, category, itemSearchDto);
 
         assertThat(listResponseDtos).hasSize(10);
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(category));

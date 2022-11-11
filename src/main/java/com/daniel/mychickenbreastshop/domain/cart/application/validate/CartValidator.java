@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.domain.cart.application.validate;
 
 import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.CartRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
+import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

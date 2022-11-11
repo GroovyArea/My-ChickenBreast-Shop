@@ -8,8 +8,8 @@ import com.daniel.mychickenbreastshop.domain.payment.model.Card;
 import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
-import com.daniel.mychickenbreastshop.domain.product.model.item.Product;
-import com.daniel.mychickenbreastshop.domain.product.model.item.ProductRepository;
+import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
+import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
@@ -31,9 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.model.item.enums.ProductResponse.ITEM_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse.ITEM_NOT_EXISTS;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway.KAKAO;
 
@@ -66,8 +67,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
     @RedisLocked(lockKey = "payItem")
     @Transactional
     public PaymentResult payItem(ItemPayRequestDto itemPayRequestDto, String requestUrl, String loginId) {
-        Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName());
-        savedProduct.checkStockQuantity(itemPayRequestDto.getQuantity());
+        Product savedProduct = getSavedProduct(itemPayRequestDto.getItemName(), itemPayRequestDto.getQuantity());
 
         PayReadyResponse response = kakaoPaymentService.payItem(itemPayRequestDto, requestUrl, loginId);
 
@@ -97,10 +97,12 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         CartValue cartValue = cartDisassembler.getCartValue(cookieValue);
 
         User savedUser = getSavedUser(loginId);
-        List<Product> savedProducts = cartValue.getItemNames().stream().map(this::getSavedProduct).toList();
 
-        for (int i = 0; i < savedProducts.size(); i++) {
-            savedProducts.get(i).checkStockQuantity(cartValue.getItemQuantities().get(i));
+        List<Product> savedProducts = new ArrayList<>();
+
+        for (int i = 0; i < cartValue.getItemNames().size(); i++) {
+            Product savedProduct = getSavedProduct(cartValue.getItemNames().get(i), cartValue.getItemQuantities().get(i));
+            savedProducts.add(savedProduct);
         }
 
         PayReadyResponse response = kakaoPaymentService.payCart(cartValue, requestUrl, loginId);
@@ -161,27 +163,19 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         User savedUser = getSavedUser(loginId);
         Payment savedPayment = savedUser.getOrders().get(savedUser.getOrders().size() - 1).getPayment();
 
-        savedPayment.updatePaymentStatus(PayStatus.CANCELED);
-        savedPayment.getOrder().updateOrderStatus(OrderStatus.CANCEL_ORDER);
+        savedPayment.cancelPayment();
+        savedPayment.getOrder().cancelOrder();
 
         kakaopayItemQuantityAdjuster.quantityIncrease(response.getItemCode(), response.getItemName(), response.getQuantity());
 
         return response;
     }
 
-    @RedisLocked(lockKey = "test")
-    @Transactional
-    public void test(String id) {
-        log.info("일해라!");
-        Product product = productRepository.findById(1L).orElseThrow(() -> new RuntimeException("에헤이"));
-        log.info("상품 전 개수:" + product.getQuantity());
-        product.decreaseItemQuantity(1);
-        log.info("상품 후 개수:" + product.getQuantity());
-    }
-
-    private Product getSavedProduct(String productName) {
-        return productRepository.findByName(productName).orElseThrow(
+    private Product getSavedProduct(String productName, int requestQuantity) {
+        Product product = productRepository.findByName(productName).orElseThrow(
                 () -> new BadRequestException(ITEM_NOT_EXISTS.getMessage()));
+        product.checkStockQuantity(requestQuantity);
+        return product;
     }
 
     private User getSavedUser(String loginId) {

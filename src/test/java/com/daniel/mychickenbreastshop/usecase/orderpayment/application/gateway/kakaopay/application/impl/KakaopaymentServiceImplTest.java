@@ -8,7 +8,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.k
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayParamsRedisEntity;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayRedisParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -147,12 +147,12 @@ class KakaopaymentServiceImplTest {
         // given
         String payToken = "payToken";
 
-        KakaoPayParamsRedisEntity entity = KakaoPayParamsRedisEntity.of(loginId, "tid", "partnerOrderId", 10000);
+        KakaoPayRedisParam entity = KakaoPayRedisParam.of(loginId, "tid", "partnerOrderId", 10000);
 
         PayApproveResponse payApproveResponse = createPayApproveResponse();
 
         // when
-        when(kakaopayRedisStore.getData(loginId, KakaoPayParamsRedisEntity.class)).thenReturn(entity);
+        when(kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class)).thenReturn(entity);
         when(kakaoPayClient.approve(anyString(), any(PayApproveRequest.class))).thenReturn(payApproveResponse);
 
         assertThat(kakaopaymentServiceImpl.completePayment(payToken, loginId)).isEqualTo(payApproveResponse);

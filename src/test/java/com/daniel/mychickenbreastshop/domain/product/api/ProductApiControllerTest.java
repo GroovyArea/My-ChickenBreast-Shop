@@ -1,20 +1,21 @@
 package com.daniel.mychickenbreastshop.domain.product.api;
 
-import com.daniel.mychickenbreastshop.domain.product.api.item.ProductApiController;
-import com.daniel.mychickenbreastshop.domain.product.application.ProductService;
-import com.daniel.mychickenbreastshop.domain.product.model.category.enums.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.request.RegisterRequestDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.model.item.enums.ChickenStatus;
+import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.domain.product.item.api.ProductApiController;
+import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.RegisterRequestDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.ListResponseDto;
+import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -83,7 +83,7 @@ class ProductApiControllerTest {
         int page = 1;
         ChickenCategory category = ChickenCategory.STEAMED;
 
-        given(productService.getAllProduct(category, page)).willReturn(pageOneItems);
+        given(productService.getAllProduct(category, any(Pageable.class))).willReturn(pageOneItems);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", String.valueOf(page));
@@ -101,17 +101,15 @@ class ProductApiControllerTest {
     void getSearchProducts() throws Exception {
         // given
         List<ListResponseDto> pageOneSearchItems = getPageOneItems();
-        int page = 1;
         ChickenCategory category = ChickenCategory.STEAMED;
         ChickenStatus status = ChickenStatus.SALE;
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("page", String.valueOf(page));
         params.add("status", status.name());
         params.add("searchKey", "name");
         params.add("searchValue", "name");
 
-        given(productService.searchProducts(anyInt(), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
+        given(productService.searchProducts(any(Pageable.class), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
                 .willReturn(pageOneSearchItems);
 
         // when & then

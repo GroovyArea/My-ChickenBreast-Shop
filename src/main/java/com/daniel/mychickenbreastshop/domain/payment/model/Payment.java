@@ -68,4 +68,9 @@ public class Payment extends BaseTimeEntity {
         this.status = status;
     }
 
+    public void cancelPayment() {
+        this.status = PayStatus.CANCELED;
+        this.delete();
+    }
+
 }

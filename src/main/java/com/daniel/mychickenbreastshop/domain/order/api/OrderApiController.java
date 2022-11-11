@@ -7,6 +7,9 @@ import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItems
 import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +25,15 @@ public class OrderApiController {
 
     /**
      * 회원 개인 주문 내역 조회
-     *
-     * @param page 페이지 번호
+     *페이지 번호
      * @param orderStatus 주문 상태
      * @return 주문 내역
      */
     @GetMapping("/v1/orders")
-    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(@PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                                                                        @RequestParam(defaultValue = "ORDER_COMPLETE") OrderStatus orderStatus) {
         Long userId = getUserId();
-        return ResponseEntity.ok(orderService.getAllOrders(userId, orderStatus, page));
+        return ResponseEntity.ok(orderService.getAllOrders(userId, orderStatus, pageable));
     }
 
     /**
