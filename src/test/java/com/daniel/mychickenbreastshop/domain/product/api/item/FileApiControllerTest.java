@@ -7,17 +7,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.net.MalformedURLException;
-import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductApiController.class)
 class FileApiControllerTest {
@@ -37,19 +42,37 @@ class FileApiControllerTest {
 
     @DisplayName("API 요청을 통해 상품 이미지 파일을 다운로드한다.")
     @Test
-    void getDownloadFile() throws MalformedURLException {
+    void getDownloadFile() throws Exception {
         // given
         String fileName = "fileName";
-        Resource resource = new UrlResource(URI.create("/test_file_path"));
+        Resource resource = mock(Resource.class);
         String imageFilePath = "test_image_file_path";
         MockHttpServletRequest request = new MockHttpServletRequest();
+        String mimeType = request.getServletContext().getMimeType(imageFilePath);
 
         given(productService.getItemImageResource(fileName)).willReturn(resource);
         given(productService.getItemFilePath(resource)).willReturn(imageFilePath);
 
+        mockMvc.perform(get("/api/v2/files/download/{fileName}", fileName))
+                .andExpect(content().contentType(mimeType))
+                .andExpect(header().exists(HttpHeaders.CONTENT_DISPOSITION))
+                .andExpect(status().isOk());
     }
 
+    @DisplayName("API 요청을 통해 상품의 이미지 파일을 변경한다.")
     @Test
-    void modifyFileOfItem() {
+    void modifyFileOfItem() throws Exception {
+        // given
+        String imageFileName = "change_image.png";
+        MockMultipartFile imageFile = new MockMultipartFile("image", imageFileName,
+                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
+
+        Long productId = 1L;
+
+        // when & then
+        mockMvc.perform(multipart("/api/v2/files/{id}", productId)
+                .file(imageFile))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }

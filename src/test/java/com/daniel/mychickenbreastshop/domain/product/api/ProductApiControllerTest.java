@@ -169,10 +169,6 @@ class ProductApiControllerTest {
                 .category(ChickenCategory.STEAMED)
                 .build();
 
-        String imageFileName = "image.png";
-        MockMultipartFile imageFile = new MockMultipartFile("image", imageFileName,
-                MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
-
         // when & then
         mockMvc.perform(patch("/api/v2/products")
                         .content(parseObject(dto))
