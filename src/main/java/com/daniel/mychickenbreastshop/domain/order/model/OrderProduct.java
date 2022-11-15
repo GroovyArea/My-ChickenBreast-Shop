@@ -1,17 +1,14 @@
 package com.daniel.mychickenbreastshop.domain.order.model;
 
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(name = "ORDER_PRODUCT")
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class OrderProduct extends BaseTimeEntity {
@@ -35,7 +32,7 @@ public class OrderProduct extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Order order;
 
     // <연관관계 편의 메서드> //

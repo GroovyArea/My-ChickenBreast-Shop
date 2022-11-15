@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserRedisEntity {
+public class EmailRedisModel {
 
     private String email;
     private String emailRandomKey;

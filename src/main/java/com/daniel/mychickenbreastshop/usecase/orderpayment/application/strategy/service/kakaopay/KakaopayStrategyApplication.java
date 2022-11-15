@@ -12,7 +12,7 @@ import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
 import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.global.aspect.annotation.RedisLocked;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse.ITEM_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.model.KakaoPayResponse.PayApproveResponse;
 import static com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway.KAKAO;
 
@@ -180,7 +180,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
     private User getSavedUser(String loginId) {
         return userRepository.findByLoginId(loginId).orElseThrow(
-                () -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
+                () -> new BadRequestException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
     }
 
 }

@@ -4,23 +4,18 @@ import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
 import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
-import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse.ITEM_QUANTITY_NOT_ENOUGH;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_QUANTITY_NOT_ENOUGH;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseTimeEntity {
-
-    protected Product() {
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +24,7 @@ public class Product extends BaseTimeEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Category category;
 
     private Integer price;

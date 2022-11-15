@@ -3,10 +3,7 @@ package com.daniel.mychickenbreastshop.domain.product.category.model;
 import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Category extends BaseTimeEntity {

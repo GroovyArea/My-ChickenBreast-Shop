@@ -6,7 +6,7 @@ import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginId = (String) authentication.getPrincipal();
         String loginPassword = (String) authentication.getCredentials();
 
-        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(UserResponse.USER_NOT_EXISTS.getMessage()));
+        User dbUser = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
         String dbPassword = dbUser.getPassword();
         String dbSalt = dbUser.getSalt();
 
@@ -46,7 +46,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             }
 
             if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {
-                throw new BadRequestException(UserResponse.WITHDRAW_USER.getMessage());
+                throw new BadRequestException(ErrorMessages.WITHDRAW_USER.getMessage());
             }
 
             PrincipalDetails principalDetails = (PrincipalDetails) principalDetailService.loadUserByUsername(loginId);

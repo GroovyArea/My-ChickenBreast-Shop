@@ -10,7 +10,7 @@ import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDt
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
-import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.EmailRedisModel;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
@@ -170,10 +170,10 @@ class UserServiceTest {
 
         int emailRandomKey = 123456;
 
-        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
+        EmailRedisModel redisEntity = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(redisEntity.getEmail(), UserRedisEntity.class)).thenReturn(redisEntity);
+        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class)).thenReturn(redisEntity);
         when(userJoinMapper.toEntity(any(JoinRequestDto.class))).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -215,10 +215,10 @@ class UserServiceTest {
 
         int emailRandomKey = 123456;
 
-        UserRedisEntity redisEntity = new UserRedisEntity(joinUser.getEmail(), String.valueOf(emailRandomKey));
+        EmailRedisModel redisEntity = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(redisEntity.getEmail(), UserRedisEntity.class)).thenReturn(redisEntity);
+        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class)).thenReturn(redisEntity);
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");

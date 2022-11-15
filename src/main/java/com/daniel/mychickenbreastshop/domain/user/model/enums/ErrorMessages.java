@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum UserResponse {
+public enum ErrorMessages {
 
     USER_EXISTS("이미 동일 회원 정보가 존재합니다."),
     USER_NOT_EXISTS("해당 회원 정보가 존재하지 않습니다."),

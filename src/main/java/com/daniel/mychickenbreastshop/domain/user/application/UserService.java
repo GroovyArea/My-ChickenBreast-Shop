@@ -12,8 +12,8 @@ import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDt
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.UserResponse;
-import com.daniel.mychickenbreastshop.domain.user.redis.model.UserRedisEntity;
+import com.daniel.mychickenbreastshop.domain.user.model.enums.ErrorMessages;
+import com.daniel.mychickenbreastshop.domain.user.redis.model.EmailRedisModel;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
@@ -50,7 +50,7 @@ public class UserService {
 
     public DetailResponseDto getUser(Long userId) {
         return userDetailMapper.toDTO(userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(UserResponse.USER_NOT_EXISTS.getMessage())));
+                .orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_EXISTS.getMessage())));
     }
 
     public List<ListResponseDto> getAllUsers(Pageable pageable) {
@@ -91,7 +91,7 @@ public class UserService {
     @Transactional
     public void modifyUser(Long userId, ModifyRequestDto modifyDTO) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
+                .orElseThrow(() -> new BadRequestException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
 
         String updatedPassword;
         try {
@@ -108,26 +108,26 @@ public class UserService {
     @Transactional
     public void removeUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(UserResponse.USER_NOT_EXISTS.getMessage()));
+                .orElseThrow(() -> new BadRequestException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
 
         user.remove();
     }
 
     private void checkDuplicatedUser(String loginId) {
         if (userRepository.existsByLoginId(loginId)) {
-            throw new BadRequestException(UserResponse.USER_EXISTS.getMessage());
+            throw new BadRequestException(ErrorMessages.USER_EXISTS.getMessage());
         }
     }
 
     private void validateAuthKey(String email, String emailKey) {
-        String savedKey = userRedisStore.getData(email, UserRedisEntity.class).getEmailRandomKey();
+        String savedKey = userRedisStore.getData(email, EmailRedisModel.class).getEmailRandomKey();
 
         if (savedKey == null) {
-            throw new BadRequestException(UserResponse.MAIL_KEY_EXPIRED.getMessage());
+            throw new BadRequestException(ErrorMessages.MAIL_KEY_EXPIRED.getMessage());
         }
 
         if (!savedKey.equals(emailKey)) {
-            throw new BadRequestException(UserResponse.MAIL_KEY_MISMATCH.getMessage());
+            throw new BadRequestException(ErrorMessages.MAIL_KEY_MISMATCH.getMessage());
         }
     }
 

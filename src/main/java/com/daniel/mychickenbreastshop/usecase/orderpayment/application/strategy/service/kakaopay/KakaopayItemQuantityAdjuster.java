@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse.ITEM_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS;
 
 /**
  * 카카오페이 결제 상품

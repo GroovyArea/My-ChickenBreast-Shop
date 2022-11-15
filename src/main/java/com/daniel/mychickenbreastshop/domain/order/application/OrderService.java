@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.order.model.enums.OrderResponse.ORDER_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.order.model.enums.ErrorMessages.ORDER_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

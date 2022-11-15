@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentResponse {
+public enum ErrorMessages {
 
     CANCELED_PAY("결제 도중 취소하셨습니다."),
     FAILED_PAY("결제에 실패하였습니다."),

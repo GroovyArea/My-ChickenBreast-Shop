@@ -4,10 +4,7 @@ package com.daniel.mychickenbreastshop.domain.user.model;
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class User extends BaseTimeEntity {
 

@@ -4,17 +4,14 @@ import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Payment extends BaseTimeEntity {
 
@@ -37,7 +34,7 @@ public class Payment extends BaseTimeEntity {
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_id")
+    @JoinColumn(name = "card_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Card card;
 
     // <팩토리 메서드> //

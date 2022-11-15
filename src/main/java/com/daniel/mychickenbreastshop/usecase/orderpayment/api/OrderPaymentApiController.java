@@ -12,7 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentResponse.*;
+import static com.daniel.mychickenbreastshop.domain.payment.model.enums.ErrorMessages.*;
 
 
 @RestController

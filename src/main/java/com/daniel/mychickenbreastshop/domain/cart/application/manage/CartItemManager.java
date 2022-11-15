@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.CartRequestD
 import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.UpdatableCartDto;
 import com.daniel.mychickenbreastshop.domain.cart.model.dto.response.CartResponseDto;
 import com.daniel.mychickenbreastshop.domain.cart.model.enums.CartProperty;
-import com.daniel.mychickenbreastshop.domain.cart.model.enums.CartResponse;
+import com.daniel.mychickenbreastshop.domain.cart.model.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.util.CookieUtil;
@@ -55,7 +55,7 @@ public class CartItemManager {
 
     public UpdatableCartDto update(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         if (CookieUtil.isCookieEmpty(updatableCartDto.getCookie())) {
-            throw new BadRequestException(CartResponse.MODIFIABLE_COOKIE_NOT_EXISTS.getMessage());
+            throw new BadRequestException(ErrorMessages.MODIFIABLE_COOKIE_NOT_EXISTS.getMessage());
         }
 
         Map<Long, CartRequestDto> existingMap = getCartRequestDtoMap(updatableCartDto);
@@ -68,7 +68,7 @@ public class CartItemManager {
 
     public UpdatableCartDto delete(UpdatableCartDto updatableCartDto, CartRequestDto cartRequestDto) {
         if (CookieUtil.isCookieEmpty(updatableCartDto.getCookie())) {
-            throw new BadRequestException(CartResponse.REMOVABLE_COOKIE_NOT_EXISTS.getMessage());
+            throw new BadRequestException(ErrorMessages.REMOVABLE_COOKIE_NOT_EXISTS.getMessage());
         }
 
         Map<Long, CartRequestDto> existingMap = getCartRequestDtoMap(updatableCartDto);

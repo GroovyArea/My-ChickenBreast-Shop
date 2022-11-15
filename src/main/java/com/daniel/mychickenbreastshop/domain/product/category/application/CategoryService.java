@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.daniel.mychickenbreastshop.domain.product.category.model.enums.CategoryResponse.CATEGORY_NOT_EXISTS;
+import static com.daniel.mychickenbreastshop.domain.product.category.model.enums.ErrorMessages.CATEGORY_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

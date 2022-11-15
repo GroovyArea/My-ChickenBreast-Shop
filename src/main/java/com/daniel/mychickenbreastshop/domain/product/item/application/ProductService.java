@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.domain.product.item.application;
 
 import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
 import com.daniel.mychickenbreastshop.domain.product.category.model.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.category.model.enums.CategoryResponse;
+import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileManager;
 import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemDetailMapper;
@@ -17,7 +17,6 @@ import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.Regi
 import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.DetailResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.ListResponseDto;
 import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
-import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ProductResponse;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,7 @@ public class ProductService {
      */
     @Transactional(readOnly = true)
     public DetailResponseDto getProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS.getMessage()));
 
         String downLoadURI = fileManager.getDownloadURI(product.getImage());
 
@@ -104,7 +103,7 @@ public class ProductService {
      */
     @Transactional
     public void changeImage(Long productId, MultipartFile file) {
-        Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+        Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS.getMessage()));
 
         if (file != null) {
             String savedImageName = dbProduct.getImage();
@@ -124,7 +123,7 @@ public class ProductService {
 
         registerRequestDto.updateImageName(uploadFileName);
 
-        Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
+        Category dbCategory = categoryRepository.findByCategoryName(registerRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(ErrorMessages.CATEGORY_NOT_EXISTS.getMessage()));
 
         Product savableProduct = itemRegisterMapper.toEntity(registerRequestDto);
 
@@ -139,9 +138,9 @@ public class ProductService {
      */
     @Transactional
     public void modifyItem(ModifyRequestDto modifyRequestDto) {
-        Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+        Product dbProduct = productRepository.findById(modifyRequestDto.getId()).orElseThrow(() -> new BadRequestException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS.getMessage()));
         Product updatableProduct = itemModifyMapper.toEntity(modifyRequestDto);
-        Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(CategoryResponse.CATEGORY_NOT_EXISTS.getMessage()));
+        Category updatableCategory = categoryRepository.findByCategoryName(modifyRequestDto.getCategory()).orElseThrow(() -> new BadRequestException(ErrorMessages.CATEGORY_NOT_EXISTS.getMessage()));
 
         dbProduct.updateProductInfo(updatableProduct);
         dbProduct.updateCategoryInfo(updatableCategory);
@@ -152,7 +151,7 @@ public class ProductService {
      */
     @Transactional
     public void removeItem(Long productId) {
-        Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+        Product dbProduct = productRepository.findById(productId).orElseThrow(() -> new BadRequestException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS.getMessage()));
         dbProduct.updateItemStatus(ChickenStatus.EXTINCTION);
         dbProduct.delete();
     }
@@ -162,10 +161,10 @@ public class ProductService {
      */
     @Transactional(readOnly = true)
     public void validatePayAmount(Long itemNo, int itemQuantity, long totalPrice) {
-        Product dbProduct = productRepository.findById(itemNo).orElseThrow(() -> new BadRequestException(ProductResponse.ITEM_NOT_EXISTS.getMessage()));
+        Product dbProduct = productRepository.findById(itemNo).orElseThrow(() -> new BadRequestException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.ITEM_NOT_EXISTS.getMessage()));
 
         if ((long) dbProduct.getPrice() * itemQuantity != totalPrice) {
-            throw new BadRequestException(ProductResponse.INVALID_PAY_AMOUNT.getMessage());
+            throw new BadRequestException(com.daniel.mychickenbreastshop.domain.product.item.model.enums.ErrorMessages.INVALID_PAY_AMOUNT.getMessage());
         }
     }
 }
