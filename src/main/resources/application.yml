@@ -4,7 +4,7 @@
 #      local-dev : dev, service
 #    active: local-dev
 
-spring :
+spring:
   profiles:
     active: local-dev
 
@@ -13,3 +13,7 @@ logging:
   config: classpath:logback-spring.xml
   level:
     root: info
+    com:
+      amazonaws:
+        util:
+          EC@MetadataUtils: error

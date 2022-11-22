@@ -2,14 +2,14 @@ package com.daniel.mychickenbreastshop.domain.product.item.api;
 
 import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 파일 API 컨트롤러
@@ -32,19 +32,16 @@ public class FileApiController {
     /**
      * 상품 이미지 파일 다운로드
      *
-     * @param fileName 이미지 파일 이름
-     * @param request  HttpServletRequest
+     * @param fileName 업로드 된 이미지 파일 이름
      * @return 파일 리소스
      */
     @GetMapping("/download/{fileName}")
-    public ResponseEntity<Resource> getDownloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = productService.getItemImageResource(fileName);
-        String imageFilePath = productService.getItemFilePath(resource);
-        String contentType = request.getServletContext().getMimeType(imageFilePath);
+    public ResponseEntity<byte[]> getDownloadFile(@PathVariable String fileName) {
+        byte[] fileByteResource = productService.getFileByteResource(fileName);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + resource.getFilename())
-                .body(resource);
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + URLEncoder.encode(fileName, StandardCharsets.UTF_8))
+                .body(fileByteResource);
     }
 
     /**
