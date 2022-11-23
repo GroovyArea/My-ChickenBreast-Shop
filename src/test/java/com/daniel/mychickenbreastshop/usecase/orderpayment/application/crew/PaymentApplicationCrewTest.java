@@ -4,6 +4,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.k
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
+import com.daniel.mychickenbreastshop.usecase.orderpayment.application.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ class PaymentApplicationCrewTest {
 
     @Mock
     private PaymentStrategyApplication<PaymentResult> paymentStrategyApplication;
+
+    @Mock
+    private ItemValidator itemValidator;
 
     @InjectMocks
     private PaymentApplicationCrew paymentApplicationCrew;

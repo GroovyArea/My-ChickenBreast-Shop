@@ -2,11 +2,9 @@ package com.daniel.mychickenbreastshop.domain.order.model.query;
 
 import com.daniel.mychickenbreastshop.domain.order.model.Order;
 import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderProductRepository;
 import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
 import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.PaymentRepository;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
 import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
@@ -21,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
@@ -37,12 +36,6 @@ class OrderCustomQueryRepositoryTest {
 
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderProductRepository orderProductRepository;
-
-    @Autowired
-    private PaymentRepository paymentRepository;
 
     @BeforeEach
     void setUp() {
@@ -96,7 +89,7 @@ class OrderCustomQueryRepositoryTest {
     void findAllByUserId() {
         // given
         int page = 1;
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Long userId = 1L;
         OrderStatus orderStatus = OrderStatus.ORDER_COMPLETE;

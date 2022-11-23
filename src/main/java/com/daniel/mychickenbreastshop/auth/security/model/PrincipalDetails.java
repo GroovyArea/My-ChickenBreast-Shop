@@ -59,4 +59,5 @@ public class PrincipalDetails implements UserDetails {
         authList.add(new SimpleGrantedAuthority(this.role));
         return authList;
     }
+
 }

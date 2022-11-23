@@ -8,10 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -20,7 +18,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.nio.charset.StandardCharsets;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,17 +43,14 @@ class FileApiControllerTest {
     @Test
     void getDownloadFile() throws Exception {
         // given
-        String fileName = "fileName";
-        Resource resource = mock(Resource.class);
+        String fileName = "fileName.jpg";
+        byte[] data = new byte[0];
         String imageFilePath = "test_image_file_path";
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        String mimeType = request.getServletContext().getMimeType(imageFilePath);
 
-        given(productService.getItemImageResource(fileName)).willReturn(resource);
-        given(productService.getItemFilePath(resource)).willReturn(imageFilePath);
+        given(productService.getFileByteResource(fileName)).willReturn(data);
 
         mockMvc.perform(get("/api/v2/files/download/{fileName}", fileName))
-                .andExpect(content().contentType(mimeType))
+                .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM))
                 .andExpect(header().exists(HttpHeaders.CONTENT_DISPOSITION))
                 .andExpect(status().isOk());
     }

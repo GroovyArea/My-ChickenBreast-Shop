@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.product.item.model.query;
 
-import com.daniel.mychickenbreastshop.domain.product.model.category.QCategory;
+import com.daniel.mychickenbreastshop.domain.product.category.model.QCategory;
 import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
 import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
@@ -17,7 +17,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.model.item.QProduct.product;
+import static com.daniel.mychickenbreastshop.domain.product.category.model.QCategory.category;
+import static com.daniel.mychickenbreastshop.domain.product.item.model.QProduct.product;
 
 @RequiredArgsConstructor
 @Repository
@@ -48,14 +49,14 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
     @Override
     public Page<Product> findAllByCategoryName(ChickenCategory categoryName, Pageable pageable) {
         List<Product> results = queryFactory.selectFrom(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .where(categoryEq(categoryName))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Product> count = queryFactory.selectFrom(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .where(categoryEq(categoryName));
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetch().size());

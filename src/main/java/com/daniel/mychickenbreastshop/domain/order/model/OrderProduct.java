@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "ORDER_PRODUCT")
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class OrderProduct extends BaseTimeEntity {

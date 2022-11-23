@@ -36,7 +36,7 @@ public class S3FileStore implements FileStore {
     @Value("{file.upload.location}")
     private String uploadDirectory;
 
-    private final AmazonS3Client s3Client;
+    private final AmazonS3Client amazonS3Client;
 
     @Override
     public FileResponse upload(MultipartFile multipartFile) {
@@ -67,12 +67,12 @@ public class S3FileStore implements FileStore {
     @Override
     public void delete(String fileName) {
         String deleteFileKey = uploadDirectory + fileName;
-        s3Client.deleteObject(new DeleteObjectRequest(bucket, deleteFileKey));
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, deleteFileKey));
     }
 
     @Override
     public FileResponse download(String fileUrl) {
-        S3Object s3ClientObject = s3Client.getObject(new GetObjectRequest(bucket, fileUrl));
+        S3Object s3ClientObject = amazonS3Client.getObject(new GetObjectRequest(bucket, fileUrl));
         S3ObjectInputStream objectInputStream = s3ClientObject.getObjectContent();
 
         byte[] bytes;
@@ -98,9 +98,9 @@ public class S3FileStore implements FileStore {
     }
 
     private String putFileToS3(File uploadFile, String fileName) {
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     private void removeFile(File targetFile) {
