@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Order extends BaseTimeEntity {
 
@@ -44,7 +44,7 @@ public class Order extends BaseTimeEntity {
 
     // <연관관계 편의 메서드> //
 
-    public void updateUserInfo(final User userInfo) {
+    public void setUserInfo(final User userInfo) {
         if (this.user != null) {
             user.getOrders().remove(this);
         }
@@ -53,7 +53,7 @@ public class Order extends BaseTimeEntity {
         user.getOrders().add(this);
     }
 
-    public void updatePaymentInfo(final Payment paymentInfo) {
+    public void setPaymentInfo(final Payment paymentInfo) {
         this.payment = paymentInfo;
         payment.updateOrderInfo(this);
     }

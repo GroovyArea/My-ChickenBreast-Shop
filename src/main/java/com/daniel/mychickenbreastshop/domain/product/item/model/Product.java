@@ -14,7 +14,7 @@ import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.Err
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Product extends BaseTimeEntity {
 
     @Id

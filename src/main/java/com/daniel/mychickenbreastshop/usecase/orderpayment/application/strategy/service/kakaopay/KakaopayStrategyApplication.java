@@ -84,7 +84,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
         Payment payment = Payment.createPayment(itemPayRequestDto.getTotalAmount());
 
         order.addOrderProduct(orderProduct);
-        order.updatePaymentInfo(payment);
+        order.setPaymentInfo(payment);
         orderRepository.save(order);
 
         return response;
@@ -118,7 +118,7 @@ public class KakaopayStrategyApplication implements PaymentStrategyApplication<P
 
         Payment payment = Payment.createPayment(cartValue.getTotalPrice());
 
-        order.updatePaymentInfo(payment);
+        order.setPaymentInfo(payment);
         orderRepository.save(order);
 
         return response;

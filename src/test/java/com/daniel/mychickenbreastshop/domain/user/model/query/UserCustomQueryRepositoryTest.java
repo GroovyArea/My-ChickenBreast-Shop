@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -62,7 +61,7 @@ class UserCustomQueryRepositoryTest {
     void findUserWithDynamicQuery() {
         // given
         int page = 1;
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         UserSearchDto searchDto = UserSearchDto.builder()
                 .searchKey("name") // 이름 검색 조건
@@ -72,7 +71,7 @@ class UserCustomQueryRepositoryTest {
         Role role = Role.ROLE_USER;
 
         // when
-        Page<User> searchPage = userRepository.findUserWithDynamicQuery(pageable, searchDto, role);
+        Page<User> searchPage = userRepository.findUserWithDynamicQuery(pageRequest, searchDto, role);
         List<User> content = searchPage.getContent();
 
         assertThat(content).hasSize(10);

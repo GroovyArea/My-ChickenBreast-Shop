@@ -43,7 +43,7 @@ public class UserCustomQueryRepositoryImpl implements UserCustomQueryRepository 
     }
 
     private BooleanExpression searchDtoEq(UserSearchDto searchDto) {
-        if (!searchDto.getSearchValue().isBlank() && searchDto.getSearchKey() != null) {
+        if (searchDto.getSearchValue().isBlank() && searchDto.getSearchKey() != null) {
             return switch (searchDto.getSearchKey()) {
                 case "loginId" -> user.loginId.startsWith(searchDto.getSearchValue());
                 case "name" -> user.name.startsWith(searchDto.getSearchValue());

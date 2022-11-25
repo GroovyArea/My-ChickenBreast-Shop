@@ -37,7 +37,6 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(product.createdAt.desc())
                 .fetch();
 
         JPAQuery<Product> count = queryFactory.selectFrom(product)
@@ -54,7 +53,6 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
                 .where(categoryEq(categoryName))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(product.createdAt.desc())
                 .fetch();
 
         JPAQuery<Product> count = queryFactory.selectFrom(product)
@@ -73,7 +71,7 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
     }
 
     private BooleanExpression searchDtoEq(ItemSearchDto searchDto) {
-        if (!searchDto.getSearchValue().isBlank() && searchDto.getSearchKey() != null) {
+        if (searchDto.getSearchValue() != "" && searchDto.getSearchKey() != null) {
             if (searchDto.getSearchKey().equals("name")) {
                 return product.name.startsWith(searchDto.getSearchValue());
             }

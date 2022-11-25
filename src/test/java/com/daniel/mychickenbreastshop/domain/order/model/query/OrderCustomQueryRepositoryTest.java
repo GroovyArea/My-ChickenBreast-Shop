@@ -37,12 +37,12 @@ class OrderCustomQueryRepositoryTest {
     @Autowired
     private OrderRepository orderRepository;
 
-
     @BeforeEach
     void setUp() {
         List<OrderProduct> orderProducts = new ArrayList<>();
 
         User user = User.builder()
+                .id(1L)
                 .loginId("loginId")
                 .email("email")
                 .role(Role.ROLE_USER)
@@ -50,28 +50,17 @@ class OrderCustomQueryRepositoryTest {
 
         User savedUser = userRepository.save(user);
 
-        for (int i = 0; i < 10; i++) {
-            OrderProduct orderProduct = OrderProduct.builder()
-                    .name("name" + i)
-                    .image("image" + i)
-                    .count(5)
-                    .price(10000)
-                    .order(null)
-                    .build();
+        List<Order> savedOrders = new ArrayList<>();
 
-            orderProducts.add(orderProduct);
-        }
-
-        for (int i = 0; i < 50; i++) {
+        for (int i = 1; i < 50; i++) {
             Payment payment = Payment.builder()
                     .totalPrice(100000L)
                     .paymentType(PaymentType.CASH)
                     .status(PayStatus.COMPLETED)
-                    .card(null)
-                    .order(null)
                     .build();
 
             Order order = Order.builder()
+                    .id((long) i)
                     .totalCount(10)
                     .orderPrice(100000L)
                     .status(OrderStatus.ORDER_COMPLETE)
@@ -80,7 +69,18 @@ class OrderCustomQueryRepositoryTest {
                     .payment(payment)
                     .build();
 
-            orderRepository.save(order);
+            savedOrders.add(orderRepository.save(order));
+        }
+
+        for (int i = 1; i < 10; i++) {
+            OrderProduct orderProduct = OrderProduct.builder()
+                    .name("name" + i)
+                    .image("image" + i)
+                    .count(5)
+                    .price(10000)
+                    .build();
+
+            savedOrders.forEach(order -> order.addOrderProduct(orderProduct));
         }
     }
 
@@ -89,8 +89,7 @@ class OrderCustomQueryRepositoryTest {
     void findAllByUserId() {
         // given
         int page = 1;
-        Pageable pageRequest = PageRequest.of
-                (page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageRequest = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Long userId = 1L;
         OrderStatus orderStatus = OrderStatus.ORDER_COMPLETE;
@@ -99,11 +98,11 @@ class OrderCustomQueryRepositoryTest {
         Page<Order> orderPage = orderRepository.findAllByUserId(userId, orderStatus, pageRequest);
         List<Order> content = orderPage.getContent();
 
+        assertThat(content).hasSize(10);
         content.forEach(order -> assertThat(order.getStatus()).isEqualTo(orderStatus));
         content.forEach(order -> assertThat(order.getPayment().getTotalPrice()).isEqualTo(100000L));
         content.forEach(order -> assertThat(order.getPayment().getPaymentType()).isEqualTo(PaymentType.CASH));
-        content.forEach(order -> order.getOrderProducts()
-                .forEach(orderProduct -> assertThat(orderProduct.getName()).contains("name")));
+        content.forEach(order -> order.getOrderProducts().forEach(orderProduct -> assertThat(orderProduct.getName()).contains("name")));
     }
 
     @DisplayName("주문 번호를 가지고 결제 내역 정보와 Fetch Join 한 결과를 반환한다.")
@@ -113,8 +112,7 @@ class OrderCustomQueryRepositoryTest {
         Long orderId = 1L;
 
         // when
-        Order savedOrder = orderRepository.findByIdWithFetchJoin(orderId)
-                .orElseThrow(() -> new RuntimeException("주문 정보 없음"));
+        Order savedOrder = orderRepository.findByIdWithFetchJoin(orderId).orElseThrow(() -> new RuntimeException("주문 정보 없음"));
 
         assertThat(savedOrder.getPayment().getPaymentType()).isEqualTo(PaymentType.CASH);
         assertThat(savedOrder.getPayment().getStatus()).isEqualTo(PayStatus.COMPLETED);

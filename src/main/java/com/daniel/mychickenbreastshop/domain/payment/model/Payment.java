@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Payment extends BaseTimeEntity {
 
@@ -53,6 +53,7 @@ public class Payment extends BaseTimeEntity {
 
     public void updateCardInfo(final Card cardInfo) {
         this.card = cardInfo;
+        card.updatePaymentInfo(this);
     }
 
     // <비즈니스 로직 메서드> //
