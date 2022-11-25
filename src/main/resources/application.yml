@@ -6,7 +6,7 @@
 
 spring:
   profiles:
-    active: local-dev
+    active: release
 
 # logging
 logging:
