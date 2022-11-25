@@ -76,8 +76,8 @@ public class RedisConfig {
         String address = "redis://" + host + ":" + port;
 
         Config config = new Config();
-        config.useClusterServers()
-                .addNodeAddress(address)
+        config.useSingleServer()
+                .setAddress(address)
                 .setConnectTimeout(Math.toIntExact(connectionTimeout));
 
         return Redisson.create(config);
