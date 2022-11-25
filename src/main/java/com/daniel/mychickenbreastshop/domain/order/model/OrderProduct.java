@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "ORDER_PRODUCT")
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class OrderProduct extends BaseTimeEntity {
@@ -32,16 +32,25 @@ public class OrderProduct extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Order order;
 
     // <연관관계 편의 메서드> //
-    public void updateOrderInfo(Order orderInfo) {
-        order = orderInfo;
+    public void updateOrderInfo(final Order orderInfo) {
+        if (this.order != null) {
+            order.getOrderProducts().remove(this);
+        }
+
+        this.order = orderInfo;
+        order.getOrderProducts().add(this);
     }
 
     // <주문 상품 생성 메서드> //
-    public static OrderProduct createOrderProduct(int count, String name, int price, String image, String content) {
+    public static OrderProduct createOrderProduct(int count,
+                                                  String name,
+                                                  int price,
+                                                  String image,
+                                                  String content) {
         return OrderProduct.builder()
                 .count(count)
                 .name(name)

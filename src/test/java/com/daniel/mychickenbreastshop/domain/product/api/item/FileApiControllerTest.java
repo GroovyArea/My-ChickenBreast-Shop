@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.nio.charset.StandardCharsets;
 
@@ -35,7 +34,6 @@ class FileApiControllerTest {
     void setUp() {
         mockMvc =
                 MockMvcBuilders.standaloneSetup(new FileApiController(productService))
-                        .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .build();
     }
 
@@ -45,7 +43,6 @@ class FileApiControllerTest {
         // given
         String fileName = "fileName.jpg";
         byte[] data = new byte[0];
-        String imageFilePath = "test_image_file_path";
 
         given(productService.getFileByteResource(fileName)).willReturn(data);
 
@@ -67,7 +64,7 @@ class FileApiControllerTest {
 
         // when & then
         mockMvc.perform(multipart("/api/v2/files/{id}", productId)
-                .file(imageFile))
+                        .file(imageFile))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
