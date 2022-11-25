@@ -29,8 +29,10 @@ public class UserAdminApiController {
      * @return 회원 리스트
      */
     @GetMapping
-    public ResponseEntity<List<ListResponseDto>> getAll(@PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC)
-                                                                Pageable pageable) {
+    public ResponseEntity<List<ListResponseDto>> getAll(@PageableDefault(
+            page = 1,
+            sort = "createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
@@ -61,7 +63,7 @@ public class UserAdminApiController {
      *
      * @param userId 회원 고유 번호
      */
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> removeUser(@PathVariable Long userId) {
         userService.removeUser(userId);
         return ResponseEntity.ok().build();

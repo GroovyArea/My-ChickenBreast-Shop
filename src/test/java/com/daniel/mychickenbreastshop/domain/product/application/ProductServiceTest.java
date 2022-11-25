@@ -1,14 +1,16 @@
 package com.daniel.mychickenbreastshop.domain.product.application;
 
-import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
+import com.daniel.mychickenbreastshop.domain.product.category.model.CategoryRepository;
+import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
+import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileManager;
+import com.daniel.mychickenbreastshop.domain.product.item.application.file.FileStore;
+import com.daniel.mychickenbreastshop.domain.product.item.application.file.model.FileResponse;
 import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemListMapper;
 import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemModifyMapper;
 import com.daniel.mychickenbreastshop.domain.product.item.mapper.ItemRegisterMapper;
-import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
-import com.daniel.mychickenbreastshop.domain.product.category.model.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
 import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
@@ -30,10 +32,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,6 +48,9 @@ class ProductServiceTest {
 
     @Mock
     private FileManager fileManager;
+
+    @Mock
+    private FileStore s3FileStore;
 
     @Mock
     private ProductRepository productRepository;
@@ -115,14 +121,12 @@ class ProductServiceTest {
     @Test
     void getProduct() {
         // given
-        String downLoadURI = "/api/v1/products/download/image1";
-
         DetailResponseDto detailResponseDto = DetailResponseDto.builder()
                 .id(1)
                 .name("name1")
                 .price(1000)
                 .quantity(100)
-                .image(downLoadURI)
+                .image("upload_image_uri")
                 .content("content1")
                 .categoryName(ChickenCategory.STEAMED)
                 .build();
@@ -131,7 +135,6 @@ class ProductServiceTest {
 
         // when
         when(productRepository.findById(products.get(0).getId())).thenReturn(optionalProduct);
-        when(fileManager.getDownloadURI(products.get(0).getImage())).thenReturn(downLoadURI);
         when(itemDetailMapper.toDTO(products.get(0))).thenReturn(detailResponseDto);
 
         assertThat(productService.getProduct(products.get(0).getId())).isEqualTo(detailResponseDto);
@@ -188,7 +191,11 @@ class ProductServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("image", imageFileName,
                 MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
-        String uploadFilename = UUID.randomUUID() + "_" + imageFileName;
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("/yyyy-MM-dd HH:mm"));
+        String uploadFilename = formatDate + imageFileName;
+
+        FileResponse fileResponse = FileResponse.builder()
+                .uploadFileUrl(uploadFilename).build();
 
         RegisterRequestDto requestDto = RegisterRequestDto.builder()
                 .name("name")
@@ -199,7 +206,7 @@ class ProductServiceTest {
                 .build();
 
         // when
-        when(fileManager.uploadFile(multipartFile)).thenReturn(uploadFilename);
+        when(s3FileStore.upload(multipartFile)).thenReturn(fileResponse);
         when(categoryRepository.findByCategoryName(requestDto.getCategory())).thenReturn(Optional.ofNullable(category));
         when(productRepository.save(products.get(0))).thenReturn(products.get(0));
         when(itemRegisterMapper.toEntity(requestDto)).thenReturn(products.get(0));
@@ -266,10 +273,14 @@ class ProductServiceTest {
                 "image", imageFileName,
                 MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
-        String uploadFilename = UUID.randomUUID() + "_" + imageFileName;
+        String formatDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("/yyyy-MM-dd HH:mm"));
+        String uploadFilename = formatDate + imageFileName;
+
+        FileResponse fileResponse = FileResponse.builder()
+                .uploadFileUrl(uploadFilename).build();
 
         // when
-        when(fileManager.uploadFile(multipartFile)).thenReturn(uploadFilename);
+        when(s3FileStore.upload(multipartFile)).thenReturn(fileResponse);
         when(productRepository.findById(original.getId())).thenReturn(Optional.of(original));
 
         productService.changeImage(original.getId(), multipartFile);
