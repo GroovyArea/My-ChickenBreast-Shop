@@ -5,7 +5,7 @@
     <!--Environment 내의 프로퍼티들을 개별적으로 설정-->
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
     <!-- log file path -->
-    <property name="LOG_PATH" value="/Users/09520/logback"/>
+    <property name="LOG_PATH" value="/home/ubuntu/project/logfile"/>
     <!-- log file name -->
     <property name="LOG_FILE_NAME" value="local_log"/>
     <!-- err log file name -->
