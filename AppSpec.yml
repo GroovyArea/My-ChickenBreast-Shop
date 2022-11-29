@@ -1,9 +1,14 @@
 # appspec.yml
 
 version: 0.0
-os: ubuntu
+os: linux
 files:
   - source: /
     destination: /home/ubuntu/project/My-Chickenbreast-Shop
     overwrite: yes
 
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
