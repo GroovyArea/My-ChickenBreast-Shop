@@ -5,10 +5,7 @@ name: test-deploy
 on: 
   push:
     branches: master
-    
-permissions:
-  contents: read
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
