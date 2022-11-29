@@ -153,6 +153,9 @@ public class ProductService {
         }
     }
 
+    /**
+     * 이미지 파일의 byte resource 반환
+     */
     public byte[] getFileByteResource(String fileUrl) {
         return s3FileStore.download(fileUrl).getDownloadFileResource();
     }
