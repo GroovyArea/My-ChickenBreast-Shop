@@ -23,7 +23,7 @@ public class OrderPaymentApiController {
     private final PaymentApplicationCrew paymentApplicationCrew;
 
     /**
-     * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민 좀 해보자)
+     * 외부 결제 API 에 해당 결제 건의 데이터 요청 (고민)
      */
 /*
     @GetMapping("/{paymentGateway}")
