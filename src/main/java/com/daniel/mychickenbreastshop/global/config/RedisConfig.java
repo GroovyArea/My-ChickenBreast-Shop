@@ -30,6 +30,7 @@ public class RedisConfig {
 
     /**
      * redis와 connection을 생성해 주는 객체
+     *
      * @return LettuceConnectionFactory
      */
     @Bean
@@ -45,6 +46,7 @@ public class RedisConfig {
     /**
      * redis 서버와 통신 및 유저에게 redis 모듈 기능 제공하기 위해 추상화를 통해
      * 오퍼레이션 제공
+     *
      * @return redisTemplate
      */
     @Bean
@@ -76,7 +78,7 @@ public class RedisConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(address)
-                .setConnectTimeout(connectionTimeout.intValue());
+                .setConnectTimeout(Math.toIntExact(connectionTimeout));
 
         return Redisson.create(config);
     }

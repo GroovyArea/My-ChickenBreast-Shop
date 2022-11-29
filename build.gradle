@@ -54,7 +54,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct:1.4.1.Final"
 
     runtimeOnly 'mysql:mysql-connector-java'
-    testImplementation 'com.h2database:h2:2.1.210'
+    testImplementation 'com.h2database:h2-mvstore:1.4.200'
 
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.1.Final"
     annotationProcessor 'org.projectlombok:lombok', "org.projectlombok:lombok-mapstruct-binding:0.2.0"
@@ -118,3 +118,7 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 //querydsl 추가 끝
+
+jar {
+    enabled = false
+}
