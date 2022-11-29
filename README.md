@@ -3,7 +3,7 @@
 
 ## 프로젝트 개요
 닭가슴살 주문, 구매 API 입니다.  
-단순 기능 구현보다 `객체지향`을 공부하며 이를 최대한 지키는 코드 구성으로 작성하려 시작했습니다.  
+단순 기능 구현보다 `객체지향`을 공부하며 이를 최대한 지키는 코드 구성에 포커스를 두고 시작했습니다.  
 상대적으로 빠르고 가벼운 단위 테스트 작성을 통해 메소드의 안정성을 높이는 방식을 해결했습니다.
 
 <br>
@@ -14,14 +14,13 @@
 <br>
 
 ## 사용 기술 스택
-```
-Java 17, Gradle
-Spring Boot 2.7.3
-Spring data JPA
-Spring Security
-Mysql 8.0.17
-Redis
-```
+- Java 17
+- Spring Boot 2.7.3
+- Spring data JPA
+- Spring Security
+- Mysql
+- Redis
+
 
 <br>
 
