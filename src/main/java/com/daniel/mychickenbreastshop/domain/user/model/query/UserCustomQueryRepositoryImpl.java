@@ -1,9 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.user.model.query;
 
-import com.daniel.mychickenbreastshop.domain.user.model.User;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
-import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+
+import com.daniel.ddd.global.error.exception.BadRequestException;
+import com.daniel.ddd.user.application.dto.request.UserSearchDto;
+import com.daniel.ddd.user.domain.User;
+import com.daniel.ddd.user.domain.enums.Role;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

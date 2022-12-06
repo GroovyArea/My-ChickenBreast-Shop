@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Card extends BaseTimeEntity {
+public class Card extends BaseTimeEntity<Card> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

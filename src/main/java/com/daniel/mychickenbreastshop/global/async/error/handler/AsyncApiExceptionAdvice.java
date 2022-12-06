@@ -2,11 +2,10 @@ package com.daniel.mychickenbreastshop.global.async.error.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.lang.reflect.Method;
 
-@RestControllerAdvice
+
 @Slf4j
 public class AsyncApiExceptionAdvice implements AsyncUncaughtExceptionHandler {
 

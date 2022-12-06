@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.impl;
 
+import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.webclient.KakaoPayClient;
@@ -53,7 +54,8 @@ public class KakaopaymentServiceImpl implements KakaoPaymentService {
 
     @Override
     public PayApproveResponse completePayment(String payToken, String loginId) {
-        KakaoPayRedisParam entity = kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class);
+        KakaoPayRedisParam entity = kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class)
+                .orElseThrow(() -> new BadRequestException("유효하지 않은 로그인 아이디"));
         PayApproveRequest request = createPayApproveRequest(payToken, entity, loginId);
         return kakaoPayClient.approve(kakaoPayClientProperty.getUri().getApprove(), request);
     }

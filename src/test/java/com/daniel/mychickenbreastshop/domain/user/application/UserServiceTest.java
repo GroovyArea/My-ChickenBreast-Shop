@@ -173,7 +173,7 @@ class UserServiceTest {
         EmailRedisModel redisEntity = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class)).thenReturn(redisEntity);
+        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class).get()).thenReturn(redisEntity);
         when(userJoinMapper.toEntity(any(JoinRequestDto.class))).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -218,7 +218,7 @@ class UserServiceTest {
         EmailRedisModel redisEntity = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class)).thenReturn(redisEntity);
+        when(userRedisStore.getData(redisEntity.getEmail(), EmailRedisModel.class).get()).thenReturn(redisEntity);
 
         assertThatThrownBy(() -> userService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");

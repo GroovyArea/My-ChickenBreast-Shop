@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.auth.jwt.JwtValidator;
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtProperties;
-import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
+import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessages;
 import com.daniel.mychickenbreastshop.auth.security.filter.model.PassablePathProperty;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtProperties.TOKEN_HEADER_KEY.getKey());
 
         if (header == null || !header.startsWith(JwtProperties.AUTH_TYPE.getKey())) {
-            request.setAttribute("exception", SecurityMessage.HEADER_LESS.getMessage());
+            request.setAttribute("exception", SecurityMessages.HEADER_LESS.getMessage());
             chain.doFilter(request, response);
             return;
         }

@@ -152,7 +152,7 @@ class KakaopaymentServiceImplTest {
         PayApproveResponse payApproveResponse = createPayApproveResponse();
 
         // when
-        when(kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class)).thenReturn(entity);
+        when(kakaopayRedisStore.getData(loginId, KakaoPayRedisParam.class).get()).thenReturn(entity);
         when(kakaoPayClient.approve(anyString(), any(PayApproveRequest.class))).thenReturn(payApproveResponse);
 
         assertThat(kakaopaymentServiceImpl.completePayment(payToken, loginId)).isEqualTo(payApproveResponse);

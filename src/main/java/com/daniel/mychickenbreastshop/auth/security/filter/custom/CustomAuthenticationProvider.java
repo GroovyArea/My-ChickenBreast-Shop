@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.auth.security.filter.custom;
 
 import com.daniel.mychickenbreastshop.auth.security.application.PrincipalDetailService;
-import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessage;
+import com.daniel.mychickenbreastshop.auth.security.error.SecurityMessages;
 import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
@@ -42,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             String encryptedLoginPassword = PasswordEncrypt.getSecurePassword(loginPassword, dbSalt);
 
             if (!encryptedLoginPassword.equals(dbPassword)) {
-                throw new BadCredentialsException(SecurityMessage.PASSWORD_MISMATCH.getMessage());
+                throw new BadCredentialsException(SecurityMessages.PASSWORD_MISMATCH.getMessage());
             }
 
             if (dbUser.getRole() == Role.ROLE_WITHDRAWAL) {

@@ -1,8 +1,9 @@
 package com.daniel.mychickenbreastshop.domain.user.model.query;
 
-import com.daniel.mychickenbreastshop.domain.user.model.User;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
+
+import com.daniel.ddd.user.application.dto.request.UserSearchDto;
+import com.daniel.ddd.user.domain.User;
+import com.daniel.ddd.user.domain.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

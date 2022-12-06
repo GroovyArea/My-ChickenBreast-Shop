@@ -25,7 +25,7 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
     private final JPAQueryFactory queryFactory;
 
-    @Override //
+    @Override // 주문 상품도 같이 페치조인 성능 최적화 필요
     public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
                 .where(userIdEq(userId), statusEq(orderStatus))

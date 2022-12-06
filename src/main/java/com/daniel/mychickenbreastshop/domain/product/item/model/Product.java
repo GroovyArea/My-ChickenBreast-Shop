@@ -15,7 +15,7 @@ import static com.daniel.mychickenbreastshop.domain.product.item.model.enums.Err
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product extends BaseTimeEntity {
+public class Product extends BaseTimeEntity<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +51,7 @@ public class Product extends BaseTimeEntity {
         if (this.quantity - quantity < 0) {
             throw new BadRequestException(ITEM_QUANTITY_NOT_ENOUGH.getMessage());
         }
+
         this.quantity -= quantity;
     }
 

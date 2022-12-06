@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.security.error.handler;
 
 import com.daniel.mychickenbreastshop.auth.jwt.model.JwtErrorMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -14,7 +13,6 @@ import java.util.List;
 
 import static com.daniel.mychickenbreastshop.auth.jwt.model.JwtErrorMessage.*;
 
-@Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

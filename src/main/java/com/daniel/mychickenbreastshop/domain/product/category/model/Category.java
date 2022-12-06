@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Category extends BaseTimeEntity {
+public class Category extends BaseTimeEntity<Category> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

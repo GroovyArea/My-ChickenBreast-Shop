@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Order extends BaseTimeEntity {
+public class Order extends BaseTimeEntity<Order> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

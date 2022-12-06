@@ -60,6 +60,7 @@ public class UserService {
                 .map(userListMapper::toDTO)
                 .toList();
     }
+
     public List<ListResponseDto> searchUsers(Pageable pageable, Role role, UserSearchDto userSearchDto) {
         List<User> searchedUsers = userRepository.findUserWithDynamicQuery(pageable, userSearchDto, role).getContent();
 
@@ -120,7 +121,9 @@ public class UserService {
     }
 
     private void validateAuthKey(String email, String emailKey) {
-        String savedKey = userRedisStore.getData(email, EmailRedisModel.class).getEmailRandomKey();
+        String savedKey = userRedisStore.getData(email, EmailRedisModel.class).
+                orElseThrow(() -> new BadRequestException(ErrorMessages.INVALID_EMAIL.getMessage()))
+                .getEmailRandomKey();
 
         if (savedKey == null) {
             throw new BadRequestException(ErrorMessages.MAIL_KEY_EXPIRED.getMessage());

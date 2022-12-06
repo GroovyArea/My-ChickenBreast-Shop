@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class OrderProduct extends BaseTimeEntity {
+public class OrderProduct extends BaseTimeEntity<OrderProduct> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

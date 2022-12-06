@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Payment extends BaseTimeEntity {
+public class Payment extends BaseTimeEntity<Payment> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

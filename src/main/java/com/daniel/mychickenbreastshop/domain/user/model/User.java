@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends BaseTimeEntity {
+public class User extends BaseTimeEntity<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
