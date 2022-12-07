@@ -1,13 +1,13 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay;
 
-import com.daniel.mychickenbreastshop.domain.order.model.Order;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.Card;
-import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
+import com.daniel.ddd.order.domain.Order;
+import com.daniel.ddd.order.domain.OrderProduct;
+import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
+import com.daniel.ddd.order.domain.enums.OrderStatus;
+import com.daniel.ddd.payment.domain.Card;
+import com.daniel.ddd.payment.domain.Payment;
+import com.daniel.ddd.payment.domain.enums.PayStatus;
+import com.daniel.ddd.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
 import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.User;

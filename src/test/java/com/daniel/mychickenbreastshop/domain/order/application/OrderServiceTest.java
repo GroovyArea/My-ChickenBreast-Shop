@@ -1,19 +1,19 @@
 package com.daniel.mychickenbreastshop.domain.order.application;
 
-import com.daniel.mychickenbreastshop.domain.order.mapper.OrderInfoListMapper;
-import com.daniel.mychickenbreastshop.domain.order.mapper.OrderItemsInfoMapper;
-import com.daniel.mychickenbreastshop.domain.order.mapper.OrderPaymentInfoMapper;
-import com.daniel.mychickenbreastshop.domain.order.mapper.OrderProductListMapper;
-import com.daniel.mychickenbreastshop.domain.order.model.Order;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderInfoListResponseDto;
-import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderItemsInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderPaymentInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.order.model.dto.response.OrderProductResponseDto;
-import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
+import com.daniel.ddd.order.mapper.OrderInfoListMapper;
+import com.daniel.ddd.order.mapper.OrderItemsInfoMapper;
+import com.daniel.ddd.order.mapper.OrderPaymentInfoMapper;
+import com.daniel.ddd.order.mapper.OrderProductListMapper;
+import com.daniel.ddd.order.domain.Order;
+import com.daniel.ddd.order.domain.OrderProduct;
+import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
+import com.daniel.ddd.order.model.dto.response.OrderInfoListResponseDto;
+import com.daniel.ddd.order.model.dto.response.OrderItemsInfoResponseDto;
+import com.daniel.ddd.order.model.dto.response.OrderPaymentInfoResponseDto;
+import com.daniel.ddd.order.model.dto.response.OrderProductResponseDto;
+import com.daniel.ddd.order.domain.enums.OrderStatus;
+import com.daniel.ddd.payment.domain.Payment;
+import com.daniel.ddd.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -177,7 +177,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        when(orderRepository.findByIdWithFetchJoin(orders.get(0).getId())).thenReturn(Optional.ofNullable(orders.get(0)));
+        when(orderRepository.findByIdWithPaymentUsingFetchJoin(orders.get(0).getId())).thenReturn(Optional.ofNullable(orders.get(0)));
         when(orderPaymentInfoMapper.toDTO(orders.get(0))).thenReturn(dto);
 
         assertThat(orderService.getPaymentDetail(orders.get(0).getId())).isEqualTo(dto);

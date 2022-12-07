@@ -1,6 +1,6 @@
 package com.daniel.ddd.user.application.port.in;
 
-import com.daniel.ddd.user.application.dto.request.JoinRequestDto;
+import com.daniel.ddd.user.model.dto.request.JoinRequestDto;
 
 public interface JoinUseCase {
 

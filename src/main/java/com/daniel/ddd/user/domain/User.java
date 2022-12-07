@@ -1,7 +1,7 @@
 package com.daniel.ddd.user.domain;
 
 
-import com.daniel.mychickenbreastshop.domain.order.model.Order;
+import com.daniel.ddd.order.domain.Order;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
 import lombok.*;

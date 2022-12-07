@@ -12,7 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.enums.ErrorMessages.*;
+import static com.daniel.ddd.payment.domain.enums.ErrorMessages.*;
 
 
 @RestController
@@ -49,7 +49,7 @@ public class OrderPaymentApiController {
      */
     @GetMapping("/canceled")
     public ResponseEntity<String> redirectPayCanceled() {
-        return ResponseEntity.ok().body(CANCELED_PAY.getMessage());
+        return ResponseEntity.internalServerError().body(CANCELED_PAY.getMessage());
     }
 
 

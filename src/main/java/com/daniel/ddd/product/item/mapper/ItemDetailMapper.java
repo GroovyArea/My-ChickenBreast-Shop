@@ -3,7 +3,7 @@ package com.daniel.ddd.product.item.mapper;
 
 import com.daniel.ddd.global.mapper.GenericDtoMapper;
 import com.daniel.ddd.product.item.domain.Product;
-import com.daniel.ddd.user.application.dto.response.DetailResponseDto;
+import com.daniel.ddd.user.model.dto.response.DetailResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

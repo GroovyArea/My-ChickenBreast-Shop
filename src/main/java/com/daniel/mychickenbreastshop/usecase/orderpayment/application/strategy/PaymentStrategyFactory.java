@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.enums.ErrorMessages.*;
+import static com.daniel.ddd.payment.domain.enums.ErrorMessages.*;
 
 /**
  * Payment 전략 제공 팩토리 클래스

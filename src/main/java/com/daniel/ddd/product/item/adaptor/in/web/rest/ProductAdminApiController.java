@@ -1,7 +1,7 @@
 package com.daniel.ddd.product.item.adaptor.in.web.rest;
 
-import com.daniel.ddd.product.item.application.dto.request.ModifyRequestDto;
-import com.daniel.ddd.product.item.application.dto.request.RegisterRequestDto;
+import com.daniel.ddd.product.item.model.dto.request.ModifyRequestDto;
+import com.daniel.ddd.product.item.model.dto.request.RegisterRequestDto;
 import com.daniel.ddd.product.item.application.port.item.in.ManageItemUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

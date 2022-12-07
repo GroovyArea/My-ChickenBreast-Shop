@@ -1,12 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.payment.application;
 
-import com.daniel.mychickenbreastshop.domain.payment.mapper.PaymentInfoMapper;
-import com.daniel.mychickenbreastshop.domain.payment.model.Card;
-import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.PaymentRepository;
-import com.daniel.mychickenbreastshop.domain.payment.model.dto.response.PaymentInfoResponseDto;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
+import com.daniel.ddd.payment.mapper.PaymentInfoMapper;
+import com.daniel.ddd.payment.domain.Card;
+import com.daniel.ddd.payment.domain.Payment;
+import com.daniel.ddd.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.ddd.payment.model.dto.response.PaymentInfoResponseDto;
+import com.daniel.ddd.payment.domain.enums.PayStatus;
+import com.daniel.ddd.payment.domain.enums.PaymentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,7 +64,7 @@ class CommonPaymentServiceTest {
                 .build();
 
         // when
-        when(paymentRepository.findByIdWithFetchJoin(payment.getId())).thenReturn(Optional.of(payment));
+        when(paymentRepository.findByIdWithCardUsingFetchJoin(payment.getId())).thenReturn(Optional.of(payment));
         when(paymentInfoMapper.toDTO(payment)).thenReturn(dto);
 
         assertThat(commonPaymentService.getPaymentDetail(payment.getId())).isEqualTo(dto);

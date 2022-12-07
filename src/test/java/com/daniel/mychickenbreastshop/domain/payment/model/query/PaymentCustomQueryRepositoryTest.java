@@ -1,11 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.payment.model.query;
 
-import com.daniel.mychickenbreastshop.domain.payment.model.Card;
-import com.daniel.mychickenbreastshop.domain.payment.model.CardRepository;
-import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.PaymentRepository;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
+import com.daniel.ddd.payment.domain.Card;
+import com.daniel.ddd.payment.adaptor.out.persistence.CardRepository;
+import com.daniel.ddd.payment.domain.Payment;
+import com.daniel.ddd.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.ddd.payment.domain.enums.PayStatus;
+import com.daniel.ddd.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ class PaymentCustomQueryRepositoryTest {
         Long paymentId = 1L;
 
         // when
-        Payment savedPayment = paymentRepository.findByIdWithFetchJoin(paymentId).
+        Payment savedPayment = paymentRepository.findByIdWithCardUsingFetchJoin(paymentId).
                 orElseThrow(() -> new RuntimeException("payment empty"));
 
         assertThat(savedPayment.getPaymentType()).isEqualTo(PaymentType.CASH);

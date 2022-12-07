@@ -1,9 +1,9 @@
 package com.daniel.ddd.product.item.application.port.item.in;
 
 import com.daniel.ddd.product.category.domain.enums.ChickenCategory;
-import com.daniel.ddd.product.item.application.dto.request.ItemSearchDto;
-import com.daniel.ddd.product.item.application.dto.response.DetailResponseDto;
-import com.daniel.ddd.product.item.application.dto.response.ListResponseDto;
+import com.daniel.ddd.product.item.model.dto.request.ItemSearchDto;
+import com.daniel.ddd.product.item.model.dto.response.DetailResponseDto;
+import com.daniel.ddd.product.item.model.dto.response.ListResponseDto;
 import com.daniel.ddd.product.item.domain.enums.ChickenStatus;
 import org.springframework.data.domain.Pageable;
 

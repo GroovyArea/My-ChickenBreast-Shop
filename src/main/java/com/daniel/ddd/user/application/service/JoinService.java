@@ -4,7 +4,7 @@ import com.daniel.ddd.global.error.exception.BadRequestException;
 import com.daniel.ddd.global.redis.store.RedisStore;
 import com.daniel.ddd.global.util.PasswordEncrypt;
 import com.daniel.ddd.user.adaptor.out.persistence.UserRepository;
-import com.daniel.ddd.user.application.dto.request.JoinRequestDto;
+import com.daniel.ddd.user.model.dto.request.JoinRequestDto;
 import com.daniel.ddd.user.application.port.in.JoinUseCase;
 import com.daniel.ddd.user.application.service.redis.model.EmailRedisModel;
 import com.daniel.ddd.user.domain.enums.ErrorMessages;

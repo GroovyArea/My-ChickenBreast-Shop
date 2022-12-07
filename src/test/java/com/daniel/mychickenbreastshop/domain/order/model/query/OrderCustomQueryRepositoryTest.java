@@ -1,12 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.order.model.query;
 
-import com.daniel.mychickenbreastshop.domain.order.model.Order;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderProduct;
-import com.daniel.mychickenbreastshop.domain.order.model.OrderRepository;
-import com.daniel.mychickenbreastshop.domain.order.model.enums.OrderStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PayStatus;
-import com.daniel.mychickenbreastshop.domain.payment.model.enums.PaymentType;
+import com.daniel.ddd.order.domain.Order;
+import com.daniel.ddd.order.domain.OrderProduct;
+import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
+import com.daniel.ddd.order.domain.enums.OrderStatus;
+import com.daniel.ddd.payment.domain.Payment;
+import com.daniel.ddd.payment.domain.enums.PayStatus;
+import com.daniel.ddd.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
@@ -113,7 +113,7 @@ class OrderCustomQueryRepositoryTest {
         Long orderId = 1L;
 
         // when
-        Order savedOrder = orderRepository.findByIdWithFetchJoin(orderId)
+        Order savedOrder = orderRepository.findByIdWithPaymentUsingFetchJoin(orderId)
                 .orElseThrow(() -> new RuntimeException("주문 정보 없음"));
 
         assertThat(savedOrder.getPayment().getPaymentType()).isEqualTo(PaymentType.CASH);
