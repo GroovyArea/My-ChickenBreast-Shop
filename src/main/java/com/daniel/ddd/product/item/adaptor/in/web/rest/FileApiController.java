@@ -1,6 +1,7 @@
 package com.daniel.ddd.product.item.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
+import com.daniel.ddd.product.item.application.port.file.in.GetFileResourceUseCase;
+import com.daniel.ddd.product.item.application.port.item.in.ManageItemUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,7 +28,8 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/api/v2/files")
 public class FileApiController {
 
-    private final ProductService productService;
+    private final ManageItemUseCase itemUseCase;
+    private final GetFileResourceUseCase fileResourceUseCase;
 
     /**
      * 상품 이미지 파일 다운로드
@@ -37,7 +39,7 @@ public class FileApiController {
      */
     @GetMapping("/download/{fileName}")
     public ResponseEntity<byte[]> getDownloadFile(@PathVariable String fileName) {
-        byte[] fileByteResource = productService.getFileByteResource(fileName);
+        byte[] fileByteResource = fileResourceUseCase.getFileOfByteResource(fileName);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + URLEncoder.encode(fileName, StandardCharsets.UTF_8))
@@ -53,7 +55,7 @@ public class FileApiController {
      */
     @PostMapping("/{id}")
     public ResponseEntity<Void> modifyFileOfItem(@PathVariable(value = "id") Long productId, @RequestPart("image") MultipartFile file) {
-        productService.changeImage(productId, file);
+        itemUseCase.changeImage(productId, file);
         return ResponseEntity.ok().build();
     }
 }

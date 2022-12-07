@@ -1,11 +1,11 @@
 package com.daniel.ddd.product.item.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
+import com.daniel.ddd.product.category.domain.enums.ChickenCategory;
+import com.daniel.ddd.product.item.application.dto.request.ItemSearchDto;
+import com.daniel.ddd.product.item.application.dto.response.DetailResponseDto;
+import com.daniel.ddd.product.item.application.dto.response.ListResponseDto;
+import com.daniel.ddd.product.item.application.port.item.in.ItemSearchUseCase;
+import com.daniel.ddd.product.item.domain.enums.ChickenStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductApiController {
 
-    private final ProductService productService;
+    private final ItemSearchUseCase searchUseCase;
 
     /**
      * 단건 상품 조회
@@ -41,7 +41,7 @@ public class ProductApiController {
      */
     @GetMapping("/{productId}")
     public ResponseEntity<DetailResponseDto> getProductDetail(@PathVariable Long productId) {
-        DetailResponseDto product = productService.getProduct(productId);
+        DetailResponseDto product = searchUseCase.getProduct(productId);
         return ResponseEntity.ok(product);
     }
 
@@ -53,7 +53,7 @@ public class ProductApiController {
     @GetMapping("/category")
     public ResponseEntity<List<ListResponseDto>> getProducts(@RequestParam(defaultValue = "STEAMED") ChickenCategory category,
                                                              @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(productService.getAllProduct(category, pageable));
+        return ResponseEntity.ok(searchUseCase.getAllProducts(category, pageable));
     }
 
     /**
@@ -75,6 +75,6 @@ public class ProductApiController {
                 .searchKey(searchKey)
                 .searchValue(searchValue)
                 .build();
-        return ResponseEntity.ok(productService.searchProducts(pageable, status, category, itemSearchDto));
+        return ResponseEntity.ok(searchUseCase.searchProducts(pageable, status, category, itemSearchDto));
     }
 }
