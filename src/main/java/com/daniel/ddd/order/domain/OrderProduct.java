@@ -28,9 +28,6 @@ public class OrderProduct extends BaseTimeEntity<OrderProduct> {
     @Column(name = "product_image")
     private String image;
 
-    @Column(name = "product_content")
-    private String content;
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Order order;
@@ -49,14 +46,13 @@ public class OrderProduct extends BaseTimeEntity<OrderProduct> {
     public static OrderProduct createOrderProduct(int count,
                                                   String name,
                                                   int price,
-                                                  String image,
-                                                  String content) {
+                                                  String image
+                                                  ) {
         return OrderProduct.builder()
                 .count(count)
                 .name(name)
                 .price(price)
                 .image(image)
-                .content(content)
                 .build();
     }
 

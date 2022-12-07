@@ -2,10 +2,9 @@ package com.daniel.ddd.user.adaptor.in.web.rest;
 
 import com.daniel.ddd.user.application.port.in.ManageUserUseCase;
 import com.daniel.ddd.user.application.port.in.SearchUseCase;
-import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
-import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
+import com.daniel.ddd.user.auth.security.model.PrincipalDetails;
+import com.daniel.ddd.user.model.dto.request.ModifyRequestDto;
+import com.daniel.ddd.user.model.dto.response.DetailResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

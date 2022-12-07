@@ -1,16 +1,11 @@
 package com.daniel.ddd.user.domain;
 
 
-import com.daniel.ddd.order.domain.Order;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
-import com.daniel.mychickenbreastshop.global.domain.BaseTimeEntity;
+import com.daniel.ddd.global.domain.BaseTimeEntity;
+import com.daniel.ddd.user.domain.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "users")
 @Entity
@@ -42,11 +37,6 @@ public class User extends BaseTimeEntity<User> {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    // 회원이 삭제 되어도 주문 데이터는 그냥 남아있어야 되기에, Cascade 사용 안함
-    @OneToMany(mappedBy = "user", fetch = LAZY)
-    private List<Order> orders = new ArrayList<>();
-
 
     // <비즈니스 로직 메서드> //
 

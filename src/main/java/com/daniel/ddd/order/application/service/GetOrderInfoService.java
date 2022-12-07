@@ -9,7 +9,7 @@ import com.daniel.ddd.order.domain.enums.OrderStatus;
 import com.daniel.ddd.order.mapper.OrderInfoListMapper;
 import com.daniel.ddd.order.mapper.OrderItemsInfoMapper;
 import com.daniel.ddd.order.mapper.OrderPaymentInfoMapper;
-import com.daniel.ddd.order.mapper.OrderProductListMapper;
+import com.daniel.ddd.order.mapper.OrderProductsMapper;
 import com.daniel.ddd.order.model.dto.response.OrderInfoListResponseDto;
 import com.daniel.ddd.order.model.dto.response.OrderItemsInfoResponseDto;
 import com.daniel.ddd.order.model.dto.response.OrderPaymentInfoResponseDto;
@@ -29,7 +29,7 @@ public class GetOrderInfoService implements GetOrderInfoUseCase {
     private final OrderRepository orderRepository;
     private final OrderInfoListMapper orderInfoListMapper;
     private final OrderItemsInfoMapper orderItemsInfoMapper;
-    private final OrderProductListMapper orderProductListMapper;
+    private final OrderProductsMapper orderProductListMapper;
     private final OrderPaymentInfoMapper orderPaymentInfoMapper;
 
     @Override

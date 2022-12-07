@@ -29,7 +29,7 @@ public class PaymentInfoApiController {
     private final GetPaymentInfoUseCase paymentInfoUseCase;
 
     /**
-     * 결제 정보(카드 정보) 조회
+     * 결제 정보(+ 카드 정보) 조회
      */
     @GetMapping("/{paymentId}")
     public ResponseEntity<PaymentInfoResponseDto> getPaymentInfo(@PathVariable Long paymentId) {

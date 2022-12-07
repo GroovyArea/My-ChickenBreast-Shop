@@ -8,7 +8,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.k
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.model.CartValue;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.redis.kakao.model.KakaoPayRedisParam;
+import com.daniel.ddd.payment.application.service.redis.kakaopay.model.KakaoPayRedisParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

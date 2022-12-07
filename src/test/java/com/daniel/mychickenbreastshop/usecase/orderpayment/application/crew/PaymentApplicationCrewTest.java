@@ -6,7 +6,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.validate.ItemValidator;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.model.dto.request.ItemPayRequestDto;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway;
+import com.daniel.ddd.payment.model.enums.PaymentGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package com.daniel.ddd.order.domain;
 
 import com.daniel.ddd.global.domain.BaseTimeEntity;
+import com.daniel.ddd.global.error.exception.BadRequestException;
+import com.daniel.ddd.order.domain.enums.ErrorMessages;
 import com.daniel.ddd.order.domain.enums.OrderStatus;
-import com.daniel.ddd.user.domain.User;
-import com.daniel.ddd.payment.domain.Payment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,37 +25,27 @@ public class Order extends BaseTimeEntity<Order> {
     @Column(name = "total_count")
     private Integer totalCount;
 
+    @Column(name = "order_price")
     private Long orderPrice;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @Column(name = "payment_id")
+    private Long paymentId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<OrderProduct> orderProducts = new ArrayList<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Payment payment;
 
     // <연관관계 편의 메서드> //
 
-    public void updateUserInfo(final User userInfo) {
-        if (this.user != null) {
-            user.getOrders().remove(this);
-        }
-
-        this.user = userInfo;
-        user.getOrders().add(this);
-    }
-
-    public void updatePaymentInfo(final Payment paymentInfo) {
-        this.payment = paymentInfo;
-        payment.updateOrderInfo(this);
+    public void updatePaymentInfo(final long paymentId) {
+        this.paymentId = paymentId;
     }
 
     public void addOrderProduct(final OrderProduct orderProduct) {
@@ -65,24 +55,38 @@ public class Order extends BaseTimeEntity<Order> {
 
     // <주문 생성 메서드> //
 
-    public static Order createReadyOrder(final int quantity, final long totalAmount, final User user) {
+    public static Order createReadyOrder(final int quantity, final long totalAmount, final long userId) {
         return Order.builder()
                 .totalCount(quantity)
                 .orderPrice(totalAmount)
                 .orderProducts(new ArrayList<>())
                 .status(OrderStatus.ORDER_READY)
-                .user(user)
+                .userId(userId)
+                .build();
+    }
+
+    public static Order createOrder(final List<OrderProduct> orderProducts, final long userId) {
+        return Order.builder()
+                .totalCount(orderProducts.size())
+                .orderPrice(orderProducts.stream().mapToLong(OrderProduct::getPrice).sum())
+                .status(OrderStatus.ORDER_READY)
+                .userId(userId)
+                .orderProducts(orderProducts)
                 .build();
     }
 
     // <비즈니스 로직 메서드> //
 
     public void cancelOrder() {
-        this.updateOrderStatus(OrderStatus.CANCEL_ORDER);
+        if (this.paymentId != null) {
+            throw new BadRequestException(ErrorMessages.CANNOT_CANCEL_ORDER.getMessage());
+        }
+
+        this.status = OrderStatus.CANCEL_ORDER;
         this.delete();
     }
 
-    public void updateOrderStatus(OrderStatus orderStatus) {
-        this.status = orderStatus;
+    public void completeOrder() {
+        this.status = OrderStatus.ORDER_COMPLETE;
     }
 }

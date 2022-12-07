@@ -10,7 +10,7 @@ import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.adjust.ItemQuantityAdjuster;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay.KakaopayStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.CartDisassembler;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.model.enums.PaymentGateway;
+import com.daniel.ddd.payment.model.enums.PaymentGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

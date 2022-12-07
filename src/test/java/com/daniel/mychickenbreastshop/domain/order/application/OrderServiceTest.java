@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.domain.order.application;
 import com.daniel.ddd.order.mapper.OrderInfoListMapper;
 import com.daniel.ddd.order.mapper.OrderItemsInfoMapper;
 import com.daniel.ddd.order.mapper.OrderPaymentInfoMapper;
-import com.daniel.ddd.order.mapper.OrderProductListMapper;
+import com.daniel.ddd.order.mapper.OrderProductsMapper;
 import com.daniel.ddd.order.domain.Order;
 import com.daniel.ddd.order.domain.OrderProduct;
 import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
@@ -45,7 +45,7 @@ class OrderServiceTest {
     private OrderItemsInfoMapper orderItemsInfoMapper;
 
     @Mock
-    private OrderProductListMapper orderProductListMapper;
+    private OrderProductsMapper orderProductListMapper;
 
     @Mock
     private OrderPaymentInfoMapper orderPaymentInfoMapper;
