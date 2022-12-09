@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
+import com.daniel.mychickenbreastshop.user.auth.jwt.JwtValidator;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

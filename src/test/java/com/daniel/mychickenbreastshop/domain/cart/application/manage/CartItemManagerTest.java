@@ -1,9 +1,10 @@
 package com.daniel.mychickenbreastshop.domain.cart.application.manage;
 
-import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.CartRequestDto;
-import com.daniel.mychickenbreastshop.domain.cart.model.dto.request.UpdatableCartDto;
-import com.daniel.mychickenbreastshop.domain.cart.model.dto.response.CartResponseDto;
-import com.daniel.mychickenbreastshop.domain.cart.model.enums.CartProperty;
+import com.daniel.mychickenbreastshop.cart.application.service.CartItemManager;
+import com.daniel.mychickenbreastshop.cart.model.dto.request.CartRequestDto;
+import com.daniel.mychickenbreastshop.cart.model.dto.request.UpdatableCartDto;
+import com.daniel.mychickenbreastshop.cart.model.dto.response.CartResponseDto;
+import com.daniel.mychickenbreastshop.cart.model.enums.CartProperty;
 import com.daniel.mychickenbreastshop.global.util.CookieUtil;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class CartItemManagerTest {
                 .totalPrice(10000L)
                 .build();
 
-        Map map = new HashMap();
+        Map<Long, CartRequestDto> map = new HashMap();
         map.put(cartRequestDto.getItemNo(), cartRequestDto);
         map.put(cartRequestDto2.getItemNo(), cartRequestDto2);
 

@@ -1,6 +1,7 @@
 package com.daniel.mychickenbreastshop.auth.jwt;
 
-import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
+import com.daniel.mychickenbreastshop.user.auth.jwt.JwtAuthenticator;
+import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
