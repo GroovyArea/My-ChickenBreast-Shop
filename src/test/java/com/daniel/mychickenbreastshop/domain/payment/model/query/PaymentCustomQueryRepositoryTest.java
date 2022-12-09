@@ -1,11 +1,11 @@
 package com.daniel.mychickenbreastshop.domain.payment.model.query;
 
-import com.daniel.ddd.payment.domain.Card;
-import com.daniel.ddd.payment.adaptor.out.persistence.CardRepository;
-import com.daniel.ddd.payment.domain.Payment;
-import com.daniel.ddd.payment.adaptor.out.persistence.PaymentRepository;
-import com.daniel.ddd.payment.domain.enums.PayStatus;
-import com.daniel.ddd.payment.domain.enums.PaymentType;
+import com.daniel.mychickenbreastshop.payment.domain.Card;
+import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.CardRepository;
+import com.daniel.mychickenbreastshop.payment.domain.Payment;
+import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

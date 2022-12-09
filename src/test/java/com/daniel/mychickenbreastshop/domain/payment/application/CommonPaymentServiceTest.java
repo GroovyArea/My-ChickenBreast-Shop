@@ -1,12 +1,12 @@
 package com.daniel.mychickenbreastshop.domain.payment.application;
 
-import com.daniel.ddd.payment.mapper.PaymentInfoMapper;
-import com.daniel.ddd.payment.domain.Card;
-import com.daniel.ddd.payment.domain.Payment;
-import com.daniel.ddd.payment.adaptor.out.persistence.PaymentRepository;
-import com.daniel.ddd.payment.model.dto.response.PaymentInfoResponseDto;
-import com.daniel.ddd.payment.domain.enums.PayStatus;
-import com.daniel.ddd.payment.domain.enums.PaymentType;
+import com.daniel.mychickenbreastshop.payment.mapper.PaymentInfoMapper;
+import com.daniel.mychickenbreastshop.payment.domain.Card;
+import com.daniel.mychickenbreastshop.payment.domain.Payment;
+import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.model.dto.response.PaymentInfoResponseDto;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

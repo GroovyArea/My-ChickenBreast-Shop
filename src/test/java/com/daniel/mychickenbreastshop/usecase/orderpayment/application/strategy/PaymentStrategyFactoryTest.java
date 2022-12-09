@@ -1,16 +1,17 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy;
 
-import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
 import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
+import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
+import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.adjust.ItemQuantityAdjuster;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay.KakaopayStrategyApplication;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.CartDisassembler;
-import com.daniel.ddd.payment.model.enums.PaymentGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)

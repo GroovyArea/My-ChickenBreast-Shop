@@ -1,16 +1,16 @@
 package com.daniel.mychickenbreastshop.domain.order.model.query;
 
-import com.daniel.ddd.order.domain.Order;
-import com.daniel.ddd.order.domain.OrderProduct;
-import com.daniel.ddd.order.adaptor.out.persistence.OrderRepository;
-import com.daniel.ddd.order.domain.enums.OrderStatus;
-import com.daniel.ddd.payment.domain.Payment;
-import com.daniel.ddd.payment.domain.enums.PayStatus;
-import com.daniel.ddd.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.domain.user.model.User;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
+import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
+import com.daniel.mychickenbreastshop.order.domain.Order;
+import com.daniel.mychickenbreastshop.order.domain.OrderProduct;
+import com.daniel.mychickenbreastshop.order.domain.enums.OrderStatus;
+import com.daniel.mychickenbreastshop.payment.domain.Payment;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
+import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
+import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
