@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.query;
 
-import com.daniel.mychickenbreastshop.domain.product.category.model.QCategory;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
+import com.daniel.mychickenbreastshop.product.category.domain.QCategory;
 import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.product.item.domain.Product;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.product.category.model.QCategory.category;
-import static com.daniel.mychickenbreastshop.domain.product.item.model.QProduct.product;
+import static com.daniel.mychickenbreastshop.product.category.domain.QCategory.category;
+import static com.daniel.mychickenbreastshop.product.item.domain.QProduct.product;
 
 @RequiredArgsConstructor
 @Repository

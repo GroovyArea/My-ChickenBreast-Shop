@@ -16,7 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.domain.user.model.QUser.user;
+import static com.daniel.mychickenbreastshop.user.domain.QUser.user;
+
 
 @Repository
 @RequiredArgsConstructor

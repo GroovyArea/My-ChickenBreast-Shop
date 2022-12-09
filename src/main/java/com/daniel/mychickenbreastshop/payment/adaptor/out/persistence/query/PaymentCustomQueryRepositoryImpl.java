@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.query;
 
 import com.daniel.mychickenbreastshop.payment.domain.Payment;
-import com.daniel.mychickenbreastshop.domain.payment.model.QPayment;
+import com.daniel.mychickenbreastshop.payment.domain.QPayment;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.daniel.mychickenbreastshop.domain.payment.model.QCard.card;
-import static com.daniel.mychickenbreastshop.domain.payment.model.QPayment.payment;
+import static com.daniel.mychickenbreastshop.payment.domain.QCard.card;
+import static com.daniel.mychickenbreastshop.payment.domain.QPayment.payment;
 
 
 @Repository

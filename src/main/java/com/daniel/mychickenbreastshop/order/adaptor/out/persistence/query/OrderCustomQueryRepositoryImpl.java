@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.order.adaptor.out.persistence.query;
 
 import com.daniel.mychickenbreastshop.order.domain.Order;
-import com.daniel.mychickenbreastshop.domain.order.model.QOrder;
 import com.daniel.mychickenbreastshop.order.domain.enums.OrderStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,11 +12,9 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.daniel.mychickenbreastshop.domain.order.model.QOrder.order;
-import static com.daniel.mychickenbreastshop.domain.payment.model.QPayment.payment;
-
+import static com.daniel.mychickenbreastshop.order.domain.QOrder.order;
+import static com.daniel.mychickenbreastshop.order.domain.QOrderProduct.orderProduct;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,6 +25,8 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
     @Override // 주문 상품도 같이 페치조인 성능 최적화 필요
     public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
+                .join(orderProduct)
+                .fetchJoin()
                 .where(userIdEq(userId), statusEq(orderStatus))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -41,23 +40,8 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
     }
 
-    @Override
-    public Optional<Order> findByIdWithPaymentUsingFetchJoin(Long orderId) {
-        Order order = queryFactory.selectFrom(QOrder.order)
-                .join(QOrder.order.payment, payment)
-                .fetchJoin()
-                .where(orderIdEq(orderId))
-                .fetchOne();
-
-        return Optional.ofNullable(order);
-    }
-
     private BooleanExpression userIdEq(Long userIdCond) {
-        return userIdCond != null ? order.user.id.eq(userIdCond) : null;
-    }
-
-    private BooleanExpression orderIdEq(Long orderIdCond) {
-        return orderIdCond != null ? order.id.eq(orderIdCond) : null;
+        return userIdCond != null ? order.userId.eq(userIdCond) : null;
     }
 
     private BooleanExpression statusEq(OrderStatus statusCond) {

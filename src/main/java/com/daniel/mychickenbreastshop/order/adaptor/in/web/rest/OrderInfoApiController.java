@@ -4,7 +4,6 @@ import com.daniel.mychickenbreastshop.order.application.port.in.GetOrderInfoUseC
 import com.daniel.mychickenbreastshop.order.domain.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderItemsInfoResponseDto;
-import com.daniel.mychickenbreastshop.order.model.dto.response.OrderPaymentInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,17 +45,6 @@ public class OrderInfoApiController {
     @GetMapping("/details/{orderId}")
     public ResponseEntity<OrderItemsInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderInfoUseCase.getOrderDetail(orderId));
-    }
-
-    /**
-     * 결제 내역 상세 조회
-     *
-     * @param orderId 주문 아이디
-     * @return 결제 상세 내역
-     */
-    @GetMapping("/{orderId}/payments")
-    public ResponseEntity<OrderPaymentInfoResponseDto> getPaymentInfo(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderInfoUseCase.getPaymentDetail(orderId));
     }
 
 }

@@ -12,7 +12,6 @@ import com.daniel.mychickenbreastshop.order.mapper.OrderPaymentInfoMapper;
 import com.daniel.mychickenbreastshop.order.mapper.OrderProductsMapper;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderItemsInfoResponseDto;
-import com.daniel.mychickenbreastshop.order.model.dto.response.OrderPaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderProductResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -57,11 +56,4 @@ public class GetOrderInfoService implements GetOrderInfoUseCase {
         return orderItemsInfoResponseDto;
     }
 
-    @Override
-    public OrderPaymentInfoResponseDto getPaymentDetail(Long orderId) {
-        Order order = orderRepository.findByIdWithPaymentUsingFetchJoin(orderId)
-                .orElseThrow(() -> new BadRequestException(ErrorMessages.ORDER_NOT_EXISTS.getMessage()));
-
-        return orderPaymentInfoMapper.toDTO(order);
-    }
 }
