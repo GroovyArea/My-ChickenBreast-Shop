@@ -5,7 +5,7 @@ import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
 import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;

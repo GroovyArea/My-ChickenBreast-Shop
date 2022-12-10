@@ -21,7 +21,6 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 public class SendMailService implements SendMailUseCase {
 
-
     private static final String ENCODE_TYPE = "utf-8";
     private static final long EXPIRED_TIME = 5 * 60 * 1000L; // 5분
 

@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.payment.application.port.in;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 
 import java.util.List;
 

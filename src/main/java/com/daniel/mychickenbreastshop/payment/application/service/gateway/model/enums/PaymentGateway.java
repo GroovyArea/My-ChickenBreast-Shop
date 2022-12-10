@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.payment.model.enums;
+package com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

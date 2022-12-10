@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.user.auth.security.enums;
+package com.daniel.mychickenbreastshop.user.auth.security.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

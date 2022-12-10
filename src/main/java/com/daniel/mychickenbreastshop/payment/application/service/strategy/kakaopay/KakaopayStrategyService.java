@@ -18,7 +18,7 @@ import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway.KAKAO;
+import static com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway.KAKAO;
 
 /**
  * 전략 결제 API 서비스 구현체 (카카오페이)

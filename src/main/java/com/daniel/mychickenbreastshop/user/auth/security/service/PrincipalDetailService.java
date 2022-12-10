@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.user.auth.security.application;
+package com.daniel.mychickenbreastshop.user.auth.security.service;
 
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
 import com.daniel.mychickenbreastshop.user.auth.security.mapper.PrincipalDetailMapper;

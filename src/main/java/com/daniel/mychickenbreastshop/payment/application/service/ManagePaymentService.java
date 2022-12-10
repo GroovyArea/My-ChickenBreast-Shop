@@ -2,11 +2,11 @@ package com.daniel.mychickenbreastshop.payment.application.service;
 
 import com.daniel.mychickenbreastshop.payment.application.port.in.ManagePaymentUseCase;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
-import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyService;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
+import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyService;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -12,6 +12,7 @@ import com.daniel.mychickenbreastshop.user.domain.enums.Role;
 import com.daniel.mychickenbreastshop.user.mapper.UserJoinMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -23,6 +24,7 @@ public class JoinService implements JoinUseCase {
     private final RedisStore userRedisStore;
     private final UserJoinMapper userJoinMapper;
 
+    @Transactional
     @Override
     public Long join(JoinRequestDto joinRequestDto) {
         checkDuplicatedUser(joinRequestDto.getLoginId());

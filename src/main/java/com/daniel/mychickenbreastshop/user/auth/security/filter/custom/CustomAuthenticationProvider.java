@@ -3,7 +3,7 @@ package com.daniel.mychickenbreastshop.user.auth.security.filter.custom;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
-import com.daniel.mychickenbreastshop.user.auth.security.application.PrincipalDetailService;
+import com.daniel.mychickenbreastshop.user.auth.security.service.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.user.auth.security.error.SecurityMessages;
 import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.domain.User;

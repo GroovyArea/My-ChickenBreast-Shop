@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.payment.application.service.strategy;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

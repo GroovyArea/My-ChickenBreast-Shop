@@ -1,9 +1,9 @@
 package com.daniel.mychickenbreastshop.user.auth.security.filter;
 
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtProvider;
-import com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtProperties;
+import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtProperties;
 import com.daniel.mychickenbreastshop.user.auth.security.error.SecurityMessages;
-import com.daniel.mychickenbreastshop.user.auth.security.filter.model.PassablePathProperty;
+import com.daniel.mychickenbreastshop.user.auth.security.filter.enums.PassablePathProperty;
 import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtValidator;

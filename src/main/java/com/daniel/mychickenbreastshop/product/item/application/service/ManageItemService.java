@@ -15,6 +15,7 @@ import com.daniel.mychickenbreastshop.product.item.model.dto.request.ModifyReque
 import com.daniel.mychickenbreastshop.product.item.model.dto.request.RegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.daniel.mychickenbreastshop.product.category.domain.enums.ErrorMessages.CATEGORY_NOT_EXISTS;
@@ -22,6 +23,7 @@ import static com.daniel.mychickenbreastshop.product.item.domain.enums.ErrorMess
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ManageItemService implements ManageItemUseCase {
 
     private final ProductRepository productRepository;

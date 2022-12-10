@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.user.auth.security.error.handler;
 
-import com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtErrorMessage;
+import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtErrorMessages;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtErrorMessage.*;
+import static com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtErrorMessages.*;
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String defaultExceptionMessage = authException.getMessage();
 
         List<String> jwtErrorMessages = Arrays.stream(values())
-                .map(JwtErrorMessage::getMessage).toList();
+                .map(JwtErrorMessages::getMessage).toList();
 
         if (!jwtErrorMessages.contains(insertedExceptionMessage)) {
             response.setContentType("application/json;charset=UTF-8");
@@ -45,7 +45,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     }
 
-    private void setResponse(HttpServletResponse response, JwtErrorMessage jwtErrorMessage) throws IOException {
+    private void setResponse(HttpServletResponse response, JwtErrorMessages jwtErrorMessage) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().print(jwtErrorMessage.getMessage());

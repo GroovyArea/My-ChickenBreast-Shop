@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.user.auth.security.filter.model;
+package com.daniel.mychickenbreastshop.user.auth.security.filter.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

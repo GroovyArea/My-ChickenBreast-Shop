@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.user.auth.jwt.model;
+package com.daniel.mychickenbreastshop.user.auth.jwt.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

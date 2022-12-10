@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.user.auth.security.filter.custom;
 
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtProvider;
-import com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtProperties;
+import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtProperties;
 import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.auth.security.model.dto.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

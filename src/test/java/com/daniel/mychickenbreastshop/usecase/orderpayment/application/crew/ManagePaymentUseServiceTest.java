@@ -6,7 +6,7 @@ import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.
 import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
 import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyService;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.ItemPayRequestDto;
-import com.daniel.mychickenbreastshop.payment.model.enums.PaymentGateway;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,11 @@
-package com.daniel.mychickenbreastshop.user.auth.jwt.model;
+package com.daniel.mychickenbreastshop.user.auth.jwt.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum JwtErrorMessage {
+public enum JwtErrorMessages {
 
     MALFORMED("유효하지 않은 토큰입니다."),
     EXPIRED("토큰 유효기간이 만료되었습니다. 재로그인 요망."),

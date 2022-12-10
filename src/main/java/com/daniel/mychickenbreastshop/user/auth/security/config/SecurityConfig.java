@@ -4,7 +4,7 @@ import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepositor
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.user.auth.jwt.JwtValidator;
-import com.daniel.mychickenbreastshop.user.auth.security.application.PrincipalDetailService;
+import com.daniel.mychickenbreastshop.user.auth.security.service.PrincipalDetailService;
 import com.daniel.mychickenbreastshop.user.auth.security.error.handler.CustomAccessDeniedHandler;
 import com.daniel.mychickenbreastshop.user.auth.security.error.handler.CustomAuthenticationEntryPoint;
 import com.daniel.mychickenbreastshop.user.auth.security.filter.JwtAuthenticationFilter;

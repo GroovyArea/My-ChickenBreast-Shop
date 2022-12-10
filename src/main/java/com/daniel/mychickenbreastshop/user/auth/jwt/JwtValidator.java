@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.user.auth.jwt;
 
-import com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtErrorMessage;
+import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtErrorMessages;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -36,15 +36,15 @@ public class JwtValidator {
             Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
-            throw new IllegalArgumentException(JwtErrorMessage.MALFORMED.getMessage());
+            throw new IllegalArgumentException(JwtErrorMessages.MALFORMED.getMessage());
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException(JwtErrorMessage.EXPIRED.getMessage());
+            throw new IllegalArgumentException(JwtErrorMessages.EXPIRED.getMessage());
         } catch (UnsupportedJwtException e) {
-            throw new IllegalArgumentException(JwtErrorMessage.UNSUPPORTED.getMessage());
+            throw new IllegalArgumentException(JwtErrorMessages.UNSUPPORTED.getMessage());
         } catch (ClassCastException e) {
-            throw new IllegalArgumentException(JwtErrorMessage.CLASS_CAST_FAIL.getMessage());
+            throw new IllegalArgumentException(JwtErrorMessages.CLASS_CAST_FAIL.getMessage());
         } catch (SignatureException e) {
-            throw new IllegalArgumentException(JwtErrorMessage.INVALID_SIGNATURE.getMessage());
+            throw new IllegalArgumentException(JwtErrorMessages.INVALID_SIGNATURE.getMessage());
         } catch (Exception e) {
             log.error("================================================ \n" +
                     "JwtValidator - validateAccessToken() 오류발생 \n" +

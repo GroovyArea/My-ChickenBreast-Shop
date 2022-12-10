@@ -10,11 +10,13 @@ import com.daniel.mychickenbreastshop.user.mapper.UserModifyMapper;
 import com.daniel.mychickenbreastshop.user.model.dto.request.ModifyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ManageUserService implements ManageUserUseCase {
 
     private final UserRepository userRepository;

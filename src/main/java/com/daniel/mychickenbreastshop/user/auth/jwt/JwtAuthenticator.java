@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.user.auth.jwt;
 
-import com.daniel.mychickenbreastshop.user.auth.jwt.model.JwtProperties;
+import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
