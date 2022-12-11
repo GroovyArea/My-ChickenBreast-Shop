@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
 import com.daniel.mychickenbreastshop.user.application.port.in.ManageUserUseCase;
-import com.daniel.mychickenbreastshop.user.application.port.in.SearchUseCase;
+import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
 import com.daniel.mychickenbreastshop.user.domain.enums.Role;
 import com.daniel.mychickenbreastshop.user.model.dto.request.UserSearchDto;
 import com.daniel.mychickenbreastshop.user.model.dto.response.ListResponseDto;
@@ -23,7 +23,7 @@ import java.util.List;
 public class UserAdminApiController {
 
     private final ManageUserUseCase userUseCase;
-    private final SearchUseCase searchUseCase;
+    private final UserSearchUseCase searchUseCase;
 
     /**
      * 회원 리스트 조회

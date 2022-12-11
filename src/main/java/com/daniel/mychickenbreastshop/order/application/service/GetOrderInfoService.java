@@ -8,7 +8,6 @@ import com.daniel.mychickenbreastshop.order.domain.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.order.domain.enums.OrderStatus;
 import com.daniel.mychickenbreastshop.order.mapper.OrderInfoListMapper;
 import com.daniel.mychickenbreastshop.order.mapper.OrderItemsInfoMapper;
-import com.daniel.mychickenbreastshop.order.mapper.OrderPaymentInfoMapper;
 import com.daniel.mychickenbreastshop.order.mapper.OrderProductsMapper;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderInfoListResponseDto;
 import com.daniel.mychickenbreastshop.order.model.dto.response.OrderItemsInfoResponseDto;
@@ -29,7 +28,6 @@ public class GetOrderInfoService implements GetOrderInfoUseCase {
     private final OrderInfoListMapper orderInfoListMapper;
     private final OrderItemsInfoMapper orderItemsInfoMapper;
     private final OrderProductsMapper orderProductListMapper;
-    private final OrderPaymentInfoMapper orderPaymentInfoMapper;
 
     @Override
     public List<OrderInfoListResponseDto> getAllOrders(Long userId, OrderStatus orderStatus, Pageable pageable) {

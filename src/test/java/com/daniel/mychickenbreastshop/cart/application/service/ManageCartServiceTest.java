@@ -1,9 +1,6 @@
-package com.daniel.mychickenbreastshop.domain.cart.application;
+package com.daniel.mychickenbreastshop.cart.application.service;
 
 import com.daniel.mychickenbreastshop.cart.application.port.in.ManageCartUseCase;
-import com.daniel.mychickenbreastshop.cart.application.service.CartItemManager;
-import com.daniel.mychickenbreastshop.cart.application.service.CartValidator;
-import com.daniel.mychickenbreastshop.cart.application.service.ManageCartService;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.UpdatableCartDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.response.CartResponseDto;
@@ -14,29 +11,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class ManageCartServiceTest {
 
     @Mock
-    private CartItemManager cartItemManager;
+    private  CartItemManager cartItemManager;
 
     @Mock
-    private CartValidator cartValidator;
+    private  CartValidator cartValidator;
 
-    private ManageCartUseCase cartUseCase;
+    @InjectMocks
+    private ManageCartUseCase manageCartService;
 
     private String cookieValue;
     private UpdatableCartDto updatableCartDto;
@@ -44,8 +43,6 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        cartUseCase = new ManageCartService(cartItemManager, cartValidator);
-
         CartRequestDto cartRequestDto = CartRequestDto.builder()
                 .itemNo(1L)
                 .itemName("itemName1")
@@ -60,7 +57,7 @@ class CartServiceTest {
                 .totalPrice(10000L)
                 .build();
 
-        cartMap = new HashMap();
+        cartMap = new ConcurrentHashMap<>();
         cartMap.put(cartRequestDto.getItemNo(), cartRequestDto);
         cartMap.put(cartRequestDto2.getItemNo(), cartRequestDto2);
 
@@ -80,7 +77,7 @@ class CartServiceTest {
 
         // when
         when(cartItemManager.getItems(cookieValue)).thenReturn(dtos);
-        List<CartResponseDto> cart = cartUseCase.getCart(cookieValue);
+        List<CartResponseDto> cart = manageCartService.getCart(cookieValue);
 
         assertThat(cart).hasSize(2);
     }
@@ -107,7 +104,7 @@ class CartServiceTest {
 
         // when
         when(cartItemManager.store(updatableCartDto, cartRequestDto3)).thenReturn(updatableCartDto);
-        UpdatableCartDto cartDto = cartUseCase.addCart(updatableCartDto, cartRequestDto3);
+        UpdatableCartDto cartDto = manageCartService.addCart(updatableCartDto, cartRequestDto3);
         List<CartResponseDto> responseDtos = CookieUtil.getCookieValueList(cartDto.getCookie().getValue(), Long.class, CartResponseDto.class);
 
         assertThat(responseDtos).hasSize(3);
@@ -137,7 +134,7 @@ class CartServiceTest {
 
         // when
         when(cartItemManager.update(updatableCartDto, cartRequestDto2)).thenReturn(updatableCartDto);
-        UpdatableCartDto cartDto = cartUseCase.modifyCart(updatableCartDto, cartRequestDto2);
+        UpdatableCartDto cartDto = manageCartService.modifyCart(updatableCartDto, cartRequestDto2);
         List<CartResponseDto> responseDtos = CookieUtil.getCookieValueList(cartDto.getCookie().getValue(), Long.class, CartResponseDto.class);
 
         assertThat(responseDtos.get(1).getItemQuantity()).isEqualTo(50);
@@ -166,7 +163,7 @@ class CartServiceTest {
 
         // when
         when(cartItemManager.delete(updatableCartDto, cartRequestDto2)).thenReturn(updatableCartDto);
-        UpdatableCartDto cartDto = cartUseCase.removeCart(updatableCartDto, cartRequestDto2);
+        UpdatableCartDto cartDto = manageCartService.removeCart(updatableCartDto, cartRequestDto2);
         List<CartResponseDto> responseDtos = CookieUtil.getCookieValueList(cartDto.getCookie().getValue(), Long.class, CartResponseDto.class);
 
         assertThat(responseDtos).hasSize(1);

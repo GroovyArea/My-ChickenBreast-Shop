@@ -1,26 +1,26 @@
 package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy;
 
-import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
-import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
-import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
+import com.daniel.mychickenbreastshop.global.event.builder.EventBuilder;
+import com.daniel.mychickenbreastshop.global.event.model.DomainEvent;
+import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.kakaopay.application.KakaoPaymentApplicationService;
+import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.kakaopay.application.KakaoPaymentService;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.gateway.model.PaymentResult;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.PaymentStrategyApplication;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.adjust.ItemQuantityAdjuster;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy.service.kakaopay.KakaopayStrategyApplication;
-import com.daniel.mychickenbreastshop.usecase.orderpayment.extract.CartDisassembler;
+import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
+import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyService;
+import com.daniel.mychickenbreastshop.payment.application.service.strategy.kakaopay.KakaopayStrategyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,26 +29,23 @@ class PaymentStrategyFactoryTest {
     private PaymentStrategyFactory paymentStrategyFactory;
 
     @Mock
-    KakaoPaymentService kakaoPaymentService;
+    KakaoPaymentApplicationService kakaoPaymentApplicationService;
 
     @Mock
-    CartDisassembler cartDisassembler;
+    ApplicationEventPublisher eventPublisher;
 
     @Mock
-    ItemQuantityAdjuster kakaopayItemQuantityAdjuster;
+    EventBuilder<DomainEvent> eventBuilder;
 
     @Mock
-    UserRepository userRepository;
-
-    @Mock
-    ProductRepository productRepository;
-
-    @Mock
-    OrderRepository orderRepository;
+    PaymentRepository paymentRepository;
 
     @BeforeEach
     void setUp() {
-        Set<PaymentStrategyApplication<PaymentResult>> strategyApplications = Set.of(new KakaopayStrategyApplication(kakaoPaymentService, cartDisassembler, kakaopayItemQuantityAdjuster, userRepository, productRepository, orderRepository));
+        Set<PaymentStrategyService<PaymentResult>> strategyApplications = Set.of(new KakaopayStrategyService(
+                kakaoPaymentApplicationService, eventPublisher,
+                eventBuilder, paymentRepository));
+
         paymentStrategyFactory = new PaymentStrategyFactory(strategyApplications);
     }
 
@@ -59,7 +56,7 @@ class PaymentStrategyFactoryTest {
         PaymentGateway paymentGateway = PaymentGateway.KAKAO; // 카카오 페이 서비스 전략
 
         // when
-        PaymentStrategyApplication<PaymentResult> strategy = paymentStrategyFactory.findStrategy(paymentGateway);
+        PaymentStrategyService<PaymentResult> strategy = paymentStrategyFactory.findStrategy(paymentGateway);
 
         assertThat(strategy.getPaymentGatewayName()).isEqualTo(paymentGateway);
     }

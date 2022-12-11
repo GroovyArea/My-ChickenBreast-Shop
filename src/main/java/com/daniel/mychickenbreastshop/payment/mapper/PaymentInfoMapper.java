@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface PaymentInfoMapper extends GenericDtoMapper<PaymentInfoResponseDto, Payment> {
 
     @Override
-    @Mapping(target = "getPaymentId", source = "payment.id")
+    @Mapping(target = "paymentId", source = "payment.id")
     @Mapping(target = "cardId", source = "card.id")
     @Mapping(target = "cardBin", source = "card.bin")
     PaymentInfoResponseDto toDTO(Payment payment);

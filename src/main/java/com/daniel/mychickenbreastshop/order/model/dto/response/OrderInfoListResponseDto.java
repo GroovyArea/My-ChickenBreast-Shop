@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 @Builder
 public class OrderInfoListResponseDto {
 
-    private Long orderId;
-    private Integer totalCount;
-    private Long orderPrice;
+    private long orderId;
+    private long paymentId;
+    private int totalCount;
+    private long orderPrice;
     private OrderStatus orderStatus;
     private LocalDateTime createAt;
 

@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.domain.payment.application;
 
+import com.daniel.mychickenbreastshop.payment.application.service.GetPaymentInfoService;
 import com.daniel.mychickenbreastshop.payment.mapper.PaymentInfoMapper;
 import com.daniel.mychickenbreastshop.payment.domain.Card;
 import com.daniel.mychickenbreastshop.payment.domain.Payment;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CommonPaymentServiceTest {
+class GetPaymentInfoServiceTest {
 
     @Mock
     private PaymentRepository paymentRepository;
@@ -29,7 +30,7 @@ class CommonPaymentServiceTest {
     private PaymentInfoMapper paymentInfoMapper;
 
     @InjectMocks
-    private CommonPaymentService commonPaymentService;
+    private GetPaymentInfoService paymentInfoService;
 
     @DisplayName("결제 고유 id를 통해 상세 정보를 조회한다.")
     @Test
@@ -67,6 +68,6 @@ class CommonPaymentServiceTest {
         when(paymentRepository.findByIdWithCardUsingFetchJoin(payment.getId())).thenReturn(Optional.of(payment));
         when(paymentInfoMapper.toDTO(payment)).thenReturn(dto);
 
-        assertThat(commonPaymentService.getPaymentDetail(payment.getId())).isEqualTo(dto);
+        assertThat(paymentInfoService.getPaymentDetail(payment.getId())).isEqualTo(dto);
     }
 }

@@ -2,7 +2,7 @@ package com.daniel.mychickenbreastshop.user.application.service;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
-import com.daniel.mychickenbreastshop.user.application.port.in.SearchUseCase;
+import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
 import com.daniel.mychickenbreastshop.user.domain.User;
 import com.daniel.mychickenbreastshop.user.domain.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.user.domain.enums.Role;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SearchService implements SearchUseCase {
+public class UserSearchService implements UserSearchUseCase {
 
     private final UserRepository userRepository;
     private final UserDetailMapper userDetailMapper;

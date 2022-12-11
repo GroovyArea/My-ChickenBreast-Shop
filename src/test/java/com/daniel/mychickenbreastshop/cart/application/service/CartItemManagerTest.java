@@ -1,6 +1,5 @@
-package com.daniel.mychickenbreastshop.domain.cart.application.manage;
+package com.daniel.mychickenbreastshop.cart.application.service;
 
-import com.daniel.mychickenbreastshop.cart.application.service.CartItemManager;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.UpdatableCartDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.response.CartResponseDto;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CartItemManagerTest {
@@ -129,5 +129,4 @@ class CartItemManagerTest {
 
         assertThat(dtos).hasSize(1);
     }
-
 }
