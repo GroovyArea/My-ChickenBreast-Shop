@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.usecase.orderpayment.application.strategy;
+package com.daniel.mychickenbreastshop.payment.application.service.strategy;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.event.builder.EventBuilder;
@@ -7,8 +7,6 @@ import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRep
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.kakaopay.application.KakaoPaymentApplicationService;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
-import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyFactory;
-import com.daniel.mychickenbreastshop.payment.application.service.strategy.PaymentStrategyService;
 import com.daniel.mychickenbreastshop.payment.application.service.strategy.kakaopay.KakaopayStrategyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +20,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentStrategyFactoryTest {

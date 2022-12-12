@@ -1,10 +1,10 @@
-package com.daniel.mychickenbreastshop.domain.user.api;
+package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.domain.user.application.MailService;
-import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.EmailRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.JoinRequestDto;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import com.daniel.mychickenbreastshop.user.application.port.in.JoinUseCase;
+import com.daniel.mychickenbreastshop.user.application.port.in.SendMailUseCase;
+import com.daniel.mychickenbreastshop.user.model.dto.request.EmailRequestDto;
+import com.daniel.mychickenbreastshop.user.model.dto.request.JoinRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,15 +37,15 @@ class JoinApiControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private JoinUseCase joinUseService;
 
     @MockBean
-    private MailService mailService;
+    private SendMailUseCase sendMailService;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new JoinApiController(userService, mailService))
+                MockMvcBuilders.standaloneSetup(new JoinApiController(joinUseService, sendMailService))
                         .apply(documentationConfiguration(restDocumentationContextProvider))
                         .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
@@ -64,7 +64,7 @@ class JoinApiControllerTest {
                 .zipcode("123-123")
                 .build();
 
-        given(userService.join(any(JoinRequestDto.class))).willReturn(1L);
+        given(joinUseService.join(any(JoinRequestDto.class))).willReturn(1L);
 
         mockMvc.perform(post("/join")
                         .content(parseObject(dto))

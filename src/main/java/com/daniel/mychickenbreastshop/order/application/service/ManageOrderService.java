@@ -46,6 +46,7 @@ public class ManageOrderService implements ManageOrderUseCase {
         );
 
         Order order = Order.createOrder(orderProducts, userId);
+        orderProducts.forEach(order::addOrderProduct);
 
         return orderRepository.save(order).getId();
     }

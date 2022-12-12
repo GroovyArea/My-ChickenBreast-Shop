@@ -1,6 +1,5 @@
-package com.daniel.mychickenbreastshop.auth.jwt;
+package com.daniel.mychickenbreastshop.user.auth.jwt;
 
-import com.daniel.mychickenbreastshop.user.auth.jwt.JwtProvider;
 import com.daniel.mychickenbreastshop.user.auth.jwt.enums.JwtProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,6 +16,7 @@ import java.security.Key;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class JwtProviderTest {

@@ -1,13 +1,13 @@
-package com.daniel.mychickenbreastshop.domain.payment.application;
+package com.daniel.mychickenbreastshop.payment.application.service;
 
-import com.daniel.mychickenbreastshop.payment.application.service.GetPaymentInfoService;
-import com.daniel.mychickenbreastshop.payment.mapper.PaymentInfoMapper;
+import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.application.port.in.GetPaymentInfoUseCase;
 import com.daniel.mychickenbreastshop.payment.domain.Card;
 import com.daniel.mychickenbreastshop.payment.domain.Payment;
-import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
-import com.daniel.mychickenbreastshop.payment.model.dto.response.PaymentInfoResponseDto;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
+import com.daniel.mychickenbreastshop.payment.mapper.PaymentInfoMapper;
+import com.daniel.mychickenbreastshop.payment.model.dto.response.PaymentInfoResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,19 +18,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GetPaymentInfoServiceTest {
 
     @Mock
-    private PaymentRepository paymentRepository;
+    private  PaymentRepository paymentRepository;
 
     @Mock
-    private PaymentInfoMapper paymentInfoMapper;
+    private  PaymentInfoMapper paymentInfoMapper;
 
     @InjectMocks
-    private GetPaymentInfoService paymentInfoService;
+    private GetPaymentInfoUseCase getPaymentInfoService;
+
 
     @DisplayName("결제 고유 id를 통해 상세 정보를 조회한다.")
     @Test
@@ -68,6 +70,6 @@ class GetPaymentInfoServiceTest {
         when(paymentRepository.findByIdWithCardUsingFetchJoin(payment.getId())).thenReturn(Optional.of(payment));
         when(paymentInfoMapper.toDTO(payment)).thenReturn(dto);
 
-        assertThat(paymentInfoService.getPaymentDetail(payment.getId())).isEqualTo(dto);
+        assertThat(getPaymentInfoService.getPaymentDetail(payment.getId())).isEqualTo(dto);
     }
 }

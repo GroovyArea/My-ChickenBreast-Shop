@@ -55,16 +55,6 @@ public class Order extends BaseTimeEntity<Order> {
 
     // <주문 생성 메서드> //
 
-    public static Order createReadyOrder(final int quantity, final long totalAmount, final long userId) {
-        return Order.builder()
-                .totalCount(quantity)
-                .orderPrice(totalAmount)
-                .orderProducts(new ArrayList<>())
-                .status(OrderStatus.ORDER_READY)
-                .userId(userId)
-                .build();
-    }
-
     public static Order createOrder(final List<OrderProduct> orderProducts, final long userId) {
         return Order.builder()
                 .totalCount(orderProducts.size())

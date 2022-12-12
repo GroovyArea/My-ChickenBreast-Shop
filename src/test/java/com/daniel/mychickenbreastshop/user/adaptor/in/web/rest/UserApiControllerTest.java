@@ -1,11 +1,12 @@
-package com.daniel.mychickenbreastshop.domain.user.api;
+package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.auth.security.model.PrincipalDetails;
-import com.daniel.mychickenbreastshop.domain.user.application.UserService;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.ModifyRequestDto;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import com.daniel.mychickenbreastshop.user.application.port.in.ManageUserUseCase;
+import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
+import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
+import com.daniel.mychickenbreastshop.user.domain.enums.Role;
+import com.daniel.mychickenbreastshop.user.model.dto.request.ModifyRequestDto;
+import com.daniel.mychickenbreastshop.user.model.dto.response.DetailResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,12 +45,15 @@ class UserApiControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private ManageUserUseCase userUseService;
+
+    @MockBean
+    private UserSearchUseCase searchUseService;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new UserApiController(userService))
+                MockMvcBuilders.standaloneSetup(new UserAdminApiController(userUseService, searchUseService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                         .apply(documentationConfiguration(restDocumentationContextProvider))
                         .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
@@ -70,13 +74,12 @@ class UserApiControllerTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        given(userService.getUser(anyLong())).willReturn(dto);
+        given(searchUseService.getUser(anyLong())).willReturn(dto);
 
         mockMvc.perform(get("/api/v1/users/{userId}", dto.getUserId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(JsonUtil.objectToString(dto)))
                 .andDo(print());
-
     }
 
     @DisplayName("API 요청을 통해 회원 정보를 수정한다.")
@@ -106,5 +109,4 @@ class UserApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-
 }

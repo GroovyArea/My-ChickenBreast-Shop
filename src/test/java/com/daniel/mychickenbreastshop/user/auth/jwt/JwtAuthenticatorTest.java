@@ -1,6 +1,5 @@
-package com.daniel.mychickenbreastshop.auth.jwt;
+package com.daniel.mychickenbreastshop.user.auth.jwt;
 
-import com.daniel.mychickenbreastshop.user.auth.jwt.JwtAuthenticator;
 import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,6 +20,7 @@ import java.security.Key;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
