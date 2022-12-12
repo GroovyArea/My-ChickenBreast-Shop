@@ -27,7 +27,7 @@ public class OrderInfoApiController {
      * @param orderStatus 주문 상태
      * @return 주문 내역
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<OrderInfoListResponseDto>> getAllOrders(
             @PathVariable Long userId,
             @PageableDefault(page = 1, sort = "createdAt",
@@ -42,7 +42,7 @@ public class OrderInfoApiController {
      * @param orderId 주문 아이디
      * @return 주문 상세 내역
      */
-    @GetMapping("/details/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity<OrderItemsInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderInfoUseCase.getOrderDetail(orderId));
     }

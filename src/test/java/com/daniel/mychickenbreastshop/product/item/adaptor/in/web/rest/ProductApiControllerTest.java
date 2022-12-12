@@ -1,13 +1,12 @@
-package com.daniel.mychickenbreastshop.domain.product.api;
+package com.daniel.mychickenbreastshop.product.item.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.item.api.ProductApiController;
-import com.daniel.mychickenbreastshop.domain.product.item.application.ProductService;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.DetailResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.response.ListResponseDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.product.item.application.port.item.in.ItemSearchUseCase;
+import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
+import com.daniel.mychickenbreastshop.product.item.model.dto.request.ItemSearchDto;
+import com.daniel.mychickenbreastshop.product.item.model.dto.response.DetailResponseDto;
+import com.daniel.mychickenbreastshop.product.item.model.dto.response.ListResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,15 +44,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 class ProductApiControllerTest {
 
-    private MockMvc mockMvc;
-
     @MockBean
-    private ProductService productService;
+    private ItemSearchUseCase searchUseCase;
+
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new ProductApiController(productService))
+                MockMvcBuilders.standaloneSetup(new ProductApiController(searchUseCase))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                         .apply(documentationConfiguration(restDocumentationContextProvider))
@@ -75,8 +74,9 @@ class ProductApiControllerTest {
                 .image("image_download_url")
                 .build();
 
-        given(productService.getProduct(dto.getId())).willReturn(dto);
+        given(searchUseCase.getProduct(dto.getId())).willReturn(dto);
 
+        // when & then
         mockMvc.perform(get("/api/v1/products/{productId}", dto.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(parseObject(dto)))
@@ -91,13 +91,14 @@ class ProductApiControllerTest {
         int page = 1;
         ChickenCategory category = ChickenCategory.STEAMED;
 
-        given(productService.getAllProduct(any(ChickenCategory.class), any(Pageable.class))).willReturn(pageOneItems);
+        given(searchUseCase.getAllProducts(any(ChickenCategory.class), any(Pageable.class)))
+                .willReturn(pageOneItems);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", String.valueOf(page));
-        params.add("category", category.name());
 
-        mockMvc.perform(get("/api/v1/products/category")
+        // when & then
+        mockMvc.perform(get("/api/v1/products/category/{category}", category)
                         .params(params))
                 .andExpect(status().isOk())
                 .andExpect(content().string(parseObject(pageOneItems)))
@@ -117,11 +118,11 @@ class ProductApiControllerTest {
         params.add("searchKey", "name");
         params.add("searchValue", "name");
 
-        given(productService.searchProducts(any(Pageable.class), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
+        given(searchUseCase.searchProducts(any(Pageable.class), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
                 .willReturn(pageOneSearchItems);
 
         // when & then
-        mockMvc.perform(get("/api/v1/products/search/{category}", category)
+        mockMvc.perform(get("/api/v1/products/details/{category}", category)
                         .params(params))
                 .andExpect(status().isOk())
                 .andExpect(content().string(parseObject(pageOneSearchItems)))

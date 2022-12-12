@@ -14,10 +14,10 @@ import java.util.List;
 @Builder
 public class OrderItemsInfoResponseDto {
 
-    private Long orderId;
+    private long orderId;
     private List<OrderProductResponseDto> orderInfoResponseDtos;
-    private Integer totalCount;
-    private Long orderPrice;
+    private int totalCount;
+    private long orderPrice;
     private OrderStatus orderStatus;
 
     public void updateOrderProducts(List<OrderProductResponseDto> dtos) {

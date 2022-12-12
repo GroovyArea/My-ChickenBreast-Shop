@@ -50,8 +50,8 @@ public class ProductApiController {
      *
      * @param category 카테고리
      */
-    @GetMapping("/category")
-    public ResponseEntity<List<ListResponseDto>> getProducts(@RequestParam(defaultValue = "STEAMED") ChickenCategory category,
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<ListResponseDto>> getProducts(@PathVariable ChickenCategory category,
                                                              @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(searchUseCase.getAllProducts(category, pageable));
     }
@@ -64,7 +64,7 @@ public class ProductApiController {
      * @param searchKey   검색 조건
      * @param searchValue 검색 값
      */
-    @GetMapping("/search/{category}")
+    @GetMapping("/details/{category}")
     public ResponseEntity<List<ListResponseDto>> getSearchProducts(
             @PathVariable ChickenCategory category,
             @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,

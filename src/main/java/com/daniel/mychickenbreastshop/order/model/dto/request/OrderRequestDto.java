@@ -1,5 +1,7 @@
 package com.daniel.mychickenbreastshop.order.model.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderRequestDto {
 
     @NotNull(message = "상품 번호를 입력하세요.")

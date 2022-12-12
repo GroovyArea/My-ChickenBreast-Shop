@@ -24,7 +24,7 @@ public class OrderApiController {
 
     private final ManageOrderUseCase orderUseCase;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Long> createOrder(List<OrderRequestDto> orderRequestDtos) {
         Long orderId = orderUseCase.makeOrderReady(orderRequestDtos, getCurrentUserId());
         return ResponseEntity.ok().body(orderId);

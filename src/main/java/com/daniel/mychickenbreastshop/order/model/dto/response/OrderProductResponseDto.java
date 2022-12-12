@@ -16,5 +16,4 @@ public class OrderProductResponseDto {
     private String name;
     private int price;
     private String image;
-    private String content;
 }
