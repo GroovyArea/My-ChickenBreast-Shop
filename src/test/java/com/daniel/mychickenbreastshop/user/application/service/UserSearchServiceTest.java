@@ -103,7 +103,7 @@ class UserSearchServiceTest {
         assertThat(userSearchService.getUser(users.get(0).getId()).getUserId()).isEqualTo(1L);
     }
 
-    @DisplayName("유저 목록을 반환한다.")
+    @DisplayName("등급에 맞는 유저 목록을 반환한다.")
     @Test
     void getAllUsers() {
         // given
@@ -112,11 +112,13 @@ class UserSearchServiceTest {
         Page<User> page = new PageImpl<>(List.of(users.get(0), users.get(1), users.get(2), users.get(3), users.get(4),
                 users.get(5), users.get(6), users.get(7), users.get(8), users.get(9)), pageable, 10);
 
+        Role role = Role.ROLE_USER;
+
         // when
-        when(userRepository.findAll(pageable)).thenReturn(page);
+        when(userRepository.findAllByRole(pageable, role)).thenReturn(page);
         when(userListMapper.toDTO(any(User.class))).thenReturn(listResponseDtos.get(0));
 
-        assertThat(userSearchService.getAllUsers(pageable)).hasSize(10);
+        assertThat(userSearchService.getAllUsers(pageable, role)).hasSize(10);
     }
 
     @DisplayName("검색 조건에 맞는 유저 목록을 반환한다.")

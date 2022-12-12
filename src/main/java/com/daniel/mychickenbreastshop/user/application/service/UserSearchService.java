@@ -34,8 +34,8 @@ public class UserSearchService implements UserSearchUseCase {
     }
 
     @Override
-    public List<ListResponseDto> getAllUsers(Pageable pageable) {
-        List<User> users = userRepository.findAll(pageable).getContent();
+    public List<ListResponseDto> getAllUsers(Pageable pageable, Role role) {
+        List<User> users = userRepository.findAllByRole(pageable, role).getContent();
 
         return users.stream()
                 .map(userListMapper::toDTO)

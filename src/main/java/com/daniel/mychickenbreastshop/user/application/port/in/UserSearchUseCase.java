@@ -12,7 +12,7 @@ public interface UserSearchUseCase {
 
     DetailResponseDto getUser(Long userId);
 
-    List<ListResponseDto> getAllUsers(Pageable pageable);
+    List<ListResponseDto> getAllUsers(Pageable pageable, Role role);
 
     List<ListResponseDto> searchUsers(Pageable pageable, Role role, UserSearchDto userSearchDto);
 }

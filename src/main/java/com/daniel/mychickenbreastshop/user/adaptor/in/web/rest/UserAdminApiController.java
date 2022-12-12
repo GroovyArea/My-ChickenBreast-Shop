@@ -30,12 +30,14 @@ public class UserAdminApiController {
      *
      * @return 회원 리스트
      */
-    @GetMapping
-    public ResponseEntity<List<ListResponseDto>> getAll(@PageableDefault(
+    @GetMapping("/{role}")
+    public ResponseEntity<List<ListResponseDto>> getAll(
+            @PathVariable Role role,
+            @PageableDefault(
             page = 1,
             sort = "createdAt",
             direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(searchUseCase.getAllUsers(pageable));
+        return ResponseEntity.ok(searchUseCase.getAllUsers(pageable, role));
     }
 
     /**
@@ -46,7 +48,7 @@ public class UserAdminApiController {
      * @param searchValue 검색 값
      * @return 회원 검색 리스트
      */
-    @GetMapping("/search/{role}")
+    @GetMapping("/details/{role}")
     public ResponseEntity<List<ListResponseDto>> searchUsers(
             @PathVariable Role role,
             @PageableDefault(page = 1, sort = "createdAt", direction = Sort.Direction.DESC)
