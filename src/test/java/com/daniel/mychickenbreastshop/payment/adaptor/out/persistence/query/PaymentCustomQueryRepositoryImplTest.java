@@ -1,12 +1,12 @@
-package com.daniel.mychickenbreastshop.domain.payment.model.query;
+package com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.query;
 
-import com.daniel.mychickenbreastshop.payment.domain.Card;
+import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
 import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.CardRepository;
-import com.daniel.mychickenbreastshop.payment.domain.Payment;
 import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.domain.Card;
+import com.daniel.mychickenbreastshop.payment.domain.Payment;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
-import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +17,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-class PaymentCustomQueryRepositoryTest {
+class PaymentCustomQueryRepositoryImplTest {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 

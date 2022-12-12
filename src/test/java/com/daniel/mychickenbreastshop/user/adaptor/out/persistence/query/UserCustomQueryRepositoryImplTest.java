@@ -1,10 +1,10 @@
-package com.daniel.mychickenbreastshop.domain.user.model.query;
+package com.daniel.mychickenbreastshop.user.adaptor.out.persistence.query;
 
-import com.daniel.mychickenbreastshop.domain.user.model.User;
-import com.daniel.mychickenbreastshop.domain.user.model.UserRepository;
-import com.daniel.mychickenbreastshop.domain.user.model.dto.request.UserSearchDto;
-import com.daniel.mychickenbreastshop.domain.user.model.enums.Role;
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
+import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
+import com.daniel.mychickenbreastshop.user.domain.User;
+import com.daniel.mychickenbreastshop.user.domain.enums.Role;
+import com.daniel.mychickenbreastshop.user.model.dto.request.UserSearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

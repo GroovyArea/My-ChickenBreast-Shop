@@ -1,19 +1,17 @@
-package com.daniel.mychickenbreastshop.domain.product.item.model.query;
+package com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.query;
 
-import com.daniel.mychickenbreastshop.domain.product.category.model.Category;
-import com.daniel.mychickenbreastshop.domain.product.category.model.CategoryRepository;
-import com.daniel.mychickenbreastshop.domain.product.category.model.enums.ChickenCategory;
-import com.daniel.mychickenbreastshop.domain.product.item.model.Product;
-import com.daniel.mychickenbreastshop.domain.product.item.model.ProductRepository;
-import com.daniel.mychickenbreastshop.domain.product.item.model.dto.request.ItemSearchDto;
-import com.daniel.mychickenbreastshop.domain.product.item.model.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
+import com.daniel.mychickenbreastshop.product.category.adaptor.out.persistence.CategoryRepository;
+import com.daniel.mychickenbreastshop.product.category.domain.Category;
+import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCategory;
+import com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.ProductRepository;
+import com.daniel.mychickenbreastshop.product.item.domain.Product;
+import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
+import com.daniel.mychickenbreastshop.product.item.model.dto.request.ItemSearchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
@@ -26,8 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.NONE)
-class ItemCustomQueryRepositoryTest {
+class ItemCustomQueryRepositoryImplTest {
 
     @Autowired
     private CategoryRepository categoryRepository;

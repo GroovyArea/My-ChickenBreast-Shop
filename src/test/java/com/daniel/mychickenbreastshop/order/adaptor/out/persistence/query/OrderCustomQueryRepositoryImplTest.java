@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.domain.order.model.query;
+package com.daniel.mychickenbreastshop.order.adaptor.out.persistence.query;
 
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
 import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-class OrderCustomQueryRepositoryTest {
+class OrderCustomQueryRepositoryImplTest {
 
     @Autowired
     private OrderRepository orderRepository;
