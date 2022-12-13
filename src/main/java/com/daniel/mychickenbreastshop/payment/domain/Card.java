@@ -27,9 +27,11 @@ public class Card extends BaseTimeEntity<Card> {
     @Column(name = "interest_free_install")
     private String interestFreeInstall;
 
-
     // <카드 생성 메서드> //
-    public static Card createCard(String bin, String cardType, String installMonth, String interestFreeInstall) {
+    public static Card createCard(final String bin,
+                                  final String cardType,
+                                  final String installMonth,
+                                  final String interestFreeInstall) {
         return Card.builder()
                 .bin(bin)
                 .cardType(cardType)

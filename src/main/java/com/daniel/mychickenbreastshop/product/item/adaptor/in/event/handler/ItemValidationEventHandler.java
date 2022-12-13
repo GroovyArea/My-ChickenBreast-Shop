@@ -1,4 +1,4 @@
-package com.daniel.mychickenbreastshop.product.item.adaptor.in.event;
+package com.daniel.mychickenbreastshop.product.item.adaptor.in.event.handler;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;

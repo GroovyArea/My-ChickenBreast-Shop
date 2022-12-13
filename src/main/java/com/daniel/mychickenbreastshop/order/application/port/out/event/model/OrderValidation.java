@@ -4,10 +4,12 @@ import com.daniel.mychickenbreastshop.global.event.model.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Component
 public class OrderValidation implements DomainEvent {
 
     private long itemNo;

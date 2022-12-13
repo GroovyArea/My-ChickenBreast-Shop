@@ -7,7 +7,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx__email__role", columnList = "email, role", unique = true),
+        @Index(name = "idx__login_id__role", columnList = "loginId, role", unique = true),
+        @Index(name = "idx__name__role", columnList = "name, role")
+})
 @Entity
 @Getter
 @Builder
@@ -19,7 +23,7 @@ public class User extends BaseTimeEntity<User> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String loginId;
 
     private String password;
@@ -28,7 +32,7 @@ public class User extends BaseTimeEntity<User> {
 
     private String name;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
     private String address;

@@ -1,13 +1,15 @@
-package com.daniel.mychickenbreastshop.product.item.adaptor.in.event;
+package com.daniel.mychickenbreastshop.product.item.adaptor.in.event.handler;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.error.exception.InternalErrorException;
 import com.daniel.mychickenbreastshop.global.event.exception.EventNotExistsException;
 import com.daniel.mychickenbreastshop.global.event.model.EventModel;
+import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.ProductRepository;
 import com.daniel.mychickenbreastshop.product.item.domain.Product;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ErrorMessages;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +32,21 @@ public class ItemVariationEventHandler {
         String eventAction = eventModel.getEventAction()
                 .orElseThrow(EventNotExistsException::new);
 
+
         if (eventAction.equals(ITEM_VARIATION_EVENT)) {
             String payload = eventModel.getPayload();
 
             try {
                 JsonNode jsonNode = objectMapper.readTree(payload);
-                List<Long> numbers = objectMapper.treeToValue(jsonNode.path("numbers"), List.class);
-                List<Integer> quantities = objectMapper.treeToValue(jsonNode.path("quantities"), List.class);
+
+                String jsonNumbers = JsonUtil.objectToString(jsonNode.path("numbers"));
+                List<Long> numbers = objectMapper.readValue(jsonNumbers, new TypeReference<>() {
+                });
+
+                String jsonQuantities = JsonUtil.objectToString(jsonNode.path("quantities"));
+                List<Integer> quantities = objectMapper.readValue(jsonQuantities, new TypeReference<>() {
+                });
+
                 long totalAmount = jsonNode.get("total_amount").asLong();
                 boolean status = jsonNode.get("status").asBoolean();
 

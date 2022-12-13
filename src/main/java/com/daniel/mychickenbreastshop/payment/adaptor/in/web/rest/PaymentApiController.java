@@ -32,7 +32,7 @@ import static com.daniel.mychickenbreastshop.payment.domain.enums.ErrorMessages.
 @RequestMapping("/api/v1/payments")
 public class PaymentApiController {
 
-    private final ManagePaymentUseCase paymentUseCase;
+    private final ManagePaymentUseCase managePaymentUseCase;
 
     @PostMapping("/{paymentGateway}")
     public ResponseEntity<PaymentRequestionDto> requestPayment(@PathVariable PaymentGateway paymentGateway,
@@ -42,7 +42,7 @@ public class PaymentApiController {
         String requestURL = getRequestURL(request);
         String currentLoginId = getCurrentLoginId();
 
-        PaymentRequestResult paymentReady = (PaymentRequestResult) paymentUseCase.createPaymentReady(
+        PaymentRequestResult paymentReady = (PaymentRequestResult) managePaymentUseCase.createPaymentReady(
                 itemPayRequestDtos,
                 paymentGateway,
                 requestURL,
@@ -60,7 +60,7 @@ public class PaymentApiController {
     public ResponseEntity<Void> approvalPaymentRequest(@PathVariable Long paymentId,
                                                        @PathVariable PaymentGateway paymentGateway,
                                                        @RequestParam("pg_token") String payToken) {
-        paymentUseCase.approvePayment(paymentGateway, payToken, paymentId, getCurrentLoginId());
+        managePaymentUseCase.approvePayment(paymentGateway, payToken, paymentId, getCurrentLoginId());
         return ResponseEntity.ok().build();
     }
 
@@ -68,7 +68,7 @@ public class PaymentApiController {
     public ResponseEntity<Void> cancelPaymentRequest(@PathVariable Long paymentId,
                                                      @PathVariable PaymentGateway paymentGateway,
                                                      @Valid @RequestBody PayCancelRequestDto payCancelRequestDto) {
-        paymentUseCase.cancelPayment(paymentGateway, payCancelRequestDto, paymentId, getCurrentLoginId());
+        managePaymentUseCase.cancelPayment(paymentGateway, payCancelRequestDto, paymentId, getCurrentLoginId());
         return ResponseEntity.ok().build();
     }
 

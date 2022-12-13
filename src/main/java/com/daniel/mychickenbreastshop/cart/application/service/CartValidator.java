@@ -12,15 +12,16 @@ import org.springframework.stereotype.Component;
 public class CartValidator {
 
     private final ApplicationEventPublisher eventPublisher;
-    private final EventBuilder<CartValidation> eventBuilder;
+    private final EventBuilder<CartValidation> cartValidationEventBuilder;
 
     public void cartValidate(CartRequestDto cartRequestDto) {
         eventPublisher.publishEvent(
-                eventBuilder.createEvent(new CartValidation(
-                        cartRequestDto.getItemNo(),
-                        cartRequestDto.getItemQuantity(),
-                        cartRequestDto.getTotalPrice()
-                ))
+                cartValidationEventBuilder.createEvent(new CartValidation(
+                                cartRequestDto.getItemNo(),
+                                cartRequestDto.getItemQuantity(),
+                                cartRequestDto.getTotalPrice()
+                        )
+                )
         );
     }
 }

@@ -7,6 +7,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Table(indexes = {
+        @Index(name = "idx__order_id__status", columnList = "order_id, pay_status", unique = true)
+})
 @Entity
 @Getter
 @Builder
@@ -18,14 +21,14 @@ public class Payment extends BaseTimeEntity<Payment> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_id")
+    @Column(name = "order_id", nullable = false)
     private Long orderId;
 
     @Column(name = "total_price", nullable = false)
     private Long totalPrice;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type")
+    @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)

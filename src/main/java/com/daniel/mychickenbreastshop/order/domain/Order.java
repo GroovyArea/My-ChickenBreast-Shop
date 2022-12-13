@@ -10,7 +10,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "ORDERS")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx__userId_status", columnList = "user_id, order_status", unique = true)
+})
 @Entity
 @Getter
 @Builder
@@ -22,16 +24,14 @@ public class Order extends BaseTimeEntity<Order> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total_count")
     private Integer totalCount;
 
-    @Column(name = "order_price")
     private Long orderPrice;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", unique = true, nullable = false)
     private Long userId;
 
-    @Column(name = "payment_id")
+    @Column(name = "payment_id", unique = true, nullable = false)
     private Long paymentId;
 
     @Enumerated(EnumType.STRING)

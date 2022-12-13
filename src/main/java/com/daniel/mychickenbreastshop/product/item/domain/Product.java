@@ -10,6 +10,9 @@ import javax.persistence.*;
 
 import static com.daniel.mychickenbreastshop.product.item.domain.enums.ErrorMessages.ITEM_QUANTITY_NOT_ENOUGH;
 
+@Table(indexes = {
+        @Index(name = "idx__name__status", columnList = "name, product_status", unique = true)
+})
 @Entity
 @Getter
 @Builder
