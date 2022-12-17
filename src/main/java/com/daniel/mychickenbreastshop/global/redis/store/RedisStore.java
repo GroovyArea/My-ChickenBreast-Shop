@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * Redis Component 클래스
@@ -34,7 +35,7 @@ public abstract class RedisStore {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public <T> T getData(String key, Class<T> valueType) {
+    public <T> Optional<T> getData(String key, Class<T> valueType) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         String value = (String) valueOperations.get(key);
 
@@ -43,7 +44,7 @@ public abstract class RedisStore {
         }
 
         try {
-            return objectMapper.readValue(value, valueType);
+            return Optional.ofNullable(objectMapper.readValue(value, valueType));
         } catch (JsonProcessingException e) {
             throw new InternalErrorException(e);
         }

@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ObjectMapper를 이용한 객체, Json을 파싱하는 util class
@@ -42,7 +42,7 @@ public class JsonUtil {
 
     public static <K, V> Map<K, V> stringToMap(String string, Class<K> keyType, Class<V> valueType) {
         try {
-            return MAPPER.readValue(string, MapType.construct(HashMap.class, null, null,
+            return MAPPER.readValue(string, MapType.construct(ConcurrentHashMap.class, null, null,
                     null, SimpleType.constructUnsafe(keyType), SimpleType.constructUnsafe(valueType)));
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);

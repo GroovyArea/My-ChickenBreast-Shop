@@ -43,8 +43,8 @@ public class PasswordEncrypt {
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < b.length; i++) {
-            sb.append(Integer.toString((b[i] & 0xFF) + 256, 16).substring(1));
+        for (byte value : b) {
+            sb.append(Integer.toString((value & 0xFF) + 256, 16).substring(1));
         }
 
         result = sb.toString();
