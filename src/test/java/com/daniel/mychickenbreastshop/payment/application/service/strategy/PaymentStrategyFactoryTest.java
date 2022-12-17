@@ -2,8 +2,9 @@ package com.daniel.mychickenbreastshop.payment.application.service.strategy;
 
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.event.builder.EventBuilder;
-import com.daniel.mychickenbreastshop.global.event.model.DomainEvent;
 import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
+import com.daniel.mychickenbreastshop.payment.application.port.out.event.model.ItemsVariation;
+import com.daniel.mychickenbreastshop.payment.application.port.out.event.model.OrderVariation;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.kakaopay.application.KakaoPaymentApplicationService;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
@@ -20,7 +21,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentStrategyFactoryTest {
@@ -34,7 +34,10 @@ class PaymentStrategyFactoryTest {
     ApplicationEventPublisher eventPublisher;
 
     @Mock
-    EventBuilder<DomainEvent> eventBuilder;
+    private EventBuilder<ItemsVariation> itemsVariationEventBuilder;
+
+    @Mock
+    private EventBuilder<OrderVariation> orderVariationEventBuilder;
 
     @Mock
     PaymentRepository paymentRepository;
@@ -43,7 +46,7 @@ class PaymentStrategyFactoryTest {
     void setUp() {
         Set<PaymentStrategyService<PaymentResult>> strategyApplications = Set.of(new KakaopayStrategyService(
                 kakaoPaymentApplicationService, eventPublisher,
-                eventBuilder, paymentRepository));
+                itemsVariationEventBuilder, orderVariationEventBuilder, paymentRepository));
 
         paymentStrategyFactory = new PaymentStrategyFactory(strategyApplications);
     }
