@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.order.application.service;
 
 import com.daniel.mychickenbreastshop.order.adaptor.out.persistence.OrderRepository;
-import com.daniel.mychickenbreastshop.order.application.port.in.GetOrderInfoUseCase;
 import com.daniel.mychickenbreastshop.order.domain.Order;
 import com.daniel.mychickenbreastshop.order.domain.OrderProduct;
 import com.daniel.mychickenbreastshop.order.domain.enums.OrderStatus;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +43,7 @@ class GetOrderInfoServiceTest {
     private  OrderProductsMapper orderProductListMapper;
 
     @InjectMocks
-    private GetOrderInfoUseCase getOrderInfoService;
+    private GetOrderInfoService getOrderInfoService;
 
     private List<Order> orders;
     private List<OrderProduct> orderProducts;
@@ -59,7 +57,7 @@ class GetOrderInfoServiceTest {
         responseDtos = new ArrayList<>();
         orderProductResponseDtos = new ArrayList<>();
 
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 51; i++) {
             OrderProduct orderProduct = OrderProduct.builder()
                     .id((long) i)
                     .count(3)
@@ -83,11 +81,12 @@ class GetOrderInfoServiceTest {
                     .userId(userId)
                     .paymentId(paymentId)
                     .build();
+
         for (int i = 1; i <= 50; i++) {
             orders.add(order);
 
             OrderInfoListResponseDto responseDto = OrderInfoListResponseDto.builder()
-                    .orderId((long) i)
+                    .orderId(i)
                     .totalCount(i)
                     .orderPrice(360000L)
                     .orderStatus(OrderStatus.ORDER_COMPLETE)
@@ -139,7 +138,7 @@ class GetOrderInfoServiceTest {
                 .build();
 
         // when
-        when(orderRepository.findById(orders.get(0).getId())).thenReturn(Optional.ofNullable(orders.get(0)));
+        when(orderRepository.findByIdWithOrderProductsUsingFetchJoin(orders.get(0).getId())).thenReturn(Optional.ofNullable(orders.get(0)));
         when(orderItemsInfoMapper.toDTO(orders.get(0))).thenReturn(dto);
         when(orderProductListMapper.toDTO(any(OrderProduct.class))).thenReturn(orderProductResponseDtos.get(0));
 

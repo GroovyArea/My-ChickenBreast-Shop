@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.payment.application.service;
 
 import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
-import com.daniel.mychickenbreastshop.payment.application.port.in.GetPaymentInfoUseCase;
 import com.daniel.mychickenbreastshop.payment.domain.Card;
 import com.daniel.mychickenbreastshop.payment.domain.Payment;
 import com.daniel.mychickenbreastshop.payment.domain.enums.PayStatus;
@@ -18,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +29,7 @@ class GetPaymentInfoServiceTest {
     private  PaymentInfoMapper paymentInfoMapper;
 
     @InjectMocks
-    private GetPaymentInfoUseCase getPaymentInfoService;
+    private GetPaymentInfoService getPaymentInfoService;
 
 
     @DisplayName("결제 고유 id를 통해 상세 정보를 조회한다.")

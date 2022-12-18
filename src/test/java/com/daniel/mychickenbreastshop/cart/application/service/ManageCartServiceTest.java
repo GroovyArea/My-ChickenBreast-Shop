@@ -1,6 +1,5 @@
 package com.daniel.mychickenbreastshop.cart.application.service;
 
-import com.daniel.mychickenbreastshop.cart.application.port.in.ManageCartUseCase;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.CartRequestDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.request.UpdatableCartDto;
 import com.daniel.mychickenbreastshop.cart.model.dto.response.CartResponseDto;
@@ -35,7 +34,7 @@ class ManageCartServiceTest {
     private  CartValidator cartValidator;
 
     @InjectMocks
-    private ManageCartUseCase manageCartService;
+    private ManageCartService manageCartService;
 
     private String cookieValue;
     private UpdatableCartDto updatableCartDto;

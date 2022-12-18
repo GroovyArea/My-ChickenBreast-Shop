@@ -2,7 +2,6 @@ package com.daniel.mychickenbreastshop.user.application.service;
 
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
-import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
 import com.daniel.mychickenbreastshop.user.domain.User;
 import com.daniel.mychickenbreastshop.user.domain.enums.Role;
 import com.daniel.mychickenbreastshop.user.mapper.UserDetailMapper;
@@ -41,7 +40,7 @@ class UserSearchServiceTest {
     private UserListMapper userListMapper;
 
     @InjectMocks
-    private UserSearchUseCase userSearchService;
+    private UserSearchService userSearchService;
 
     private List<User> users;
     private List<ListResponseDto> listResponseDtos;

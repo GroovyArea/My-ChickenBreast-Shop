@@ -3,7 +3,6 @@ package com.daniel.mychickenbreastshop.product.item.application.service;
 import com.daniel.mychickenbreastshop.product.category.domain.Category;
 import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.ProductRepository;
-import com.daniel.mychickenbreastshop.product.item.application.port.item.in.ItemSearchUseCase;
 import com.daniel.mychickenbreastshop.product.item.domain.Product;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.product.item.mapper.ItemDetailMapper;
@@ -41,7 +40,7 @@ class ItemSearchServiceTest {
     private ItemListMapper itemListMapper;
 
     @InjectMocks
-    private ItemSearchUseCase itemSearchService;
+    private ItemSearchService itemSearchService;
 
     private List<Product> products;
     private List<ListResponseDto> listResponseDtos;

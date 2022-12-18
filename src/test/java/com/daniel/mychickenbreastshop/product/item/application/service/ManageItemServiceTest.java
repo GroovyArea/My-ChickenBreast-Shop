@@ -6,7 +6,6 @@ import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCateg
 import com.daniel.mychickenbreastshop.product.item.adaptor.out.file.FileStore;
 import com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.ProductRepository;
 import com.daniel.mychickenbreastshop.product.item.application.port.file.out.model.FileResponse;
-import com.daniel.mychickenbreastshop.product.item.application.port.item.in.ManageItemUseCase;
 import com.daniel.mychickenbreastshop.product.item.domain.Product;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.product.item.mapper.ItemModifyMapper;
@@ -50,7 +49,7 @@ class ManageItemServiceTest {
     private ItemModifyMapper itemModifyMapper;
 
     @InjectMocks
-    private ManageItemUseCase manageItemService;
+    private ManageItemService manageItemService;
 
 
     private List<Product> products;

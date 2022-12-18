@@ -1,6 +1,5 @@
 package com.daniel.mychickenbreastshop.payment.application.service;
 
-import com.daniel.mychickenbreastshop.payment.application.port.in.ManagePaymentUseCase;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.kakaopay.webclient.model.KakaoPayResponse;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentRequestResult;
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.PaymentResult;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +32,7 @@ class ManagePaymentServiceTest {
     private PaymentStrategyService<PaymentResult> paymentStrategyService;
 
     @InjectMocks
-    private ManagePaymentUseCase paymentUseCase;
+    private ManagePaymentService managePaymentService;
 
     private String requestUrl;
     private String loginId;
@@ -77,7 +75,7 @@ class ManagePaymentServiceTest {
         when(paymentStrategyService.payItems(itemPayRequestDtos, requestUrl, loginId, orderId))
                 .thenReturn(payReadyResponse);
 
-        PaymentRequestResult paymentReady = (PaymentRequestResult) paymentUseCase
+        PaymentRequestResult paymentReady = (PaymentRequestResult) managePaymentService
                 .createPaymentReady(itemPayRequestDtos, paymentGateway, requestUrl, loginId, orderId);
 
         assertThat(paymentReady.getRedirectUrl()).isEqualTo(redirectUrl);

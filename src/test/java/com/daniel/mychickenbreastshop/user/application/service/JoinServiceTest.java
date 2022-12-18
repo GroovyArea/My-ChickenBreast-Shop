@@ -3,7 +3,6 @@ package com.daniel.mychickenbreastshop.user.application.service;
 import com.daniel.mychickenbreastshop.global.error.exception.BadRequestException;
 import com.daniel.mychickenbreastshop.global.redis.store.RedisStore;
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
-import com.daniel.mychickenbreastshop.user.application.port.in.JoinUseCase;
 import com.daniel.mychickenbreastshop.user.application.service.redis.model.EmailRedisModel;
 import com.daniel.mychickenbreastshop.user.domain.User;
 import com.daniel.mychickenbreastshop.user.domain.enums.Role;
@@ -16,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +35,7 @@ class JoinServiceTest {
     private UserJoinMapper userJoinMapper;
 
     @InjectMocks
-    private JoinUseCase joinService;
+    private JoinService joinService;
 
     @DisplayName("회원 가입을 진행한다.")
     @Test
@@ -63,7 +64,7 @@ class JoinServiceTest {
         EmailRedisModel emailRedisModel = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(emailRedisModel.getEmail(), EmailRedisModel.class).get()).thenReturn(emailRedisModel);
+        when(userRedisStore.getData(emailRedisModel.getEmail(), EmailRedisModel.class)).thenReturn(Optional.of(emailRedisModel));
         when(userJoinMapper.toEntity(any(JoinRequestDto.class))).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
@@ -108,7 +109,7 @@ class JoinServiceTest {
         EmailRedisModel emailRedisModel = new EmailRedisModel(joinUser.getEmail(), String.valueOf(emailRandomKey));
 
         // when
-        when(userRedisStore.getData(emailRedisModel.getEmail(), EmailRedisModel.class).get()).thenReturn(emailRedisModel);
+        when(userRedisStore.getData(emailRedisModel.getEmail(), EmailRedisModel.class)).thenReturn(Optional.of(emailRedisModel));
 
         assertThatThrownBy(() -> joinService.join(joinUser))
                 .isInstanceOf(BadRequestException.class).hasMessageContaining("인증 번호가 일치하지 않습니다. 재인증 받아 주세요.");
