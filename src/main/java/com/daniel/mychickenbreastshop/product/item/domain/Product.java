@@ -84,7 +84,7 @@ public class Product extends BaseTimeEntity<Product> {
         this.category.getProducts().add(this);
     }
 
-    public void updateImageInfo(String uploadFileName) {
+    public void updateImageInfo(final String uploadFileName) {
         this.image = uploadFileName;
     }
 

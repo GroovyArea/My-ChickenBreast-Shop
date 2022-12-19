@@ -80,8 +80,6 @@ class ManageItemServiceTest {
             product.updateCategoryInfo(category);
 
             products.add(product);
-
-
         }
     }
 
@@ -108,6 +106,7 @@ class ManageItemServiceTest {
 
         Category category = Category.builder()
                 .categoryName(ChickenCategory.STEAMED)
+                .products(products)
                 .build();
 
         // when
@@ -190,13 +189,14 @@ class ManageItemServiceTest {
 
         String imageFileName = "modifiedImage.png";
         String uploadFileName = "uploadFileName.png";
+        String uploadFileUrl = "upload_file_url";
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "image", imageFileName,
                 MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
         FileResponse fileResponse = FileResponse.builder()
-                .uploadFileUrl("upload_file_url")
+                .uploadFileUrl(uploadFileUrl)
                 .build();
 
         // when
@@ -205,7 +205,7 @@ class ManageItemServiceTest {
 
         manageItemService.changeImage(original.getId(), multipartFile);
 
-        assertThat(original.getImage()).isEqualTo(uploadFileName);
+        assertThat(original.getImage()).isEqualTo(uploadFileUrl);
 
     }
 }

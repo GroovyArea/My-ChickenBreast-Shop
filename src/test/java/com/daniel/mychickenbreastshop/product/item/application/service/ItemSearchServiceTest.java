@@ -62,8 +62,6 @@ class ItemSearchServiceTest {
                     .status(ChickenStatus.SALE)
                     .build();
 
-            product.updateCategoryInfo(category);
-
             products.add(product);
 
             ListResponseDto listResponseDto = ListResponseDto.builder()
@@ -73,7 +71,7 @@ class ItemSearchServiceTest {
                     .quantity(i * 100)
                     .image("image" + i)
                     .status(ChickenStatus.SALE)
-                    .category(category.getCategoryName())
+                    .category(ChickenCategory.STEAMED)
                     .build();
 
             listResponseDtos.add(listResponseDto);
@@ -82,8 +80,10 @@ class ItemSearchServiceTest {
         category = Category.builder()
                 .id(1L)
                 .categoryName(ChickenCategory.STEAMED)
-                .products(new ArrayList<>())
+                .products(products)
                 .build();
+
+
     }
 
     @DisplayName("상품 상세 정보를 조회한다.")
@@ -147,7 +147,7 @@ class ItemSearchServiceTest {
         List<ListResponseDto> listResponseDtos = itemSearchService.searchProducts(pageable, status, categoryName, itemSearchDto);
 
         assertThat(listResponseDtos).hasSize(10);
-        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(category));
+        listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(categoryName));
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getStatus()).isEqualTo(status));
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getName()).contains("name"));
     }
