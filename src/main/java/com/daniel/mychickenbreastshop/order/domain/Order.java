@@ -10,8 +10,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "orders", indexes = {
-        @Index(name = "idx__userId_status", columnList = "user_id, order_status", unique = true)
+@Table(name = "orders",
+        indexes = {
+        @Index(name = "idx__userId_status", columnList = "user_id", unique = true)
 })
 @Entity
 @Getter

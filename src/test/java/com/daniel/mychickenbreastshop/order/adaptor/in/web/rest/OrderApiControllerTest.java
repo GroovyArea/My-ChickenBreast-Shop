@@ -43,14 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrderApiControllerTest {
 
     @MockBean
-    private ManageOrderUseCase orderUseCase;
+    private ManageOrderUseCase manageOrderService;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new OrderApiController(orderUseCase))
+                MockMvcBuilders.standaloneSetup(new OrderApiController(manageOrderService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .apply(documentationConfiguration(restDocumentationContextProvider))
                         .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
@@ -75,11 +75,11 @@ class OrderApiControllerTest {
         long orderId = 1;
         long userId = 1;
 
-        given(orderUseCase.makeOrderReady(orderRequestDtos, userId))
+        given(manageOrderService.makeOrderReady(orderRequestDtos, userId))
                 .willReturn(orderId);
 
         // when & then
-        mockMvc.perform(post("/api/v2/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .content(parseObject(orderRequestDtos))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

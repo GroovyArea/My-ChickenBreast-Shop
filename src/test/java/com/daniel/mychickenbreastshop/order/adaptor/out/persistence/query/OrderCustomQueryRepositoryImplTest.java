@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
@@ -29,13 +28,10 @@ class OrderCustomQueryRepositoryImplTest {
     @Autowired
     private OrderRepository orderRepository;
 
-
     @BeforeEach
     void setUp() {
         List<Order> orders = new ArrayList<>();
         List<OrderProduct> orderProducts = new ArrayList<>();
-
-        long userId = 1;
 
         for (int i = 0; i < 10; i++) {
             OrderProduct orderProduct = OrderProduct.builder()
@@ -54,14 +50,15 @@ class OrderCustomQueryRepositoryImplTest {
                     .totalCount(10)
                     .orderPrice(100000L)
                     .status(OrderStatus.ORDER_COMPLETE)
-                    .userId(userId)
+                    .userId((long) i)
+                    .paymentId((long) i)
                     .orderProducts(orderProducts)
                     .build();
 
             orders.add(order);
 
-            orderRepository.save(order);
         }
+        orderRepository.saveAll(orders);
     }
 
     @DisplayName("회원 번호에 해당하는 주문 정보를 페이징 반환한다.")

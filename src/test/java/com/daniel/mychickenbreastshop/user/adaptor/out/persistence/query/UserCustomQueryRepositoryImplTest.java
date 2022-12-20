@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
-class UserCustomQueryRepositoryTest {
+class UserCustomQueryRepositoryImplTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -57,7 +57,7 @@ class UserCustomQueryRepositoryTest {
         }
     }
 
-    @DisplayName("검색 조건에 맞는 검색 결과를 반환한다.")
+    @DisplayName("회원 검색 조건에 맞는 검색 결과를 반환한다.")
     @Test
     void findUserWithDynamicQuery() {
         // given

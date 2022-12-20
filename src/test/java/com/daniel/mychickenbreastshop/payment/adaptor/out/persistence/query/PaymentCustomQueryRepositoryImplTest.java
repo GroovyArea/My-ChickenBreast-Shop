@@ -1,7 +1,6 @@
 package com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.query;
 
 import com.daniel.mychickenbreastshop.global.config.QuerydslConfig;
-import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.CardRepository;
 import com.daniel.mychickenbreastshop.payment.adaptor.out.persistence.PaymentRepository;
 import com.daniel.mychickenbreastshop.payment.domain.Card;
 import com.daniel.mychickenbreastshop.payment.domain.Payment;
@@ -10,26 +9,18 @@ import com.daniel.mychickenbreastshop.payment.domain.enums.PaymentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
 class PaymentCustomQueryRepositoryImplTest {
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private PaymentRepository paymentRepository;
-
-    @Autowired
-    private CardRepository cardRepository;
 
     @BeforeEach
     void setUp() {
@@ -40,6 +31,7 @@ class PaymentCustomQueryRepositoryImplTest {
                     .build();
 
             Payment payment = Payment.builder()
+                    .orderId((long) i)
                     .totalPrice(100000L)
                     .paymentType(PaymentType.CASH)
                     .status(PayStatus.COMPLETED)

@@ -26,6 +26,7 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
     public Page<Order> findAllByUserId(Long userId, OrderStatus orderStatus, Pageable pageable) {
         List<Order> results = queryFactory.selectFrom(order)
                 .join(orderProduct)
+                .on(orderIdEq())
                 .where(userIdEq(userId), statusEq(orderStatus))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -37,6 +38,10 @@ public class OrderCustomQueryRepositoryImpl implements OrderCustomQueryRepositor
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetch().size());
 
+    }
+
+    private BooleanExpression orderIdEq() {
+        return order.id.eq(orderProduct.order.id);
     }
 
     private BooleanExpression userIdEq(Long userIdCond) {
