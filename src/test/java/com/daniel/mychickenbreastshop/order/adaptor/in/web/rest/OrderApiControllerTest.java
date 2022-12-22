@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -26,11 +25,10 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(OrderApiController.class)
-@AutoConfigureRestDocs
 class OrderApiControllerTest {
 
     @MockBean
@@ -53,7 +50,6 @@ class OrderApiControllerTest {
                 MockMvcBuilders.standaloneSetup(new OrderApiController(manageOrderService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .apply(documentationConfiguration(restDocumentationContextProvider))
-                        .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
 
         UserDetails userDetails = PrincipalDetails.builder()
@@ -73,9 +69,8 @@ class OrderApiControllerTest {
         // given
         List<OrderRequestDto> orderRequestDtos = getOrderRequestDtos();
         long orderId = 1;
-        long userId = 1;
 
-        given(manageOrderService.makeOrderReady(orderRequestDtos, userId))
+        given(manageOrderService.makeOrderReady(any(), anyLong()))
                 .willReturn(orderId);
 
         // when & then
@@ -94,7 +89,7 @@ class OrderApiControllerTest {
     private List<OrderRequestDto> getOrderRequestDtos() {
         List<OrderRequestDto> orderRequestDtos = new ArrayList<>();
 
-        for (int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 10; i++) {
             OrderRequestDto orderRequestDto = OrderRequestDto.builder()
                     .itemNumber((long) i)
                     .itemName("item_name" + i)

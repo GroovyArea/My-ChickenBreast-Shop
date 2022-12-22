@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -26,10 +25,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(ProductAdminApiController.class)
-@AutoConfigureRestDocs
 class ProductAdminApiControllerTest {
 
     @MockBean
@@ -52,7 +47,6 @@ class ProductAdminApiControllerTest {
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                         .apply(documentationConfiguration(restDocumentationContextProvider))
-                        .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
     }
 
@@ -74,14 +68,17 @@ class ProductAdminApiControllerTest {
         MockMultipartFile imageFile = new MockMultipartFile("image", imageFileName,
                 MediaType.IMAGE_PNG_VALUE, "image".getBytes(StandardCharsets.UTF_8));
 
+        MockMultipartFile requestDto = new MockMultipartFile("registerRequestDto", "registerRequestDto",
+                MediaType.APPLICATION_JSON_VALUE, parseObject(registerRequestDto).getBytes());
+
         long registeredProductId = 1;
 
         given(manageItemService.registerItem(any(RegisterRequestDto.class), any(MultipartFile.class)))
                 .willReturn(registeredProductId);
 
         mockMvc.perform(multipart("/api/v2/products")
-                .file(imageFile)
-                .content(parseObject(registerRequestDto)))
+                        .file(imageFile)
+                        .file(requestDto))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(registeredProductId)))
                 .andDo(print());

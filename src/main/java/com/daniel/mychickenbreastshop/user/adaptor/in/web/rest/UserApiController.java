@@ -56,7 +56,11 @@ public class UserApiController {
     }
 
     private Long getUserId() {
-        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         return principalDetails.getId();
     }
 }

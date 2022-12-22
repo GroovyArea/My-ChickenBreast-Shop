@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,10 +26,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,24 +35,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(UserApiController.class)
-@AutoConfigureRestDocs
 class UserApiControllerTest {
 
     private MockMvc mockMvc;
 
     @MockBean
-    private ManageUserUseCase userUseService;
+    private ManageUserUseCase manageUserService;
 
     @MockBean
-    private UserSearchUseCase searchUseService;
+    private UserSearchUseCase userSearchService;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new UserAdminApiController(userUseService, searchUseService))
+                MockMvcBuilders.standaloneSetup(new UserApiController(manageUserService, userSearchService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                         .apply(documentationConfiguration(restDocumentationContextProvider))
-                        .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
     }
 
@@ -74,7 +68,7 @@ class UserApiControllerTest {
                 .role(Role.ROLE_USER)
                 .build();
 
-        given(searchUseService.getUser(anyLong())).willReturn(dto);
+        given(userSearchService.getUser(anyLong())).willReturn(dto);
 
         mockMvc.perform(get("/api/v1/users/{userId}", dto.getUserId()))
                 .andExpect(status().isOk())

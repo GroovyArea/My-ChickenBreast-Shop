@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +15,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.nio.charset.StandardCharsets;
 
@@ -32,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(FileApiController.class)
-@AutoConfigureRestDocs
 class FileApiControllerTest {
 
     @MockBean
@@ -47,7 +44,6 @@ class FileApiControllerTest {
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
                 MockMvcBuilders.standaloneSetup(new FileApiController(itemUseCase, fileResourceUseCase))
-                        .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .apply(documentationConfiguration(restDocumentationContextProvider))
                         .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();

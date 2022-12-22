@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/v1/orders")
 public class OrderInfoApiController {
 
-    private final GetOrderInfoUseCase orderInfoUseCase;
+    private final GetOrderInfoUseCase getOrderInfoUseCase;
 
     /**
      * 회원 개인 주문 내역 조회
@@ -33,7 +33,7 @@ public class OrderInfoApiController {
             @PageableDefault(page = 1, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(defaultValue = "ORDER_COMPLETE") OrderStatus orderStatus) {
-        return ResponseEntity.ok(orderInfoUseCase.getAllOrders(userId, orderStatus, pageable));
+        return ResponseEntity.ok(getOrderInfoUseCase.getAllOrders(userId, orderStatus, pageable));
     }
 
     /**
@@ -44,7 +44,7 @@ public class OrderInfoApiController {
      */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderItemsInfoResponseDto> getOrderInfo(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderInfoUseCase.getOrderDetail(orderId));
+        return ResponseEntity.ok(getOrderInfoUseCase.getOrderDetail(orderId));
     }
 
 }

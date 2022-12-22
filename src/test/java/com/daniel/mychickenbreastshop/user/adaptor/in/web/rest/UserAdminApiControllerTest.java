@@ -9,12 +9,13 @@ import com.daniel.mychickenbreastshop.user.model.dto.response.ListResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,10 +28,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,26 +36,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserAdminApiController.class)
-@AutoConfigureRestDocs
+@ExtendWith(RestDocumentationExtension.class)
 class UserAdminApiControllerTest {
 
     private MockMvc mockMvc;
 
     @MockBean
-    private ManageUserUseCase userUseService;
+    private ManageUserUseCase manageUserService;
 
     @MockBean
-    private UserSearchUseCase searchUseService;
-
+    private UserSearchUseCase userSearchService;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new UserAdminApiController(userUseService, searchUseService))
+                MockMvcBuilders.standaloneSetup(new UserAdminApiController(manageUserService, userSearchService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                         .apply(documentationConfiguration(restDocumentationContextProvider))
-                        .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
     }
 
@@ -73,7 +69,7 @@ class UserAdminApiControllerTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", String.valueOf(page));
 
-        given(searchUseService.getAllUsers(any(Pageable.class), any(Role.class)))
+        given(userSearchService.getAllUsers(any(Pageable.class), any(Role.class)))
                 .willReturn(listResponseDtos);
 
         mockMvc.perform(get("/api/v2/users/{role}", role)
@@ -96,7 +92,7 @@ class UserAdminApiControllerTest {
         params.add("searchKey", "name");
         params.add("searchValue", "name");
 
-        given(searchUseService.searchUsers(any(Pageable.class), any(Role.class), any(UserSearchDto.class)))
+        given(userSearchService.searchUsers(any(Pageable.class), any(Role.class), any(UserSearchDto.class)))
                 .willReturn(listResponseDtos);
 
         // when & then

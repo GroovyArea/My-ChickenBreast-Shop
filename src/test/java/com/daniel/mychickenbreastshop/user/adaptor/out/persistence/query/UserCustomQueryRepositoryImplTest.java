@@ -19,10 +19,10 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 @Import(QuerydslConfig.class)
 class UserCustomQueryRepositoryImplTest {
+
 
     @Autowired
     private UserRepository userRepository;

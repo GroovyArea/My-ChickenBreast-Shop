@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +18,8 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDateTime;
@@ -26,11 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,22 +37,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(OrderInfoApiController.class)
-@AutoConfigureRestDocs
 class OrderInfoApiControllerTest {
 
     @MockBean
-    private GetOrderInfoUseCase orderInfoUseCase;
+    private GetOrderInfoUseCase getOrderInfoService;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc =
-                MockMvcBuilders.standaloneSetup(new OrderInfoApiController(orderInfoUseCase))
+                MockMvcBuilders.standaloneSetup(new OrderInfoApiController(getOrderInfoService))
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                         .apply(documentationConfiguration(restDocumentationContextProvider))
-                        .alwaysDo(document("{method-name}", preprocessRequest(prettyPrint())))
                         .build();
     }
 
@@ -63,18 +60,22 @@ class OrderInfoApiControllerTest {
         // given
         long userId = 1;
         OrderStatus orderStatus = OrderStatus.ORDER_COMPLETE;
-        List<OrderInfoListResponseDto> listResponseDtos = getListResponseDtos();
+        List<OrderInfoListResponseDto> orderInfoListResponseDtos = getListResponseDtos();
         int page = 1;
 
-        given(orderInfoUseCase.getAllOrders(userId, orderStatus, any(Pageable.class)))
-                .willReturn(listResponseDtos);
+        given(getOrderInfoService.getAllOrders(anyLong(),
+                any(OrderStatus.ORDER_COMPLETE.getClass()), any(Pageable.class)))
+                .willReturn(orderInfoListResponseDtos);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("page", String.valueOf(page));
+        params.add("orderStatus", orderStatus.name());
 
         // when & then
         mockMvc.perform(get("/api/v1/orders/user/{userId}", userId)
-                        .param("page", String.valueOf(page))
-                        .param("orderStatus", orderStatus.name()))
+                        .params(params))
                 .andExpect(status().isOk())
-                .andExpect(content().string(parseObject(listResponseDtos)))
+                .andExpect(content().string(parseObject(orderInfoListResponseDtos)))
                 .andDo(print());
     }
 
@@ -85,7 +86,7 @@ class OrderInfoApiControllerTest {
         OrderItemsInfoResponseDto orderItemsInfoResponseDto = getOrderItemsInfoResponseDto();
         long orderId = 1;
 
-        given(orderInfoUseCase.getOrderDetail(orderId))
+        given(getOrderInfoService.getOrderDetail(orderId))
                 .willReturn(orderItemsInfoResponseDto);
 
         mockMvc.perform(get("/api/v1/orders/{orderId}", orderId))
@@ -101,7 +102,7 @@ class OrderInfoApiControllerTest {
     private List<OrderInfoListResponseDto> getListResponseDtos() {
         List<OrderInfoListResponseDto> orderInfoListResponseDtos = new ArrayList<>();
 
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 10; i++) {
             OrderInfoListResponseDto orderInfoListResponseDto = OrderInfoListResponseDto.builder()
                     .orderId(i)
                     .paymentId(i)
@@ -131,7 +132,6 @@ class OrderInfoApiControllerTest {
 
             orderProductResponseDtos.add(build);
         }
-
 
         return OrderItemsInfoResponseDto.builder()
                 .orderId(1)
