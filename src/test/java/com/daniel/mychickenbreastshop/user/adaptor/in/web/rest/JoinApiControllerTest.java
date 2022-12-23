@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import com.daniel.mychickenbreastshop.document.utils.ControllerTest;
 import com.daniel.mychickenbreastshop.global.util.PasswordEncrypt;
 import com.daniel.mychickenbreastshop.user.application.port.in.JoinUseCase;
 import com.daniel.mychickenbreastshop.user.application.port.in.SendMailUseCase;
@@ -10,33 +10,26 @@ import com.daniel.mychickenbreastshop.user.model.dto.request.JoinRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(JoinApiController.class)
-class JoinApiControllerTest {
-
-    private MockMvc mockMvc;
+class JoinApiControllerTest extends ControllerTest {
 
     @MockBean
     private JoinUseCase joinUseService;
@@ -45,10 +38,12 @@ class JoinApiControllerTest {
     private SendMailUseCase sendMailService;
 
     @BeforeEach
-    void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
+    void setUp(RestDocumentationContextProvider provider) {
         mockMvc =
                 MockMvcBuilders.standaloneSetup(new JoinApiController(joinUseService, sendMailService))
-                        .apply(documentationConfiguration(restDocumentationContextProvider))
+                        .apply(documentationConfiguration(provider))
+                        .alwaysDo(MockMvcResultHandlers.print())
+                        .alwaysDo(restDocs)
                         .build();
     }
 
@@ -71,18 +66,17 @@ class JoinApiControllerTest {
         given(joinUseService.join(any(JoinRequestDto.class))).willReturn(1L);
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/join")
-                .content(parseObject(dto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions =
+                mockMvc.perform(post("/join")
+                        .content(createJson(dto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
 
         // then
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"))
-                .andDo(document("{class-name}/{method-name}",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
+                .andDo(restDocs.document(
                         requestFields(
                                 fieldWithPath("loginId").type(JsonFieldType.STRING).description("로그인 아이디"),
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("로그인 비밀번호"),
@@ -103,22 +97,18 @@ class JoinApiControllerTest {
         // given
         EmailRequestDto dto = new EmailRequestDto("asdf@gmail.com");
 
+        // when
         ResultActions resultActions = mockMvc.perform(post("/join/email")
-                .content(parseObject(dto))
+                .content(createJson(dto))
                 .contentType(MediaType.APPLICATION_JSON));
 
+        // then
         resultActions
                 .andExpect(status().isOk())
-                .andDo(document("{class-name}/{method-name}",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
+                .andDo(restDocs.document(
                         requestFields(
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("회원 가입 이메일")
                         )
                 ));
-    }
-
-    String parseObject(Object object) {
-        return JsonUtil.objectToString(object);
     }
 }

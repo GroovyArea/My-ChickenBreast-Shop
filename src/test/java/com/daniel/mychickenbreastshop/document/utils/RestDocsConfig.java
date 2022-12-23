@@ -11,7 +11,7 @@ import org.springframework.restdocs.snippet.Attributes.Attribute;
 public class RestDocsConfig {
 
     @Bean
-    public RestDocumentationResultHandler write(){
+    public RestDocumentationResultHandler write() {
         return MockMvcRestDocumentation.document(
                 "{class-name}/{method-name}",
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
@@ -19,9 +19,9 @@ public class RestDocsConfig {
         );
     }
 
-    public static final Attribute field(
+    public static Attribute field(
             final String key,
-            final String value){
-        return new Attribute(key,value);
+            final String value) {
+        return new Attribute(key, value);
     }
 }

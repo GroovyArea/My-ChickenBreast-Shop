@@ -6,10 +6,9 @@ import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.
 import com.daniel.mychickenbreastshop.payment.application.service.gateway.model.enums.PaymentGateway;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.ItemPayRequestDto;
 import com.daniel.mychickenbreastshop.payment.model.dto.request.PayCancelRequestDto;
-import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,18 +34,18 @@ public class PaymentApiController {
     private final ManagePaymentUseCase managePaymentUseCase;
 
     @PostMapping("/{paymentGateway}")
-    public ResponseEntity<PaymentRequestionDto> requestPayment(@PathVariable PaymentGateway paymentGateway,
+    public ResponseEntity<PaymentRequestionDto> requestPayment(@AuthenticationPrincipal String loginId,
+                                                               @PathVariable PaymentGateway paymentGateway,
                                                                @Valid @RequestBody List<ItemPayRequestDto> itemPayRequestDtos,
                                                                @RequestParam Long orderId,
                                                                HttpServletRequest request) {
         String requestURL = getRequestURL(request);
-        String currentLoginId = getCurrentLoginId();
 
         PaymentRequestResult paymentReady = (PaymentRequestResult) managePaymentUseCase.createPaymentReady(
                 itemPayRequestDtos,
                 paymentGateway,
                 requestURL,
-                currentLoginId,
+                loginId,
                 orderId);
 
         PaymentRequestionDto paymentRequestionDto = new PaymentRequestionDto(
@@ -57,18 +56,20 @@ public class PaymentApiController {
     }
 
     @PostMapping("/{paymentId}/approval/{paymentGateway}")
-    public ResponseEntity<Void> approvalPaymentRequest(@PathVariable Long paymentId,
+    public ResponseEntity<Void> approvalPaymentRequest(@AuthenticationPrincipal String loginId,
+                                                       @PathVariable Long paymentId,
                                                        @PathVariable PaymentGateway paymentGateway,
                                                        @RequestParam("pg_token") String payToken) {
-        managePaymentUseCase.approvePayment(paymentGateway, payToken, paymentId, getCurrentLoginId());
+        managePaymentUseCase.approvePayment(paymentGateway, payToken, paymentId, loginId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{paymentId}/cancellation/{paymentGateway}")
-    public ResponseEntity<Void> cancelPaymentRequest(@PathVariable Long paymentId,
+    public ResponseEntity<Void> cancelPaymentRequest(@AuthenticationPrincipal String loginId,
+                                                     @PathVariable Long paymentId,
                                                      @PathVariable PaymentGateway paymentGateway,
                                                      @Valid @RequestBody PayCancelRequestDto payCancelRequestDto) {
-        managePaymentUseCase.cancelPayment(paymentGateway, payCancelRequestDto, paymentId, getCurrentLoginId());
+        managePaymentUseCase.cancelPayment(paymentGateway, payCancelRequestDto, paymentId, loginId);
         return ResponseEntity.ok().build();
     }
 
@@ -87,11 +88,4 @@ public class PaymentApiController {
         return request.getRequestURL().toString().replace(request.getRequestURI(), "");
     }
 
-    private String getCurrentLoginId() {
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        return principal.getLoginId();
-    }
 }

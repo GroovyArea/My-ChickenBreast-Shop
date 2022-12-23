@@ -15,8 +15,10 @@ public class ParamConverter {
 
         try {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            Map<String, String> map = objectMapper.convertValue(dto, new TypeReference<Map<String, String>>() {
+
+            Map<String, String> map = objectMapper.convertValue(dto, new TypeReference<>() {
             });
+
             params.setAll(map);
 
             return params;

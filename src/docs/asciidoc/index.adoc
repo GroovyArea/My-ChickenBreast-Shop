@@ -12,5 +12,6 @@
 
 [[User-회원가입]]
 === User 회원 가입
-operation::join-api-controller-test/join[]
+
+operation::join-api-controller-test/join[snippets='http-request,http-response']
 

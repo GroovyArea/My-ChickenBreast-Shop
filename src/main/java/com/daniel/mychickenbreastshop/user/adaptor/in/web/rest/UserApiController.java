@@ -2,12 +2,11 @@ package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
 import com.daniel.mychickenbreastshop.user.application.port.in.ManageUserUseCase;
 import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
-import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.model.dto.request.ModifyRequestDto;
 import com.daniel.mychickenbreastshop.user.model.dto.response.DetailResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,18 +48,10 @@ public class UserApiController {
      * @param modifyDTO 회원 수정 정보
      */
     @PatchMapping
-    public ResponseEntity<Void> modifyUser(@Valid @RequestBody ModifyRequestDto modifyDTO) {
-        Long userId = getUserId();
-        userUseCase.modifyUser(userId, modifyDTO);
+    public ResponseEntity<Void> modifyUser(@AuthenticationPrincipal Long id,
+                                           @Valid @RequestBody ModifyRequestDto modifyDTO) {
+        userUseCase.modifyUser(id, modifyDTO);
         return ResponseEntity.ok().build();
     }
 
-    private Long getUserId() {
-        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        return principalDetails.getId();
-    }
 }
