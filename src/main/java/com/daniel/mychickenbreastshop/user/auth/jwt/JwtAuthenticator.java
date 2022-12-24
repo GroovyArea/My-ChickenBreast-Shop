@@ -42,7 +42,10 @@ public class JwtAuthenticator {
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) claims.get(JwtProperties.LOGIN_ID.getKey()));
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(
+                (String) claims.get(JwtProperties.LOGIN_ID.getKey()));
+
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                userDetails.getAuthorities());
     }
 }
