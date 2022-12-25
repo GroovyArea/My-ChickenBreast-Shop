@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop;
 
-import com.daniel.mychickenbreastshop.user.domain.User;
+import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.domain.enums.Role;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,22 +15,19 @@ public class WithAuthUserSecurityContextFactory implements WithSecurityContextFa
 
     @Override
     public SecurityContext createSecurityContext(WithAuthUser annotation) {
-        User user = User.builder()
+        List<GrantedAuthority> role =
+                AuthorityUtils.createAuthorityList(Role.ROLE_USER.name());
+
+        PrincipalDetails principalDetails = PrincipalDetails.builder()
                 .id(annotation.id())
                 .loginId(annotation.loginId())
                 .password(annotation.password())
                 .name(annotation.name())
-                .email(annotation.email())
-                .address(annotation.address())
-                .zipcode(annotation.zipcode())
-                .role(annotation.role())
+                .role(annotation.role().name())
                 .build();
 
-        List<GrantedAuthority> role =
-                AuthorityUtils.createAuthorityList(Role.ROLE_USER.name());
-
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user, user.getPassword(),
+                new UsernamePasswordAuthenticationToken(principalDetails, principalDetails.getPassword(),
                         role));
 
         return SecurityContextHolder.getContext();

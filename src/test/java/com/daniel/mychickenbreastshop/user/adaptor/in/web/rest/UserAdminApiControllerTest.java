@@ -1,5 +1,6 @@
 package com.daniel.mychickenbreastshop.user.adaptor.in.web.rest;
 
+import com.daniel.mychickenbreastshop.WithAuthUser;
 import com.daniel.mychickenbreastshop.document.utils.ControllerTest;
 import com.daniel.mychickenbreastshop.user.application.port.in.ManageUserUseCase;
 import com.daniel.mychickenbreastshop.user.application.port.in.UserSearchUseCase;
@@ -150,6 +151,7 @@ class UserAdminApiControllerTest extends ControllerTest {
                 ));
     }
 
+    @WithAuthUser
     @DisplayName("API 요청을 통해 회원 삭제를 진행한다.")
     @Test
     void removeUser() throws Exception {

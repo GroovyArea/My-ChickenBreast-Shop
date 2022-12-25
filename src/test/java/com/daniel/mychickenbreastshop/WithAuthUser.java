@@ -14,8 +14,5 @@ public @interface WithAuthUser {
     String loginId() default "loginId";
     String name() default "name";
     String password() default "password";
-    String email() default "0909@gmail.com";
-    String address() default "서울시 서초구 서초동";
-    String zipcode() default "123-123";
     Role role() default Role.ROLE_USER;
 }

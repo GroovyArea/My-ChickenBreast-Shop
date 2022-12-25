@@ -1,11 +1,10 @@
 package com.daniel.mychickenbreastshop.order.adaptor.in.web.rest;
 
+import com.daniel.mychickenbreastshop.global.util.PrincipalUtil;
 import com.daniel.mychickenbreastshop.order.application.port.in.ManageOrderUseCase;
 import com.daniel.mychickenbreastshop.order.model.dto.request.OrderRequestDto;
-import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Long> createOrder(@RequestBody List<OrderRequestDto> orderRequestDtos) {
-        Long orderId = orderUseCase.makeOrderReady(orderRequestDtos, getCurrentUserId());
+        Long orderId = orderUseCase.makeOrderReady(orderRequestDtos, PrincipalUtil.getCurrentId());
         return ResponseEntity.ok().body(orderId);
     }
 
@@ -42,8 +41,4 @@ public class OrderApiController {
         return ResponseEntity.ok().build();
     }
 
-    private Long getCurrentUserId() {
-        PrincipalDetails principalDetails = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principalDetails.getId();
-    }
 }

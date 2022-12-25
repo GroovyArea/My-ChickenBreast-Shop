@@ -1,7 +1,7 @@
 package com.daniel.mychickenbreastshop.user.auth.security.service;
 
 import com.daniel.mychickenbreastshop.user.adaptor.out.persistence.UserRepository;
-import com.daniel.mychickenbreastshop.user.auth.security.mapper.PrincipalDetailMapper;
+import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
 import com.daniel.mychickenbreastshop.user.domain.User;
 import com.daniel.mychickenbreastshop.user.domain.enums.ErrorMessages;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +28,22 @@ import org.springframework.stereotype.Service;
 public class PrincipalDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PrincipalDetailMapper principalDetailMapper;
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
-        return principalDetailMapper.toDTO(user);
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_EXISTS.getMessage()));
+
+        return toUserDetails(user);
+    }
+
+    private UserDetails toUserDetails(User user) {
+        return PrincipalDetails.builder()
+                .id(user.getId())
+                .loginId(user.getLoginId())
+                .name(user.getName())
+                .password(user.getPassword())
+                .role(user.getRole().name())
+                .build();
     }
 }

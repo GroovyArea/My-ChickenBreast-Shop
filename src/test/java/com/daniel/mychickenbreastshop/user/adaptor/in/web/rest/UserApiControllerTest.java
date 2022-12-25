@@ -96,8 +96,8 @@ class UserApiControllerTest extends ControllerTest {
                 ));
     }
 
-    @DisplayName("API 요청을 통해 회원 정보를 수정한다.")
     @WithAuthUser
+    @DisplayName("API 요청을 통해 회원 정보를 수정한다.")
     @Test
     void modifyUser() throws Exception {
         // given

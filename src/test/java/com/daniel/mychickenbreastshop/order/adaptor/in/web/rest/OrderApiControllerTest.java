@@ -1,10 +1,9 @@
 package com.daniel.mychickenbreastshop.order.adaptor.in.web.rest;
 
+import com.daniel.mychickenbreastshop.WithAuthUser;
 import com.daniel.mychickenbreastshop.global.util.JsonUtil;
 import com.daniel.mychickenbreastshop.order.application.port.in.ManageOrderUseCase;
 import com.daniel.mychickenbreastshop.order.model.dto.request.OrderRequestDto;
-import com.daniel.mychickenbreastshop.user.auth.security.model.PrincipalDetails;
-import com.daniel.mychickenbreastshop.user.domain.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -51,24 +46,15 @@ class OrderApiControllerTest {
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .apply(documentationConfiguration(restDocumentationContextProvider))
                         .build();
-
-        UserDetails userDetails = PrincipalDetails.builder()
-                .id(1L)
-                .loginId("loginId")
-                .password("password")
-                .role(Role.ROLE_USER.getRoleName())
-                .build();
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @DisplayName("API 요청을 통해 주문 건 생성을 한다.")
+    @WithAuthUser
     @Test
     void createOrder() throws Exception {
         // given
         List<OrderRequestDto> orderRequestDtos = getOrderRequestDtos();
-        long orderId = 1;
+        Long orderId = 1L;
 
         given(manageOrderService.makeOrderReady(any(), anyLong()))
                 .willReturn(orderId);
@@ -78,7 +64,7 @@ class OrderApiControllerTest {
                         .content(parseObject(orderRequestDtos))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(parseObject(orderId)))
+                .andExpect(content().string(String.valueOf(orderId)))
                 .andDo(print());
     }
 
