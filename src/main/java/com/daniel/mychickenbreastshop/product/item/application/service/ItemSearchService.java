@@ -5,7 +5,6 @@ import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCateg
 import com.daniel.mychickenbreastshop.product.item.adaptor.out.persistence.ProductRepository;
 import com.daniel.mychickenbreastshop.product.item.application.port.item.in.ItemSearchUseCase;
 import com.daniel.mychickenbreastshop.product.item.domain.Product;
-import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ErrorMessages;
 import com.daniel.mychickenbreastshop.product.item.mapper.ItemDetailMapper;
 import com.daniel.mychickenbreastshop.product.item.mapper.ItemListMapper;
@@ -47,10 +46,10 @@ public class ItemSearchService implements ItemSearchUseCase {
     }
 
     @Override
-    public List<ListResponseDto> searchProducts(Pageable pageable, ChickenStatus chickenStatus,
-                                                ChickenCategory chickenCategory, ItemSearchDto itemSearchDto) {
+    public List<ListResponseDto> searchProducts(Pageable pageable, ChickenCategory chickenCategory,
+                                                ItemSearchDto itemSearchDto) {
         List<Product> searchedItems = productRepository.findItemWithDynamicQuery(
-                pageable, itemSearchDto, chickenCategory, chickenStatus).getContent();
+                pageable, itemSearchDto, chickenCategory).getContent();
 
         return searchedItems.stream()
                 .map(itemListMapper::toDTO)

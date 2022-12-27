@@ -1,6 +1,6 @@
 package com.daniel.mychickenbreastshop.product.item.adaptor.in.web.rest;
 
-import com.daniel.mychickenbreastshop.global.util.JsonUtil;
+import com.daniel.mychickenbreastshop.document.utils.ControllerTest;
 import com.daniel.mychickenbreastshop.product.category.domain.enums.ChickenCategory;
 import com.daniel.mychickenbreastshop.product.item.application.port.item.in.ItemSearchUseCase;
 import com.daniel.mychickenbreastshop.product.item.domain.enums.ChickenStatus;
@@ -10,16 +10,15 @@ import com.daniel.mychickenbreastshop.product.item.model.dto.response.ListRespon
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -27,22 +26,22 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.daniel.mychickenbreastshop.document.utils.RestDocsConfig.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(RestDocumentationExtension.class)
 @WebMvcTest(ProductApiController.class)
-class ProductApiControllerTest {
+class ProductApiControllerTest extends ControllerTest {
 
     @MockBean
     private ItemSearchUseCase searchUseCase;
-
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -51,6 +50,8 @@ class ProductApiControllerTest {
                         .addFilters(new CharacterEncodingFilter("UTF-8", true))
                         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                         .apply(documentationConfiguration(restDocumentationContextProvider))
+                        .alwaysDo(MockMvcResultHandlers.print())
+                        .alwaysDo(restDocs)
                         .build();
     }
 
@@ -70,11 +71,29 @@ class ProductApiControllerTest {
 
         given(searchUseCase.getProduct(dto.getId())).willReturn(dto);
 
-        // when & then
-        mockMvc.perform(get("/api/v1/products/{productId}", dto.getId()))
+        // when
+        ResultActions resultActions =
+                mockMvc.perform(
+                        get("/api/v1/products/{productId}", dto.getId()));
+
+        // then
+        resultActions
                 .andExpect(status().isOk())
-                .andExpect(content().string(parseObject(dto)))
-                .andDo(print());
+                .andExpect(content().string(createJson(dto)))
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("productId").description("상품 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 id"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("categoryName").type(JsonFieldType.VARIES).description("상품 카테고리 이름"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("상품 재고 수량"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("상품 정보 설명 컨텐츠"),
+                                fieldWithPath("image").type(JsonFieldType.STRING).description("상품 이미지 다운로드 url")
+                        )
+                ));
     }
 
     @DisplayName("API 요청을 통해 상품 목록 10개를 페이징하여 반환한다.")
@@ -88,15 +107,35 @@ class ProductApiControllerTest {
         given(searchUseCase.getAllProducts(any(ChickenCategory.class), any(Pageable.class)))
                 .willReturn(pageOneItems);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("page", String.valueOf(page));
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/products/category/{category}", category)
+                        .param("page", String.valueOf(page)));
 
-        // when & then
-        mockMvc.perform(get("/api/v1/products/category/{category}", category)
-                        .params(params))
+        // then
+        resultActions
                 .andExpect(status().isOk())
-                .andExpect(content().string(parseObject(pageOneItems)))
-                .andDo(print());
+                .andExpect(content().string(createJson(pageOneItems)))
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("category").description("상품 카테고리 enum 값")
+                        ),
+                        requestParameters(
+                                parameterWithName("page").optional().description("요청 페이지 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 id"),
+                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("상품 재고 수량"),
+                                fieldWithPath("[].image").type(JsonFieldType.STRING).description("상품 이미지 다운로드 url"),
+                                fieldWithPath("[].category").type(JsonFieldType.VARIES).description("상품 카테고리 enum 값"),
+                                fieldWithPath("[].status").type(JsonFieldType.VARIES).description("상품 상태 enum 값"),
+                                fieldWithPath("[].createdAt").type(JsonFieldType.ARRAY).description("상품 등록 일시"),
+                                fieldWithPath("[].updatedAt").type(JsonFieldType.ARRAY).description("상품 정보 수정 일시"),
+                                fieldWithPath("[].deletedAt").type(JsonFieldType.ARRAY).description("상품 삭제 일시")
+                        )
+                ));
     }
 
     @DisplayName("API 요청을 통해 검색 조건에 맞는 상품 목록 10개를 페이징하여 반환한다.")
@@ -107,25 +146,52 @@ class ProductApiControllerTest {
         ChickenCategory category = ChickenCategory.STEAMED;
         ChickenStatus status = ChickenStatus.SALE;
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("status", status.name());
-        params.add("searchKey", "name");
-        params.add("searchValue", "name");
+        ItemSearchDto dto = ItemSearchDto.builder()
+                .searchKey("name")
+                .searchValue("name")
+                .status(status)
+                .build();
 
-        given(searchUseCase.searchProducts(any(Pageable.class), any(ChickenStatus.class), any(ChickenCategory.class), any(ItemSearchDto.class)))
+        MultiValueMap<String, String> params = createParams(dto);
+
+        given(searchUseCase.searchProducts(any(Pageable.class), any(ChickenCategory.class),
+                any(ItemSearchDto.class)))
                 .willReturn(pageOneSearchItems);
 
-        // when & then
-        mockMvc.perform(get("/api/v1/products/details/{category}", category)
-                        .params(params))
+        // when
+        ResultActions resultActions =
+                mockMvc.perform(get("/api/v1/products/details/{category}", category)
+                        .params(params));
+
+        // then
+        resultActions
                 .andExpect(status().isOk())
-                .andExpect(content().string(parseObject(pageOneSearchItems)))
-                .andDo(print());
+                .andExpect(content().string(createJson(pageOneSearchItems)))
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("category").description("상품 카테고리 enum 값")
+                        ),
+                        requestParameters(
+                                parameterWithName("page").optional().description("요청 페이지 번호"),
+                                parameterWithName("status").description("상품 상태 enum 값"),
+                                parameterWithName("searchKey").description("상품 검색 키 조건").attributes(field("constraints", "상품 번호, 상품 이름")),
+                                parameterWithName("searchValue").description("상품 검색 값 조건")
+                        ),
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 id"),
+                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("상품 재고 수량"),
+                                fieldWithPath("[].image").type(JsonFieldType.STRING).description("상품 이미지 다운로드 url"),
+                                fieldWithPath("[].category").type(JsonFieldType.VARIES).description("상품 카테고리 enum 값"),
+                                fieldWithPath("[].status").type(JsonFieldType.VARIES).description("상품 상태 enum 값"),
+                                fieldWithPath("[].createdAt").type(JsonFieldType.ARRAY).description("상품 등록 일시"),
+                                fieldWithPath("[].updatedAt").type(JsonFieldType.ARRAY).description("상품 정보 수정 일시"),
+                                fieldWithPath("[].deletedAt").type(JsonFieldType.ARRAY).description("상품 삭제 일시")
+                        )
+                ));
     }
 
-    private String parseObject(Object object) {
-        return JsonUtil.objectToString(object);
-    }
 
     private List<ListResponseDto> getPageOneItems() {
         List<ListResponseDto> items = new ArrayList<>();

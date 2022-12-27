@@ -131,9 +131,9 @@ class ItemSearchServiceTest {
     @Test
     void searchProducts() {
         // given
-        ItemSearchDto itemSearchDto = new ItemSearchDto("name", "name");
-        int pageNumber = 1;
         ChickenStatus status = ChickenStatus.SALE;
+        ItemSearchDto itemSearchDto = new ItemSearchDto("name", "name", status);
+        int pageNumber = 1;
         ChickenCategory categoryName = category.getCategoryName();
 
         Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -141,10 +141,10 @@ class ItemSearchServiceTest {
                 products.get(5), products.get(6), products.get(7), products.get(8), products.get(9)), pageable, 10);
 
         // when
-        when(productRepository.findItemWithDynamicQuery(pageable, itemSearchDto, categoryName, status)).thenReturn(page);
+        when(productRepository.findItemWithDynamicQuery(pageable, itemSearchDto, categoryName)).thenReturn(page);
         when(itemListMapper.toDTO(any(Product.class))).thenReturn(listResponseDtos.get(0));
 
-        List<ListResponseDto> listResponseDtos = itemSearchService.searchProducts(pageable, status, categoryName, itemSearchDto);
+        List<ListResponseDto> listResponseDtos = itemSearchService.searchProducts(pageable, categoryName, itemSearchDto);
 
         assertThat(listResponseDtos).hasSize(10);
         listResponseDtos.forEach(listResponseDto -> assertThat(listResponseDto.getCategory()).isEqualTo(categoryName));

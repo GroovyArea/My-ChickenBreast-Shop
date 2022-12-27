@@ -62,17 +62,19 @@ class ItemCustomQueryRepositoryImplTest {
         PageRequest pageRequest = PageRequest.of(
                 page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
+        ChickenStatus chickenStatus = ChickenStatus.SALE;
+        ChickenCategory chickenCategory = ChickenCategory.STEAMED;
+
         ItemSearchDto itemSearchDto = ItemSearchDto.builder()
                 .searchKey("name")
                 .searchValue("name")
+                .status(chickenStatus)
                 .build();
 
-        ChickenCategory chickenCategory = ChickenCategory.STEAMED;
-        ChickenStatus chickenStatus = ChickenStatus.SALE;
 
         // when
         Page<Product> searchPage = productRepository.findItemWithDynamicQuery(
-                pageRequest, itemSearchDto, chickenCategory, chickenStatus);
+                pageRequest, itemSearchDto, chickenCategory);
         List<Product> content = searchPage.getContent();
 
         assertThat(content).hasSize(10);

@@ -27,7 +27,7 @@ public class ProductAdminApiController {
      */
     @PostMapping
     public ResponseEntity<Long> registerProduct(@RequestPart RegisterRequestDto registerRequestDto,
-                                                @RequestPart(value = "image") MultipartFile file) {
+                                                @RequestPart(value = "file") MultipartFile file) {
         Long productId = itemUseCase.registerItem(registerRequestDto, file);
         return ResponseEntity.ok().body(productId);
     }

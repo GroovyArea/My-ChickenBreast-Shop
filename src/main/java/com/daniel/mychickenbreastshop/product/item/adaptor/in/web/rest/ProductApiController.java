@@ -74,7 +74,8 @@ public class ProductApiController {
         ItemSearchDto itemSearchDto = ItemSearchDto.builder()
                 .searchKey(searchKey)
                 .searchValue(searchValue)
+                .status(status)
                 .build();
-        return ResponseEntity.ok(searchUseCase.searchProducts(pageable, status, category, itemSearchDto));
+        return ResponseEntity.ok(searchUseCase.searchProducts(pageable, category, itemSearchDto));
     }
 }

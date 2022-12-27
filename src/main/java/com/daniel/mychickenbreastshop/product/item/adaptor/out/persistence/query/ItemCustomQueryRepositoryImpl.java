@@ -27,13 +27,13 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Product> findItemWithDynamicQuery(Pageable pageable, ItemSearchDto itemSearchDto, ChickenCategory category, ChickenStatus status) {
+    public Page<Product> findItemWithDynamicQuery(Pageable pageable, ItemSearchDto itemSearchDto, ChickenCategory category) {
         List<Product> results = queryFactory.selectFrom(product)
                 .leftJoin(product.category, QCategory.category)
                 .where(
                         searchDtoEq(itemSearchDto),
                         categoryEq(category),
-                        statusEq(status)
+                        statusEq(itemSearchDto.getStatus())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -42,7 +42,7 @@ public class ItemCustomQueryRepositoryImpl implements ItemCustomQueryRepository 
 
         JPAQuery<Product> count = queryFactory.selectFrom(product)
                 .leftJoin(product.category, QCategory.category)
-                .where(searchDtoEq(itemSearchDto), categoryEq(category), statusEq(status));
+                .where(searchDtoEq(itemSearchDto), categoryEq(category), statusEq(itemSearchDto.getStatus()));
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetch().size());
     }
